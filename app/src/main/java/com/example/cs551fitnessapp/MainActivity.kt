@@ -8,11 +8,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.cs551fitnessapp.navigation.AppNavHost
+import com.example.cs551fitnessapp.navigation.BottomBar
+import com.example.cs551fitnessapp.navigation.TopBar
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,7 +25,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CS551FitnessAppTheme {
                 val navController = rememberNavController()
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize() , topBar = {TopBar(navController = navController)} , bottomBar = { BottomBar(navController = navController) }) { innerPadding ->
                     AppNavHost(navController , modifier = Modifier.padding(innerPadding))
                 }
             }
