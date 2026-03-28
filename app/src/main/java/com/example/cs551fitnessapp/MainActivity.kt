@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.example.cs551fitnessapp.navigation.AppNavHost
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,11 +21,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CS551FitnessAppTheme {
+                val navController = rememberNavController()
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    AppNavHost(navController , modifier = Modifier.padding(innerPadding))
                 }
             }
         }
