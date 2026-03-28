@@ -42,23 +42,24 @@ fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(navController : NavHostController , modifier: Modifier = Modifier) {
-
+fun TopBar(navController : NavHostController , showBackIcon : Boolean ,  modifier: Modifier = Modifier) {
     CenterAlignedTopAppBar(
         title = {Text(text = "Fitness App")},
-        navigationIcon = {BackNavigateIcon(navController = navController)},
+
+        navigationIcon = {BackNavigateIcon(navController = navController , showBackIcon = showBackIcon)},
 
         )
 }
 
 @Composable
-fun BackNavigateIcon (navController: NavHostController , modifier: Modifier = Modifier) {
-
-    IconButton(onClick = { navController.popBackStack() }) {
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = "Localized description"
-        )
+fun BackNavigateIcon (navController: NavHostController , showBackIcon : Boolean , modifier: Modifier = Modifier) {
+    if (showBackIcon) {
+        IconButton(onClick = { navController.popBackStack() }) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Localized description"
+            )
+        }
     }
 
 }

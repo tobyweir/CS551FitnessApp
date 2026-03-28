@@ -10,8 +10,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.cs551fitnessapp.navigation.AppNavHost
 import com.example.cs551fitnessapp.navigation.BottomBar
@@ -25,7 +27,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             CS551FitnessAppTheme {
                 val navController = rememberNavController()
-                Scaffold(modifier = Modifier.fillMaxSize() , topBar = {TopBar(navController = navController)} , bottomBar = { BottomBar(navController = navController) }) { innerPadding ->
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val canGoBack = navBackStackEntry != null &&
+                        navController.previousBackStackEntry != null
+                Scaffold(modifier = Modifier.fillMaxSize() , topBar = {TopBar(navController = navController , showBackIcon = canGoBack)} , bottomBar = { BottomBar(navController = navController) }) { innerPadding ->
                     AppNavHost(navController , modifier = Modifier.padding(innerPadding))
                 }
             }
