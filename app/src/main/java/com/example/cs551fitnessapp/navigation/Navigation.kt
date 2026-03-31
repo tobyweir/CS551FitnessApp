@@ -6,6 +6,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -47,7 +48,14 @@ fun TopBar(navController : NavHostController , showBackIcon : Boolean ,  modifie
         title = {Text(text = "Fitness App")},
 
         navigationIcon = {BackNavigateIcon(navController = navController , showBackIcon = showBackIcon)},
-
+        actions = {
+            IconButton(onClick = {/*navigate to preferences*/}) {
+                Icon (
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Settings Icon"
+                )
+            }
+        }
         )
 }
 
@@ -57,7 +65,7 @@ fun BackNavigateIcon (navController: NavHostController , showBackIcon : Boolean 
         IconButton(onClick = { navController.popBackStack() }) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Localized description"
+                contentDescription = "Arrow Back Icon"
             )
         }
     }
