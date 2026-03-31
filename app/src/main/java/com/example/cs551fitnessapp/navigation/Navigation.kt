@@ -38,6 +38,12 @@ fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifi
                 modifier = modifier
             )
         }
+        composable<PreferencesPage> {
+            Greeting(
+                name = "preferences screen",
+                modifier = modifier
+            )
+        }
     }
 }
 
@@ -49,7 +55,7 @@ fun TopBar(navController : NavHostController , showBackIcon : Boolean ,  modifie
 
         navigationIcon = {BackNavigateIcon(navController = navController , showBackIcon = showBackIcon)},
         actions = {
-            IconButton(onClick = {/*navigate to preferences*/}) {
+            IconButton(onClick = {navController.navigate(PreferencesPage)}) {
                 Icon (
                     imageVector = Icons.Default.Settings,
                     contentDescription = "Settings Icon"
