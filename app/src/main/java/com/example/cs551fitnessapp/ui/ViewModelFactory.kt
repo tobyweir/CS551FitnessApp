@@ -1,4 +1,6 @@
 package com.example.cs551fitnessapp.ui
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.cs551fitnessapp.ui.viewmodels.EditMemberViewModel
@@ -23,3 +25,6 @@ object ViewModelFactory {
         }
     }
 }
+
+//fun CreationExtras.inventoryApplication(): InventoryApplication =
+    //(this[AndroidViewModelFactory.APPLICATION_KEY] as InventoryApplication)
