@@ -1,9 +1,7 @@
-package com.example.cs551fitnessapp.navigation
+package com.example.cs551fitnessapp.ui.navigation
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
@@ -38,6 +36,12 @@ fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifi
                 modifier = modifier
             )
         }
+        composable<PreferencesPage> {
+            Greeting(
+                name = "preferences screen",
+                modifier = modifier
+            )
+        }
     }
 }
 
@@ -49,7 +53,7 @@ fun TopBar(navController : NavHostController , showBackIcon : Boolean ,  modifie
 
         navigationIcon = {BackNavigateIcon(navController = navController , showBackIcon = showBackIcon)},
         actions = {
-            IconButton(onClick = {/*navigate to preferences*/}) {
+            IconButton(onClick = {navController.navigate(PreferencesPage)}) {
                 Icon (
                     imageVector = Icons.Default.Settings,
                     contentDescription = "Settings Icon"

@@ -1,4 +1,4 @@
-package com.example.cs551fitnessapp.navigation
+package com.example.cs551fitnessapp.ui.navigation
 
 import kotlinx.serialization.Serializable
 

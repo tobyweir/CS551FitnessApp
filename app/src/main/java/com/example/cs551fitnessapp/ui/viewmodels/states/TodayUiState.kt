@@ -1,4 +1,4 @@
-package com.example.cs551fitnessapp.viewmodels.states
+package com.example.cs551fitnessapp.ui.viewmodels.states
 
 import java.util.Date
 
