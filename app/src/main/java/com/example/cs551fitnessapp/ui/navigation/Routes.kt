@@ -2,7 +2,6 @@ package com.example.cs551fitnessapp.ui.navigation
 
 import kotlinx.serialization.Serializable
 
-
 @Serializable
 object Today
 
@@ -10,7 +9,4 @@ object Today
 object Members
 
 @Serializable
-data class EditMember(val id: Int)
-
-@Serializable
-object PreferencesPage;
+object PreferencesPage
