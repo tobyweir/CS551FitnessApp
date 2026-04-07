@@ -1,11 +1,13 @@
 package com.example.cs551fitnessapp.ui.screens
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,71 +17,169 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.cs551fitnessapp.Greeting
-import com.example.cs551fitnessapp.R
-import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
-import java.util.Date
-import androidx.compose.foundation.lazy.items
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.text.style.LineHeightStyle
-import org.intellij.lang.annotations.JdkConstants
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.cs551fitnessapp.R
+import com.example.cs551fitnessapp.ui.navigation.BottomBar
+import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
+import java.util.Date
+
+val members = listOf<Member>(
+    Member(id = 0,
+        name ="John Smith" ,
+        joinDate = Date(2026 , 3 , 17) ,
+        endDate = null ,
+        status = "Active",),
+    Member( id = 1,
+        name ="Mike Smith" ,
+        joinDate = Date(2026 , 3 , 17) ,
+        endDate = null ,
+        status = "Active",),
+    Member(id = 2,
+        name ="Major Smith" ,
+        joinDate = Date(2026 , 3 , 17) ,
+        endDate = null ,
+        status = "Active",)
+)
 
 @Composable
-fun MembersScreen(){
+fun MembersScreen(modifier: Modifier = Modifier){
+    Scaffold(modifier = modifier , floatingActionButton = {AddMemberButton()} , floatingActionButtonPosition = FabPosition.EndOverlay) { innerPadding ->
+        Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+            SearchBar(currentSearch = "", updateSearchQuery = {}, runSearch = {})
+            SortingButtons(currentStatus = "Active", {}, {}, {})
+            MembersList(members = members)
+        }
+    }
+
 
 }
-@Composable
-fun SearchBar() {
 
+
+@Composable
+fun SearchBar(currentSearch : String = "" , updateSearchQuery : () -> Unit , runSearch : () -> Unit) {
+    val focusManager = LocalFocusManager.current
+    Card (modifier = Modifier.fillMaxWidth().fillMaxHeight(0.15f) , shape = RectangleShape, colors = CardDefaults.cardColors(containerColor = Color.Blue)) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center , modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
+            OutlinedTextField(
+                leadingIcon = {Icon(imageVector = Icons.Default.Search , contentDescription = "Search icon" )},
+                value = currentSearch,
+                modifier = Modifier
+                    .fillMaxWidth(0.85f)
+                    ,
+
+
+                onValueChange = {
+                    updateSearchQuery()
+                },
+                shape = RoundedCornerShape(100.dp),
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    cursorColor = Color.Black,
+                    focusedBorderColor = Color.White,
+                    unfocusedBorderColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                    focusedContainerColor = Color.White
+
+                ),
+                placeholder = {
+                    Text(
+                        text = "Search...",
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            color = Color.LightGray
+                        )
+                    )
+                },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                ),
+                keyboardActions = KeyboardActions(onDone = {
+                    runSearch()
+                    focusManager.clearFocus()
+                })
+            )
+        }
+    }
 }
 
 @Composable
-fun SortingButtons() {
-
+fun SortingButtons(currentStatus : String , selectActive : () -> Unit , selectNearlyFinished : () -> Unit , selectInactive : () -> Unit) {
+    Row(horizontalArrangement = Arrangement.SpaceEvenly , modifier = Modifier.fillMaxWidth().padding(top = 10.dp , bottom = 10.dp)) {
+        ElevatedButton(onClick = {} ,  ) { Text(text = "Active")}
+        ElevatedButton(onClick = {}) { Text (text = "Nearly Finished")}
+        ElevatedButton(onClick = {}) { Text (text = " Inactive")}
+    }
 }
 
 @Composable
 fun AddMemberButton() {
-
+    Button(onClick = {}) { Icon(imageVector = Icons.Default.Add , contentDescription = "Add a new member") }
 }
 //drawBehind modifier taken from https://stackoverflow.com/questions/68592618/how-to-add-border-on-bottom-only-in-jetpack-compose
 @Composable
 fun MembersList(members : List<Member> , modifier: Modifier = Modifier) {
     LazyColumn(horizontalAlignment = Alignment.CenterHorizontally , modifier = modifier.fillMaxSize()) {
         items(items = members, key = { it.id }) { item ->
-            MemberCard(member = item , modifier = Modifier
-                .drawBehind {
-                    val strokeWidth = 1 * density
-                    val y = size.height - strokeWidth / 2
-                    drawLine(
-                        Color.LightGray,
-                        Offset(1f, y),
-                        Offset(size.width, y),
-                        strokeWidth
-                    )
-                })
-
+                MemberCard(
+                    member = item, modifier = Modifier.fillMaxSize()
+                        .drawBehind {
+                            val strokeWidth = 1 * density
+                            val y = size.height - strokeWidth / 2
+                            drawLine(
+                                Color.LightGray,
+                                Offset(1f, y),
+                                Offset(size.width, y),
+                                strokeWidth
+                            )
+                        }
+                        .clickable(onClick = {}))
         }
     }
 }
 @Composable
-fun MemberCard(member : Member , modifier: Modifier = Modifier) {
-    Row(modifier = modifier ,) {
-        MemberCardImage(modifier = Modifier.fillMaxWidth(0.3f).padding(10.dp))
+fun MemberCard(member : Member , modifier: Modifier = Modifier.fillMaxSize()) {
+    Row(modifier = modifier.fillMaxSize(), horizontalArrangement = Arrangement.Center ,) {
+        MemberCardImage(modifier = Modifier
+            .fillMaxWidth(0.3f)
+            .padding(10.dp))
         MemberCardInfo(member.name ,
             member.joinDate ,
             endDate = member.endDate,
@@ -89,7 +189,7 @@ fun MemberCard(member : Member , modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun MemberCardImage(modifier: Modifier = Modifier) {
+fun MemberCardImage(modifier: Modifier = Modifier.fillMaxSize()) {
     Image(
         painter = painterResource(id = R.drawable.ic_launcher_background),
         contentDescription = "Image of member",
@@ -106,18 +206,19 @@ fun MemberCardInfo(name : String ,
                    joinDate : Date,
                    endDate: Date? ,
                    status : String,
-                   modifier: Modifier) {
-    Column(verticalArrangement = Arrangement.SpaceBetween , modifier = modifier) {
-        Text(text = name)
-        Text(text = "Join : ${joinDate.date}/${joinDate.month}/${joinDate.year}")
+                   modifier: Modifier
+) {
+    Column(verticalArrangement = Arrangement.SpaceAround , modifier = modifier.fillMaxHeight().padding (top = 10.dp , start = 10.dp , end = 10.dp , bottom = 10.dp)) {
+        Text(text = name , Modifier.padding(bottom = 3.dp) , color = Color.Blue , fontWeight = FontWeight.Bold, style = TextStyle(fontSize = 18.sp))
+        Text(text = "Join : ${joinDate.date}/${joinDate.month}/${joinDate.year}" , modifier = Modifier.padding(bottom = 3.dp) , style = TextStyle(fontSize = 14.sp))
         if (endDate != null) {
-            Text(text = "End Session : ${endDate.date}/${endDate.month}/${endDate.year}")
+            Text(text = "End Session : ${endDate.date}/${endDate.month}/${endDate.year}" , modifier = Modifier.padding(bottom = 3.dp) , style = TextStyle(fontSize = 14.sp))
         } else {
-            Text(text = "End Session : - ")
+            Text(text = "End Session : - " , modifier = Modifier.padding(bottom = 3.dp) , style = TextStyle(fontSize = 14.sp))
         }
-        Card() {
+        Card(colors = CardDefaults.cardColors(containerColor = Color.Blue)) {
             Text(text = status , modifier = Modifier
-                .padding (top = 1.dp , start = 10.dp , end = 10.dp))
+                .padding (top = 1.dp , start = 10.dp , end = 10.dp) , color = Color.White)
         }
     }
 }
@@ -127,24 +228,7 @@ data class Member(val id : Int , val name : String , val joinDate : Date , val e
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    val members = listOf<Member>(
-        Member(id = 0,
-            name ="John Smith" ,
-            joinDate = Date(2026 , 3 , 17) ,
-            endDate = null ,
-            status = "Active",),
-        Member( id = 1,
-            name ="Mike Smith" ,
-            joinDate = Date(2026 , 3 , 17) ,
-            endDate = null ,
-            status = "Active",),
-        Member(id = 2,
-            name ="Major Smith" ,
-            joinDate = Date(2026 , 3 , 17) ,
-            endDate = null ,
-            status = "Active",)
-    )
     CS551FitnessAppTheme {
-        MembersList(members)
+        MembersScreen()
     }
 }

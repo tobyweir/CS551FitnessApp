@@ -20,15 +20,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.cs551fitnessapp.Greeting
+import com.example.cs551fitnessapp.ui.screens.MembersScreen
 
 @Composable
 fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifier) {
     NavHost(navController, startDestination = Members) {
         composable<Members> {
-            Greeting(
-                name = "Members screen",
-                modifier = modifier
-            )
+            MembersScreen(modifier = modifier)
         }
         composable<Today> {
             Greeting(
