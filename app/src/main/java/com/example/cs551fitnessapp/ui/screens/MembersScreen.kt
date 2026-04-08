@@ -110,7 +110,7 @@ val members = listOf<Member>(
 @Composable
 fun MembersScreen(modifier: Modifier = Modifier){
     Scaffold(modifier = modifier , floatingActionButton = {AddMemberButton()} , floatingActionButtonPosition = FabPosition.EndOverlay) { innerPadding ->
-        Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+        Column(modifier = Modifier.padding(innerPadding)) {
             SearchBar(currentSearch = "", updateSearchQuery = {}, runSearch = {})
             SortingButtons(currentStatus = "Active", {}, {}, {})
             MembersList(members = members)
