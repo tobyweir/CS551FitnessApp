@@ -2,45 +2,39 @@ package com.example.cs551fitnessapp.ui.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
+
+import androidx.compose.material3.*
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+
 import androidx.compose.ui.Modifier
+
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.cs551fitnessapp.Greeting
+
+import com.example.cs551fitnessapp.ui.screens.TodayScreen
+
+
 
 @Composable
 fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifier) {
-    NavHost(navController, startDestination = Members) {
+    NavHost(navController, startDestination = Today) {
         composable<Members> {
-            Greeting(
-                name = "Members screen",
-                modifier = modifier
-            )
+            Text(text = "members")
         }
         composable<Today> {
-            Greeting(
-                name = "today screen",
-                modifier = modifier
-            )
+            TodayScreen()
         }
         composable<PreferencesPage> {
-            Greeting(
-                name = "preferences screen",
-                modifier = modifier
-            )
+            Text(text = "preferences")
         }
     }
 }
@@ -60,7 +54,7 @@ fun TopBar(navController : NavHostController , showBackIcon : Boolean ,  modifie
                 )
             }
         }
-        )
+    )
 }
 
 @Composable
@@ -80,7 +74,7 @@ fun BackNavigateIcon (navController: NavHostController , showBackIcon : Boolean 
 @Composable
 fun BottomBar(navController : NavHostController, modifier: Modifier = Modifier) {
     val selectedNavigationIndex = rememberSaveable {
-        mutableIntStateOf(1)
+        mutableIntStateOf(0)
     }
 
     NavigationBar() {
@@ -90,7 +84,7 @@ fun BottomBar(navController : NavHostController, modifier: Modifier = Modifier) 
                 selectedNavigationIndex.intValue = 0
                 navController.navigate(Today)
             },
-            icon = { Icon(imageVector = Icons.Default.List , contentDescription = "Today") },
+            icon = { Icon(imageVector = Icons.Default.DateRange , contentDescription = "Today") },
             label = {}
         )
         NavigationBarItem(
@@ -99,7 +93,7 @@ fun BottomBar(navController : NavHostController, modifier: Modifier = Modifier) 
                 selectedNavigationIndex.intValue = 1
                 navController.navigate(Members)
             },
-            icon = { Icon(imageVector = Icons.Default.Home , contentDescription = "Members") },
+            icon = { Icon(imageVector = Icons.Default.Person , contentDescription = "Members") },
             label = {}
         )
     }
