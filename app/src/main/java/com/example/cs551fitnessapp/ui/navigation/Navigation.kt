@@ -217,36 +217,5 @@ fun BottomBar(
 
             }
         )
-
-
-        NavigationBarItem(
-
-            selected = selectedIndex.intValue == 2,
-
-            onClick = {
-
-                selectedIndex.intValue = 2
-
-                navController.navigate(PreferencesPage)
-
-            },
-
-            icon = {
-
-                Icon(
-
-                    Icons.Default.Settings,
-
-                    contentDescription = null
-
-                )
-            },
-
-            label = {
-
-                Text("Settings")
-
-            }
-        )
     }
 }

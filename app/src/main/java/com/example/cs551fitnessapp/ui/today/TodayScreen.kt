@@ -1,4 +1,5 @@
 package com.example.cs551fitnessapp.ui.today
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,7 +11,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Notifications
+
 import androidx.compose.material3.*
 
 import androidx.compose.runtime.*
@@ -27,99 +30,179 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.cs551fitnessapp.R
 
 
+/*
+DATA MODEL
+Represents one training session
+*/
 
 data class Session(
+
     val name: String,
+
     val start: String,
+
     val duration: String,
+
     val progress: String,
+
     val image: Int
+
 )
+
+
+
+/*
+MAIN SCREEN
+*/
 
 @Composable
 fun TodayScreen() {
 
-    var selectedDate by remember { mutableStateOf("24") }
+    var selectedDate by remember {
+
+        mutableStateOf("24")
+
+    }
+
 
     val sessions = listOf(
 
         Session(
+
             "Alexander Bennett",
+
             "10:00 AM",
+
             "1 hr",
+
             "2/10",
+
             R.drawable.profile1
+
         ),
 
+
         Session(
+
             "Jessica J.",
+
             "02:00 PM",
+
             "1 hr",
+
             "8/10",
+
             R.drawable.profile2
+
         ),
 
+
         Session(
+
             "Olivia Turner",
+
             "05:30 PM",
+
             "1 hr",
+
             "3/15",
+
             R.drawable.profile3
+
         ),
 
+
         Session(
+
             "Sophia M.",
+
             "07:00 PM",
+
             "2 hr",
+
             "4/10",
+
             R.drawable.profile4
+
         )
+
     )
 
-    Scaffold(
 
-        bottomBar = { BottomNavBar() }
+    Scaffold {
 
-    ) { padding ->
+            padding ->
+
 
         Column(
+
             modifier = Modifier
+
                 .padding(padding)
+
                 .fillMaxSize()
+
         ) {
+
 
             Header()
 
-            DateSelector(selectedDate) {
 
-                selectedDate = it
-            }
+            DateSelector(
+
+                selectedDate = selectedDate,
+
+                onDateSelected = {
+
+                    selectedDate = it
+
+                }
+
+            )
+
 
             LazyColumn {
+
 
                 items(sessions) {
 
                     SessionCard(it)
+
                 }
+
             }
+
         }
+
     }
+
 }
+
+
+
+/*
+TOP HEADER
+*/
 
 @Composable
 fun Header() {
 
+
     Row(
 
         modifier = Modifier
+
             .fillMaxWidth()
+
             .padding(16.dp),
 
+
         horizontalArrangement = Arrangement.SpaceBetween,
+
         verticalAlignment = Alignment.CenterVertically
+
     ) {
 
-        Icon(Icons.Default.ArrowBack, null)
 
         Text(
 
@@ -128,11 +211,27 @@ fun Header() {
             style = MaterialTheme.typography.titleLarge,
 
             fontWeight = FontWeight.Bold
+
         )
 
-        Icon(Icons.Default.Notifications, null)
+
+        Icon(
+
+            Icons.Default.Notifications,
+
+            contentDescription = null
+
+        )
+
     }
+
 }
+
+
+
+/*
+DATE SELECTOR ROW
+*/
 
 @Composable
 fun DateSelector(
@@ -140,23 +239,47 @@ fun DateSelector(
     selectedDate: String,
 
     onDateSelected: (String) -> Unit
+
 ) {
 
+
     val dates = listOf(
-        "21","22","23","24","25","26","27"
+
+        "21",
+
+        "22",
+
+        "23",
+
+        "24",
+
+        "25",
+
+        "26",
+
+        "27"
+
     )
+
 
     LazyRow(
 
         modifier = Modifier
+
             .fillMaxWidth()
+
             .background(Color(0xFFE3E8FF))
+
             .padding(12.dp),
 
+
         horizontalArrangement = Arrangement.spacedBy(10.dp)
+
     ) {
 
+
         items(dates) {
+
 
             DateItem(
 
@@ -167,11 +290,22 @@ fun DateSelector(
                 onClick = {
 
                     onDateSelected(it)
+
                 }
+
             )
+
         }
+
     }
+
 }
+
+
+
+/*
+SINGLE DATE ITEM
+*/
 
 @Composable
 fun DateItem(
@@ -181,13 +315,18 @@ fun DateItem(
     isSelected: Boolean,
 
     onClick: () -> Unit
+
 ) {
+
 
     Box(
 
         modifier = Modifier
+
             .clip(RoundedCornerShape(20.dp))
+
             .background(
+
 
                 if (isSelected)
 
@@ -196,22 +335,32 @@ fun DateItem(
                 else
 
                     Color.White
+
             )
+
             .padding(
 
                 horizontal = 18.dp,
 
                 vertical = 12.dp
+
             )
-            .clickable { onClick() }
+
+            .clickable {
+
+                onClick()
+
+            }
 
     ) {
+
 
         Text(
 
             day,
 
             color =
+
 
                 if (isSelected)
 
@@ -220,32 +369,60 @@ fun DateItem(
                 else
 
                     Color.Black
+
         )
+
     }
+
 }
 
+
+
+/*
+SESSION CARD
+*/
+
 @Composable
-fun SessionCard(session: Session) {
+fun SessionCard(
+
+    session: Session
+
+) {
+
 
     Card(
 
         modifier = Modifier
-            .padding(16.dp),
+
+            .padding(
+
+                horizontal = 16.dp,
+
+                vertical = 8.dp
+
+            ),
+
 
         shape = RoundedCornerShape(20.dp),
+
 
         colors = CardDefaults.cardColors(
 
             containerColor = Color(0xFFE3E8FF)
+
         )
+
     ) {
+
 
         Row(
 
             modifier = Modifier.padding(16.dp),
 
             verticalAlignment = Alignment.CenterVertically
+
         ) {
+
 
             Image(
 
@@ -255,17 +432,29 @@ fun SessionCard(session: Session) {
 
                 contentScale = ContentScale.Crop,
 
+
                 modifier = Modifier
+
                     .size(70.dp)
+
                     .clip(CircleShape)
+
             )
 
-            Spacer(modifier = Modifier.width(16.dp))
+
+            Spacer(
+
+                modifier = Modifier.width(16.dp)
+
+            )
+
 
             Column(
 
                 modifier = Modifier.weight(1f)
+
             ) {
+
 
                 Text(
 
@@ -274,13 +463,26 @@ fun SessionCard(session: Session) {
                     fontWeight = FontWeight.Bold,
 
                     color = Color(0xFF2962FF)
+
                 )
 
-                Text("Start : ${session.start}")
 
-                Text("Duration : ${session.duration}")
+                Text(
+
+                    "Start : ${session.start}"
+
+                )
+
+
+                Text(
+
+                    "Duration : ${session.duration}"
+
+                )
+
 
                 Row {
+
 
                     Button(
 
@@ -288,10 +490,21 @@ fun SessionCard(session: Session) {
 
                     ) {
 
-                        Text("Info")
+                        Text(
+
+                            "Info"
+
+                        )
+
                     }
 
-                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Spacer(
+
+                        modifier = Modifier.width(8.dp)
+
+                    )
+
 
                     IconButton(
 
@@ -299,65 +512,59 @@ fun SessionCard(session: Session) {
 
                     ) {
 
-                        Icon(Icons.Default.DateRange, null)
+
+                        Icon(
+
+                            Icons.Default.DateRange,
+
+                            contentDescription = null
+
+                        )
+
                     }
+
                 }
+
             }
+
 
             AssistChip(
 
                 onClick = { },
 
+
                 label = {
+
 
                     Text(
 
                         "session ${session.progress}"
+
                     )
+
                 }
+
             )
+
         }
+
     }
+
 }
 
-@Composable
-fun BottomNavBar() {
 
-    NavigationBar {
 
-        NavigationBarItem(
-            selected = false,
-            onClick = { },
-            icon = { Icon(Icons.Default.Home, null) },
-            label = { Text("Home") }
-        )
-
-        NavigationBarItem(
-            selected = true,
-            onClick = { },
-            icon = { Icon(Icons.Default.DateRange, null) },
-            label = { Text("Today") }
-        )
-
-        NavigationBarItem(
-            selected = false,
-            onClick = { },
-            icon = { Icon(Icons.Default.Person, null) },
-            label = { Text("Member") }
-        )
-
-        NavigationBarItem(
-            selected = false,
-            onClick = { },
-            icon = { Icon(Icons.Default.Settings, null) },
-            label = { Text("Settings") }
-        )
-    }
-}
+/*
+PREVIEW
+*/
 
 @Preview(showBackground = true)
+
 @Composable
+
 fun PreviewToday() {
 
+
     TodayScreen()
+
 }
