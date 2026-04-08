@@ -29,7 +29,7 @@ import com.example.cs551fitnessapp.ui.screens.TodayScreen
 fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifier) {
     NavHost(navController, startDestination = Today) {
         composable<Members> {
-            MembersScreen()
+            MembersScreen(modifier = modifier)
         }
         composable<Today> {
             TodayScreen()

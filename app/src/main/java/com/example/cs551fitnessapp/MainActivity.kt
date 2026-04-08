@@ -36,42 +36,23 @@ class MainActivity : ComponentActivity() {
             CS551FitnessAppTheme {
 
                 val navController = rememberNavController()
-
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
-
-                val canGoBack =
-                    navBackStackEntry != null &&
-                            navController.previousBackStackEntry != null
-
-
+                val canGoBack = navBackStackEntry != null && navController.previousBackStackEntry != null
                 Scaffold(
-
                     modifier = Modifier.fillMaxSize(),
-
                     topBar = {
-
                         TopBar(
                             navController = navController,
                             showBackIcon = canGoBack
                         )
-
                     },
-
                     bottomBar = {
-
                         BottomBar(navController)
-
                     }
-
                 ) { innerPadding ->
-
-
                     AppNavHost(
-
                         navController = navController,
-
                         modifier = Modifier.padding(innerPadding)
-
                     )
 
                 }
