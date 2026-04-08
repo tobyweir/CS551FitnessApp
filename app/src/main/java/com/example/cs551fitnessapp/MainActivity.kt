@@ -19,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 
 import com.example.cs551fitnessapp.ui.navigation.AppNavHost
 import com.example.cs551fitnessapp.ui.navigation.BottomBar
+import com.example.cs551fitnessapp.ui.navigation.TopBar
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 
 
@@ -47,13 +48,18 @@ class MainActivity : ComponentActivity() {
 
                     modifier = Modifier.fillMaxSize(),
 
+                    topBar = {
+
+                        TopBar(
+                            navController = navController,
+                            showBackIcon = canGoBack
+                        )
+
+                    },
+
                     bottomBar = {
 
-                        BottomBar(
-
-                            navController = navController
-
-                        )
+                        BottomBar(navController)
 
                     }
 

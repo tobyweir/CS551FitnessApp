@@ -3,10 +3,12 @@ package com.example.cs551fitnessapp.ui.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 
 import androidx.compose.material3.*
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -20,8 +22,9 @@ import androidx.navigation.compose.composable
 import com.example.cs551fitnessapp.ui.today.TodayScreen
 
 
+
 /*
-NAVIGATION HOST
+NAV HOST
 */
 
 @Composable
@@ -60,7 +63,9 @@ fun AppNavHost(
             Text("Settings screen")
 
         }
+
     }
+
 }
 
 
@@ -83,7 +88,7 @@ fun TopBar(
 
         title = {
 
-            Text("Fitness App")
+            Text("Today")
 
         },
 
@@ -108,8 +113,11 @@ fun TopBar(
                         contentDescription = null
 
                     )
+
                 }
+
             }
+
         },
 
         actions = {
@@ -131,8 +139,11 @@ fun TopBar(
                     contentDescription = null
 
                 )
+
             }
+
         }
+
     )
 }
 
@@ -172,12 +183,10 @@ fun BottomBar(
             icon = {
 
                 Icon(
-
                     Icons.Default.DateRange,
-
                     contentDescription = null
-
                 )
+
             },
 
             label = {
@@ -185,6 +194,7 @@ fun BottomBar(
                 Text("Today")
 
             }
+
         )
 
 
@@ -203,12 +213,10 @@ fun BottomBar(
             icon = {
 
                 Icon(
-
                     Icons.Default.Person,
-
                     contentDescription = null
-
                 )
+
             },
 
             label = {
@@ -216,6 +224,9 @@ fun BottomBar(
                 Text("Members")
 
             }
+
         )
+
     }
+
 }

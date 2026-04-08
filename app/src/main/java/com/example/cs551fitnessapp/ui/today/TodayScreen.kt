@@ -4,19 +4,21 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Notifications
 
 import androidx.compose.material3.*
 
 import androidx.compose.runtime.*
+
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,15 +27,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+
 import androidx.compose.ui.tooling.preview.Preview
 
 import com.example.cs551fitnessapp.R
 
 
-/*
-DATA MODEL
-Represents one training session
-*/
 
 data class Session(
 
@@ -51,10 +50,6 @@ data class Session(
 
 
 
-/*
-MAIN SCREEN
-*/
-
 @Composable
 fun TodayScreen() {
 
@@ -68,107 +63,67 @@ fun TodayScreen() {
     val sessions = listOf(
 
         Session(
-
             "Alexander Bennett",
-
             "10:00 AM",
-
             "1 hr",
-
             "2/10",
-
             R.drawable.profile1
-
         ),
 
-
         Session(
-
             "Jessica J.",
-
             "02:00 PM",
-
             "1 hr",
-
             "8/10",
-
             R.drawable.profile2
-
         ),
 
-
         Session(
-
             "Olivia Turner",
-
             "05:30 PM",
-
             "1 hr",
-
             "3/15",
-
             R.drawable.profile3
-
         ),
 
-
         Session(
-
             "Sophia M.",
-
             "07:00 PM",
-
             "2 hr",
-
             "4/10",
-
             R.drawable.profile4
-
         )
 
     )
 
 
-    Scaffold {
+    Column(
 
-            padding ->
+        modifier = Modifier
 
+            .fillMaxSize()
 
-        Column(
-
-            modifier = Modifier
-
-                .padding(padding)
-
-                .fillMaxSize()
-
-        ) {
+    ) {
 
 
-            Header()
+        DateSelector(
+
+            selectedDate = selectedDate,
+
+            onDateSelected = {
+
+                selectedDate = it
+
+            }
+
+        )
 
 
-            DateSelector(
+        LazyColumn {
 
-                selectedDate = selectedDate,
+            items(sessions) {
 
-                onDateSelected = {
-
-                    selectedDate = it
-
-                }
-
-            )
-
-
-            LazyColumn {
-
-
-                items(sessions) {
-
-                    SessionCard(it)
-
-                }
+                SessionCard(it)
 
             }
 
@@ -180,59 +135,6 @@ fun TodayScreen() {
 
 
 
-/*
-TOP HEADER
-*/
-
-@Composable
-fun Header() {
-
-
-    Row(
-
-        modifier = Modifier
-
-            .fillMaxWidth()
-
-            .padding(16.dp),
-
-
-        horizontalArrangement = Arrangement.SpaceBetween,
-
-        verticalAlignment = Alignment.CenterVertically
-
-    ) {
-
-
-        Text(
-
-            "Today",
-
-            style = MaterialTheme.typography.titleLarge,
-
-            fontWeight = FontWeight.Bold
-
-        )
-
-
-        Icon(
-
-            Icons.Default.Notifications,
-
-            contentDescription = null
-
-        )
-
-    }
-
-}
-
-
-
-/*
-DATE SELECTOR ROW
-*/
-
 @Composable
 fun DateSelector(
 
@@ -242,25 +144,9 @@ fun DateSelector(
 
 ) {
 
-
     val dates = listOf(
-
-        "21",
-
-        "22",
-
-        "23",
-
-        "24",
-
-        "25",
-
-        "26",
-
-        "27"
-
+        "21","22","23","24","25","26","27"
     )
-
 
     LazyRow(
 
@@ -270,16 +156,13 @@ fun DateSelector(
 
             .background(Color(0xFFE3E8FF))
 
-            .padding(12.dp),
-
+            .padding(vertical = 10.dp, horizontal = 12.dp),
 
         horizontalArrangement = Arrangement.spacedBy(10.dp)
 
     ) {
 
-
         items(dates) {
-
 
             DateItem(
 
@@ -303,10 +186,6 @@ fun DateSelector(
 
 
 
-/*
-SINGLE DATE ITEM
-*/
-
 @Composable
 fun DateItem(
 
@@ -318,7 +197,6 @@ fun DateItem(
 
 ) {
 
-
     Box(
 
         modifier = Modifier
@@ -327,13 +205,9 @@ fun DateItem(
 
             .background(
 
-
                 if (isSelected)
-
                     Color(0xFF2962FF)
-
                 else
-
                     Color.White
 
             )
@@ -354,20 +228,15 @@ fun DateItem(
 
     ) {
 
-
         Text(
 
             day,
 
             color =
 
-
                 if (isSelected)
-
                     Color.White
-
                 else
-
                     Color.Black
 
         )
@@ -378,10 +247,6 @@ fun DateItem(
 
 
 
-/*
-SESSION CARD
-*/
-
 @Composable
 fun SessionCard(
 
@@ -389,31 +254,21 @@ fun SessionCard(
 
 ) {
 
-
     Card(
 
         modifier = Modifier
 
-            .padding(
-
-                horizontal = 16.dp,
-
-                vertical = 8.dp
-
-            ),
-
+            .padding(horizontal = 16.dp, vertical = 8.dp),
 
         shape = RoundedCornerShape(20.dp),
 
-
         colors = CardDefaults.cardColors(
 
-            containerColor = Color(0xFFE3E8FF)
+            containerColor = Color(0xFFDCE3F3)
 
         )
 
     ) {
-
 
         Row(
 
@@ -431,7 +286,6 @@ fun SessionCard(
                 contentDescription = null,
 
                 contentScale = ContentScale.Crop,
-
 
                 modifier = Modifier
 
@@ -467,18 +321,10 @@ fun SessionCard(
                 )
 
 
-                Text(
-
-                    "Start : ${session.start}"
-
-                )
+                Text("Start : ${session.start}")
 
 
-                Text(
-
-                    "Duration : ${session.duration}"
-
-                )
+                Text("Duration : ${session.duration}")
 
 
                 Row {
@@ -486,15 +332,17 @@ fun SessionCard(
 
                     Button(
 
-                        onClick = { }
+                        onClick = { },
+
+                        colors = ButtonDefaults.buttonColors(
+
+                            containerColor = Color(0xFF5C6BC0)
+
+                        )
 
                     ) {
 
-                        Text(
-
-                            "Info"
-
-                        )
+                        Text("Info")
 
                     }
 
@@ -511,7 +359,6 @@ fun SessionCard(
                         onClick = { }
 
                     ) {
-
 
                         Icon(
 
@@ -532,9 +379,7 @@ fun SessionCard(
 
                 onClick = { },
 
-
                 label = {
-
 
                     Text(
 
@@ -554,16 +399,11 @@ fun SessionCard(
 
 
 
-/*
-PREVIEW
-*/
-
 @Preview(showBackground = true)
 
 @Composable
 
 fun PreviewToday() {
-
 
     TodayScreen()
 
