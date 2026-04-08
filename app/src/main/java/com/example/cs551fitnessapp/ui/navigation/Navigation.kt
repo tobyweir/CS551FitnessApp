@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.cs551fitnessapp.ui.screens.MembersScreen
 
 import com.example.cs551fitnessapp.ui.screens.TodayScreen
 
@@ -28,7 +29,7 @@ import com.example.cs551fitnessapp.ui.screens.TodayScreen
 fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifier) {
     NavHost(navController, startDestination = Today) {
         composable<Members> {
-            Text(text = "members")
+            MembersScreen(modifier = modifier)
         }
         composable<Today> {
             TodayScreen()
