@@ -1,4 +1,4 @@
-package com.example.cs551fitnessapp.ui.today
+package com.example.cs551fitnessapp.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
