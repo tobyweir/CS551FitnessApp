@@ -74,6 +74,36 @@ val members = listOf<Member>(
         name ="Major Smith" ,
         joinDate = Date(2026 , 3 , 17) ,
         endDate = null ,
+        status = "Active",),
+    Member(id = 3,
+        name ="John Smith" ,
+        joinDate = Date(2026 , 3 , 17) ,
+        endDate = null ,
+        status = "Active",),
+    Member( id = 4,
+        name ="Mike Smith" ,
+        joinDate = Date(2026 , 3 , 17) ,
+        endDate = null ,
+        status = "Active",),
+    Member(id = 5,
+        name ="Major Smith" ,
+        joinDate = Date(2026 , 3 , 17) ,
+        endDate = null ,
+        status = "Active",),
+    Member(id = 6,
+        name ="John Smith" ,
+        joinDate = Date(2026 , 3 , 17) ,
+        endDate = null ,
+        status = "Active",),
+    Member( id = 7,
+        name ="Mike Smith" ,
+        joinDate = Date(2026 , 3 , 17) ,
+        endDate = null ,
+        status = "Active",),
+    Member(id = 8,
+        name ="Major Smith" ,
+        joinDate = Date(2026 , 3 , 17) ,
+        endDate = null ,
         status = "Active",)
 )
 
@@ -130,8 +160,9 @@ fun SearchBar(currentSearch : String = "" , updateSearchQuery : () -> Unit , run
                 },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Search
                 ),
-                keyboardActions = KeyboardActions(onDone = {
+                keyboardActions = KeyboardActions(onSearch = {
                     runSearch()
                     focusManager.clearFocus()
                 })
