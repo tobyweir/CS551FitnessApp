@@ -77,10 +77,6 @@ fun MemberInfoScreen(
 
 
 
-/*
-PROFILE CARD
-*/
-
 @Composable
 fun ProfileCard(member: MemberUiState) {
 
@@ -103,10 +99,8 @@ fun ProfileCard(member: MemberUiState) {
 
 
             Box(
-
                 modifier = Modifier
                     .size(90.dp)
-
                     .background(
                         Color.LightGray,
                         CircleShape
@@ -117,15 +111,11 @@ fun ProfileCard(member: MemberUiState) {
             Spacer(modifier = Modifier.width(16.dp))
 
 
-
             Column {
 
                 Text(
-
                     text = member.name,
-
                     fontSize = 20.sp,
-
                     fontWeight = FontWeight.Bold
                 )
 
@@ -134,9 +124,7 @@ fun ProfileCard(member: MemberUiState) {
 
 
                 Text(
-
                     text = "Member information",
-
                     color = Color.Gray
                 )
             }
@@ -146,10 +134,6 @@ fun ProfileCard(member: MemberUiState) {
 
 
 
-/*
-STATS (placeholder for now)
-*/
-
 @Composable
 fun StatsSection() {
 
@@ -157,7 +141,6 @@ fun StatsSection() {
 
         modifier = Modifier
             .fillMaxWidth()
-
             .padding(horizontal = 20.dp, vertical = 10.dp),
 
         horizontalArrangement = Arrangement.SpaceBetween
@@ -197,10 +180,6 @@ fun StatsSection() {
 
 
 
-/*
-UPCOMING
-*/
-
 @Composable
 fun UpcomingSection() {
 
@@ -210,10 +189,6 @@ fun UpcomingSection() {
 }
 
 
-
-/*
-PREVIOUS
-*/
 
 @Composable
 fun PreviousSection() {
@@ -226,10 +201,6 @@ fun PreviousSection() {
 }
 
 
-
-/*
-SECTION TITLE
-*/
 
 @Composable
 fun SectionTitle(text: String) {
@@ -253,10 +224,6 @@ fun SectionTitle(text: String) {
 
 
 
-/*
-SESSION ROW
-*/
-
 @Composable
 fun SessionRow(
 
@@ -270,7 +237,6 @@ fun SessionRow(
 
         modifier = Modifier
             .fillMaxWidth()
-
             .padding(
                 horizontal = 20.dp,
                 vertical = 12.dp
@@ -279,10 +245,8 @@ fun SessionRow(
 
 
         Box(
-
             modifier = Modifier
                 .size(40.dp)
-
                 .background(
                     Color(0xFF2E5BFF),
                     CircleShape
@@ -293,9 +257,7 @@ fun SessionRow(
         Spacer(modifier = Modifier.width(16.dp))
 
 
-
         Column(
-
             modifier = Modifier.weight(1f)
         ) {
 
@@ -310,7 +272,6 @@ fun SessionRow(
                 fontSize = 13.sp
             )
         }
-
 
 
         Text(">")

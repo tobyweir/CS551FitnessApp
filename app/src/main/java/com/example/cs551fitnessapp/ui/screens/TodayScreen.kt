@@ -28,7 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 
 import com.example.cs551fitnessapp.R
 
@@ -37,13 +37,9 @@ import com.example.cs551fitnessapp.R
 data class Session(
 
     val name: String,
-
     val start: String,
-
     val duration: String,
-
     val progress: String,
-
     val image: Int
 
 )
@@ -51,12 +47,12 @@ data class Session(
 
 
 @Composable
-fun TodayScreen() {
+fun TodayScreen(
+    navController: NavController
+) {
 
     var selectedDate by remember {
-
         mutableStateOf("24")
-
     }
 
 
@@ -93,27 +89,19 @@ fun TodayScreen() {
             "4/10",
             R.drawable.profile4
         )
-
     )
 
 
     Column(
-
-        modifier = Modifier
-
-            .fillMaxSize()
-
+        modifier = Modifier.fillMaxSize()
     ) {
-
 
         DateSelector(
 
             selectedDate = selectedDate,
 
             onDateSelected = {
-
                 selectedDate = it
-
             }
 
         )
@@ -123,8 +111,10 @@ fun TodayScreen() {
 
             items(sessions) {
 
-                SessionCard(it)
-
+                SessionCard(
+                    session = it,
+                    navController = navController
+                )
             }
 
         }
@@ -134,6 +124,10 @@ fun TodayScreen() {
 }
 
 
+
+/*
+DATE SELECTOR
+*/
 
 @Composable
 fun DateSelector(
@@ -147,6 +141,7 @@ fun DateSelector(
     val dates = listOf(
         "21","22","23","24","25","26","27"
     )
+
 
     LazyRow(
 
@@ -171,9 +166,7 @@ fun DateSelector(
                 isSelected = it == selectedDate,
 
                 onClick = {
-
                     onDateSelected(it)
-
                 }
 
             )
@@ -185,6 +178,10 @@ fun DateSelector(
 }
 
 
+
+/*
+DATE ITEM
+*/
 
 @Composable
 fun DateItem(
@@ -213,17 +210,12 @@ fun DateItem(
             )
 
             .padding(
-
                 horizontal = 18.dp,
-
                 vertical = 12.dp
-
             )
 
             .clickable {
-
                 onClick()
-
             }
 
     ) {
@@ -233,7 +225,6 @@ fun DateItem(
             day,
 
             color =
-
                 if (isSelected)
                     Color.White
                 else
@@ -247,10 +238,16 @@ fun DateItem(
 
 
 
+/*
+SESSION CARD
+*/
+
 @Composable
 fun SessionCard(
 
-    session: Session
+    session: Session,
+
+    navController: NavController
 
 ) {
 
@@ -297,16 +294,12 @@ fun SessionCard(
 
 
             Spacer(
-
                 modifier = Modifier.width(16.dp)
-
             )
 
 
             Column(
-
                 modifier = Modifier.weight(1f)
-
             ) {
 
 
@@ -332,7 +325,14 @@ fun SessionCard(
 
                     Button(
 
-                        onClick = { },
+                        onClick = {
+
+                            navController.navigate(
+
+                                "member_info/${session.name}"
+
+                            )
+                        },
 
                         colors = ButtonDefaults.buttonColors(
 
@@ -348,9 +348,7 @@ fun SessionCard(
 
 
                     Spacer(
-
                         modifier = Modifier.width(8.dp)
-
                     )
 
 
@@ -394,17 +392,5 @@ fun SessionCard(
         }
 
     }
-
-}
-
-
-
-@Preview(showBackground = true)
-
-@Composable
-
-fun PreviewToday() {
-
-    TodayScreen()
 
 }
