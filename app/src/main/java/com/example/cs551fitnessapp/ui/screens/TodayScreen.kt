@@ -67,7 +67,7 @@ fun TodayScreen() {
             "10:00 AM",
             "1 hr",
             "2/10",
-            R.drawable.profile1
+            R.drawable.profile5
         ),
 
         Session(
@@ -75,7 +75,7 @@ fun TodayScreen() {
             "02:00 PM",
             "1 hr",
             "8/10",
-            R.drawable.profile2
+            R.drawable.profile6
         ),
 
         Session(
@@ -83,7 +83,7 @@ fun TodayScreen() {
             "05:30 PM",
             "1 hr",
             "3/15",
-            R.drawable.profile3
+            R.drawable.profile7
         ),
 
         Session(
@@ -91,7 +91,7 @@ fun TodayScreen() {
             "07:00 PM",
             "2 hr",
             "4/10",
-            R.drawable.profile4
+            R.drawable.profile8
         )
 
     )
