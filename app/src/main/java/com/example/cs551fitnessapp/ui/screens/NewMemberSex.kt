@@ -3,8 +3,10 @@ package com.example.cs551fitnessapp.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -12,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,6 +37,15 @@ import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 
 @Composable
 fun NewMemberSexScreen (modifier: Modifier = Modifier) {
+    Column(
+        modifier
+            .padding(20.dp)
+            .fillMaxSize()
+    ) {
+        Description()
+
+        SexButton()
+    }
 
 }
 
@@ -41,7 +53,8 @@ fun NewMemberSexScreen (modifier: Modifier = Modifier) {
 fun Description (modifier: Modifier = Modifier) {
     Column(modifier = Modifier) {
         Text(
-            text = stringResource(R.string.tell_us_about_yourself)
+            text = stringResource(R.string.tell_us_about_yourself),
+            style = MaterialTheme.typography.displayMedium
         )
         Text(
             text = stringResource(R.string.Sample_Text)
@@ -67,15 +80,11 @@ fun SexButton (modifier: Modifier = Modifier) {
     var isToggledM by rememberSaveable { mutableStateOf(false) }
     var isToggledF by rememberSaveable { mutableStateOf(false) }
     Row(
-        modifier = Modifier
-            .padding(24.dp)
-
+        modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        Column(
-            modifier
-                .padding(horizontal = 10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        Column() {
 
             IconButton(
                 onClick = {
@@ -89,6 +98,7 @@ fun SexButton (modifier: Modifier = Modifier) {
                     contentDescription = if (isToggledM) "Male Button Filled" else "Male Button",
                     contentScale = ContentScale.Inside,
                     modifier = if (isToggledM) circleModFilled else circleMod
+
                 )
             }
             Text(
@@ -96,11 +106,7 @@ fun SexButton (modifier: Modifier = Modifier) {
             )
         }
 
-        Column(
-            modifier
-                .padding(horizontal = 10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        Column() {
 
             IconButton(
                 onClick = {
@@ -147,6 +153,7 @@ fun SubmissionButtons (modifier: Modifier = Modifier) {
 fun ButtonPreview() {
     CS551FitnessAppTheme() {
         //SexButton()
-        SubmissionButtons()
+        //SubmissionButtons()
+        NewMemberSexScreen()
     }
 }
