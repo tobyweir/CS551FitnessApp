@@ -90,7 +90,7 @@ class ReminderWorker(private val context: Context, workerParams: WorkerParameter
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent)   // ← tap action
             .setAutoCancel(true)
-            .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources, R.drawable.dumbbell_blue))
+            .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_notification)) //error finding dumbell image , quick fix
             .build()
 
         manager.notify(1001, notification)
