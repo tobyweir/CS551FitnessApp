@@ -111,7 +111,7 @@ fun MemberHeader(
             .padding(
                 start = 16.dp,
                 end = 16.dp,
-                top = 40.dp,   // pushes card down from TopBar
+                top = 20.dp,   // increased spacing from top bar
                 bottom = 8.dp
             )
             .fillMaxWidth()
@@ -128,7 +128,7 @@ fun MemberHeader(
 
                 Image(
 
-                    painter = painterResource(R.drawable.profile2),
+                    painter = painterResource(member.image),
 
                     contentDescription = null,
 

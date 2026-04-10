@@ -18,6 +18,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 
+import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.ui.screens.MembersScreen
 import com.example.cs551fitnessapp.ui.screens.TodayScreen
 import com.example.cs551fitnessapp.ui.screens.MemberInfoScreen
@@ -42,7 +43,7 @@ fun AppNavHost(
         }
 
         composable("members") {
-            MembersScreen(modifier = modifier)
+            MembersScreen(navController)
         }
 
         composable("preferences") {
@@ -50,7 +51,7 @@ fun AppNavHost(
         }
 
         composable(
-            route = "member_info/{name}"
+            route = "member_info/{name}/{image}"
         ) { backStackEntry ->
 
             val name =
@@ -58,11 +59,26 @@ fun AppNavHost(
                     ?.getString("name")
                     ?: ""
 
+            val image =
+                backStackEntry.arguments
+                    ?.getString("image")
+                    ?.toIntOrNull()
+                    ?: R.drawable.profile1
+
+
             MemberInfoScreen(
-                member = MemberUiState(name = name)
+
+                member = MemberUiState(
+                    name = name,
+                    image = image
+                )
+
             )
+
         }
+
     }
+
 }
 
 
@@ -88,20 +104,22 @@ fun TopBar(
         actions = {
 
             IconButton(
-
                 onClick = {
                     navController.navigate("preferences")
                 }
-
             ) {
 
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = "Settings"
                 )
+
             }
+
         }
+
     )
+
 }
 
 
@@ -122,8 +140,11 @@ fun BackNavigateIcon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Back"
             )
+
         }
+
     }
+
 }
 
 
@@ -150,14 +171,18 @@ fun BottomBar(
                 selectedNavigationIndex.intValue = 0
 
                 navController.navigate("today")
+
             },
 
             icon = {
+
                 Icon(
                     Icons.Default.DateRange,
                     contentDescription = "Today"
                 )
+
             }
+
         )
 
 
@@ -172,14 +197,20 @@ fun BottomBar(
                 selectedNavigationIndex.intValue = 1
 
                 navController.navigate("members")
+
             },
 
             icon = {
+
                 Icon(
                     Icons.Default.Person,
                     contentDescription = "Members"
                 )
+
             }
+
         )
+
     }
+
 }
