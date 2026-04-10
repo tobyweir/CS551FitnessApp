@@ -1,8 +1,8 @@
 package com.example.cs551fitnessapp.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,6 +10,7 @@ import androidx.compose.foundation.verticalScroll
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DateRange
 
 import androidx.compose.material3.*
 
@@ -17,14 +18,18 @@ import androidx.compose.runtime.Composable
 
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+
 import androidx.compose.ui.text.font.FontWeight
+
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-
+import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.ui.viewmodels.states.MemberUiState
 
 
@@ -43,7 +48,7 @@ fun MemberInfoScreen(
                 .verticalScroll(rememberScrollState())
         ) {
 
-            ProfileCard(member)
+            MemberHeader(member)
 
             StatsSection()
 
@@ -51,7 +56,7 @@ fun MemberInfoScreen(
 
             PreviousSection()
 
-            Spacer(modifier = Modifier.height(100.dp))
+            Spacer(modifier = Modifier.height(90.dp))
         }
 
 
@@ -60,12 +65,21 @@ fun MemberInfoScreen(
 
             onClick = { },
 
+            containerColor = Color(0xFFD7FF00),
+
             icon = {
+
                 Icon(Icons.Default.Add, null)
+
             },
 
             text = {
-                Text("Session")
+
+                Text(
+                    "Session",
+                    fontWeight = FontWeight.Bold
+                )
+
             },
 
             modifier = Modifier
@@ -77,60 +91,205 @@ fun MemberInfoScreen(
 
 
 
+
+
+
 @Composable
-fun ProfileCard(member: MemberUiState) {
+fun MemberHeader(
+    member: MemberUiState
+) {
 
     Card(
 
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(30.dp),
 
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFFDDE3F5)
         ),
 
         modifier = Modifier
-            .padding(16.dp)
+            .padding(
+                start = 16.dp,
+                end = 16.dp,
+                top = 40.dp,   // pushes card down from TopBar
+                bottom = 8.dp
+            )
             .fillMaxWidth()
+
     ) {
 
-        Row(
-            modifier = Modifier.padding(16.dp)
+        Column(
+
+            modifier = Modifier.padding(20.dp)
+
         ) {
 
+            Row {
 
-            Box(
-                modifier = Modifier
-                    .size(90.dp)
-                    .background(
-                        Color.LightGray,
-                        CircleShape
-                    )
-            )
+                Image(
 
+                    painter = painterResource(R.drawable.profile2),
 
-            Spacer(modifier = Modifier.width(16.dp))
+                    contentDescription = null,
 
+                    contentScale = ContentScale.Crop,
 
-            Column {
+                    modifier = Modifier
+                        .size(95.dp)
+                        .clip(CircleShape)
 
-                Text(
-                    text = member.name,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
                 )
 
 
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.width(16.dp))
 
+
+                Column {
+
+                    AssistChip(
+
+                        onClick = { },
+
+                        label = {
+
+                            Text("Lose weight")
+
+                        }
+
+                    )
+
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+
+                    Card(
+
+                        shape = RoundedCornerShape(14.dp),
+
+                        colors = CardDefaults.cardColors(
+
+                            containerColor = Color(0xFF2E5BFF)
+
+                        )
+
+                    ) {
+
+                        Text(
+
+                            text = "Info : Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+
+                            color = Color.White,
+
+                            modifier = Modifier.padding(12.dp),
+
+                            fontSize = 13.sp
+
+                        )
+                    }
+
+                }
+
+            }
+
+
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+
+            Card(
+
+                shape = RoundedCornerShape(50),
+
+                colors = CardDefaults.cardColors(
+
+                    containerColor = Color.White
+
+                ),
+
+                modifier = Modifier.fillMaxWidth()
+
+            ) {
 
                 Text(
-                    text = "Member information",
-                    color = Color.Gray
+
+                    text = member.name,
+
+                    modifier = Modifier.padding(12.dp),
+
+                    color = Color(0xFF2E5BFF),
+
+                    fontWeight = FontWeight.Bold
+
                 )
             }
+
+
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+
+            Row(
+
+                verticalAlignment = Alignment.CenterVertically
+
+            ) {
+
+                Icon(
+
+                    Icons.Default.DateRange,
+
+                    contentDescription = null,
+
+                    tint = Color(0xFF2E5BFF)
+
+                )
+
+
+                Spacer(modifier = Modifier.width(6.dp))
+
+
+                Text(
+
+                    "Sat 5 Jan 2026 / 9:00AM",
+
+                    color = Color.Gray
+
+                )
+
+            }
+
+
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+
+            Button(
+
+                onClick = { },
+
+                colors = ButtonDefaults.buttonColors(
+
+                    containerColor = Color(0xFF2E5BFF)
+
+                )
+
+            ) {
+
+                Icon(Icons.Default.DateRange, null)
+
+                Spacer(modifier = Modifier.width(6.dp))
+
+                Text("Schedule")
+
+            }
+
         }
+
     }
+
 }
+
+
 
 
 
@@ -141,9 +300,10 @@ fun StatsSection() {
 
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 10.dp),
+            .padding(horizontal = 24.dp, vertical = 10.dp),
 
         horizontalArrangement = Arrangement.SpaceBetween
+
     ) {
 
         Column {
@@ -153,11 +313,13 @@ fun StatsSection() {
                 color = Color.Gray
             )
 
+
             Text(
-                "0",
-                fontSize = 26.sp,
+                "17.50",
+                fontSize = 28.sp,
                 fontWeight = FontWeight.Bold
             )
+
         }
 
 
@@ -165,18 +327,25 @@ fun StatsSection() {
         Column {
 
             Text(
-                "Sessions",
+                "Session",
                 color = Color.Gray
             )
 
+
             Text(
-                "0 / 0",
-                fontSize = 26.sp,
+                "18 / 20",
+                fontSize = 28.sp,
                 fontWeight = FontWeight.Bold
             )
+
         }
+
     }
 }
+
+
+
+
 
 
 
@@ -185,8 +354,15 @@ fun UpcomingSection() {
 
     SectionTitle("Upcoming")
 
-    SessionRow("Session", "60 mins", "date")
+    SessionRow(
+        title = "Cardio Session",
+        duration = "60 mins",
+        date = "5 Jan 2026"
+    )
+
 }
+
+
 
 
 
@@ -195,10 +371,22 @@ fun PreviousSection() {
 
     SectionTitle("Previous Session")
 
-    SessionRow("Session", "45 mins", "date")
+    SessionRow(
+        title = "Strength Session",
+        duration = "30 mins",
+        date = "30 Dec 2025"
+    )
 
-    SessionRow("Session", "30 mins", "date")
+
+    SessionRow(
+        title = "Mixed",
+        duration = "90 mins",
+        date = "25 Dec 2025"
+    )
+
 }
+
+
 
 
 
@@ -219,42 +407,59 @@ fun SectionTitle(text: String) {
         ),
 
         color = Color(0xFF2E5BFF)
+
     )
 }
 
 
 
+
+
+
+
 @Composable
 fun SessionRow(
-
     title: String,
     duration: String,
     date: String
-
 ) {
 
     Row(
 
         modifier = Modifier
             .fillMaxWidth()
-            .padding(
-                horizontal = 20.dp,
-                vertical = 12.dp
-            )
+            .padding(horizontal = 20.dp, vertical = 14.dp),
+
+        verticalAlignment = Alignment.CenterVertically
+
     ) {
 
 
         Box(
+
             modifier = Modifier
-                .size(40.dp)
+                .size(46.dp)
                 .background(
                     Color(0xFF2E5BFF),
                     CircleShape
-                )
-        )
+                ),
+
+            contentAlignment = Alignment.Center
+
+        ) {
+
+            Icon(
+                Icons.Default.DateRange,
+                contentDescription = null,
+                tint = Color.White
+            )
+
+        }
+
 
 
         Spacer(modifier = Modifier.width(16.dp))
+
 
 
         Column(
@@ -262,18 +467,27 @@ fun SessionRow(
         ) {
 
             Text(
+
                 title,
                 fontWeight = FontWeight.Bold
             )
+
 
             Text(
                 "$duration • $date",
                 color = Color.Gray,
                 fontSize = 13.sp
             )
+
         }
 
 
-        Text(">")
+
+        Text(
+            ">",
+            fontSize = 18.sp,
+            color = Color.Gray
+        )
+
     }
 }
