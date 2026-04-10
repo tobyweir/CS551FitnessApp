@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -29,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cs551fitnessapp.R
@@ -64,13 +67,13 @@ fun Description (modifier: Modifier = Modifier) {
 
 val circleMod = Modifier
     .clip(CircleShape)
-    .size(50.dp)
+    .size(100.dp)
     .border(4.dp,Color.LightGray,CircleShape)
     .background(Color.LightGray)
 
 val circleModFilled = Modifier
     .clip(CircleShape)
-    .size(50.dp)
+    .size(100.dp)
     .border(4.dp,Color.DarkGray,CircleShape)
     .background(Color.DarkGray)
 
@@ -90,7 +93,10 @@ fun SexButton (modifier: Modifier = Modifier) {
                 onClick = {
                     isToggledM = !isToggledM
                     if (isToggledF) isToggledM = false
-                }
+                },
+                modifier
+                    .height(100.dp)
+                    .width(100.dp)
             ) {
                 // Attribution for readme: <a href="https://www.flaticon.com/free-icons/male" title="male icons">Male icons created by smashingstocks - Flaticon</a>
                 Image(
@@ -102,7 +108,10 @@ fun SexButton (modifier: Modifier = Modifier) {
                 )
             }
             Text(
-                text = "Male"
+                text = "Male",
+                modifier
+                    .align(Alignment.CenterHorizontally)
+
             )
         }
 
@@ -112,7 +121,9 @@ fun SexButton (modifier: Modifier = Modifier) {
                 onClick = {
                     isToggledF = !isToggledF
                     if (isToggledM) isToggledF = false
-                }
+                }, modifier
+                    .height(100.dp)
+                    .width(100.dp)
             ) {
                 // Attribution for readme: <a href="https://www.flaticon.com/free-icons/woman" title="woman icons">Woman icons created by Freepik - Flaticon</a>
                 Image(
@@ -123,7 +134,9 @@ fun SexButton (modifier: Modifier = Modifier) {
                 )
             }
             Text(
-                text = "Female"
+                text = "Female",
+                modifier
+                    .align(Alignment.CenterHorizontally)
             )
 
         }
