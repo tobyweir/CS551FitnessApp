@@ -20,8 +20,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.cs551fitnessapp.ui.screens.MembersScreen
+import com.example.cs551fitnessapp.ui.screens.SettingsScreen
 
 import com.example.cs551fitnessapp.ui.screens.TodayScreen
+
 
 
 
@@ -35,7 +37,8 @@ fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifi
             TodayScreen()
         }
         composable<PreferencesPage> {
-            Text(text = "preferences")
+            //Text(text = "preferences")
+            SettingsScreen(onBack = { })
         }
     }
 }

@@ -1,0 +1,15 @@
+package com.example.cs551fitnessapp.database
+
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+
+@Entity(tableName = "userAppointment")
+data class UserAppointmentEntity(
+    @PrimaryKey val id: Int,
+    val userFirstname: String,
+    val dtStartSession: Long,
+    val dtEndSession: Long,
+    val duration: Double
+)
