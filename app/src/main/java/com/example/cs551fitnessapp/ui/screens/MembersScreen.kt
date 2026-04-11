@@ -72,7 +72,12 @@ fun MembersScreen(modifier: Modifier = Modifier, viewmodel : MembersViewModel = 
     Scaffold(modifier = modifier , floatingActionButton = {AddMemberButton()} , floatingActionButtonPosition = FabPosition.EndOverlay) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             SearchBar(currentSearch = viewmodel.searchEntry , updateSearchQuery = {viewmodel.searchEntry = it}, runSearch = {viewmodel.doSearch()})
-            SortingButtons(currentStatus = "Active", {}, {}, {})
+            SortingButtons(isActive = uiState.value.includeActive ,
+                isInactive = uiState.value.includeInactive ,
+                isNearlyFinished = uiState.value.includeNearlyFinished,
+                {viewmodel.pressActiveButton()},
+                {viewmodel.pressNearlyFinishedButton()},
+                {viewmodel.pressInactiveButton()})
             MembersList(members = uiState.value.sortedMembers)
         }
     }
@@ -129,11 +134,23 @@ fun SearchBar(currentSearch : String = "" , updateSearchQuery : (String) -> Unit
 }
 
 @Composable
-fun SortingButtons(currentStatus : String , selectActive : () -> Unit , selectNearlyFinished : () -> Unit , selectInactive : () -> Unit) {
+fun SortingButtons( isActive : Boolean , isInactive : Boolean , isNearlyFinished : Boolean , selectActive : () -> Unit , selectNearlyFinished : () -> Unit , selectInactive : () -> Unit) {
     Row(horizontalArrangement = Arrangement.SpaceEvenly , modifier = Modifier.fillMaxWidth().padding(top = 10.dp , bottom = 10.dp)) {
-        ElevatedButton(onClick = {} ,  ) { Text(text = "Active")}
-        ElevatedButton(onClick = {}) { Text (text = "Nearly Finished")}
-        ElevatedButton(onClick = {}) { Text (text = " Inactive")}
+        ElevatedButton(onClick = {} , enabled = isActive,  ) {
+            Box (modifier = Modifier.clickable(onClick = selectActive)) {
+                Text(text = "Active")
+            }
+        }
+        ElevatedButton(onClick = {} , enabled = isNearlyFinished) {
+            Box (modifier = Modifier.clickable(onClick = selectNearlyFinished)) {
+                Text(text = "Nearly Finished")
+            }
+        }
+        ElevatedButton(onClick = {} , enabled = isInactive) {
+            Box (modifier = Modifier.clickable(onClick = selectInactive)) {
+                Text(text = " Inactive")
+            }
+        }
     }
 }
 

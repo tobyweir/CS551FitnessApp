@@ -72,15 +72,30 @@ class MembersViewModel : ViewModel() {
     val uiState : StateFlow<MembersUiState> = _uiState.asStateFlow()
 
     fun pressActiveButton () {
-
+        _uiState.update { uiState ->
+            uiState.copy(
+                includeActive = !_uiState.value.includeActive
+            )
+        }
+        doSearch()
     }
 
     fun pressNearlyFinishedButton () {
-
+        _uiState.update { uiState ->
+            uiState.copy(
+                includeNearlyFinished = !_uiState.value.includeNearlyFinished
+            )
+        }
+        doSearch()
     }
 
     fun pressInactiveButton () {
-
+        _uiState.update { uiState ->
+            uiState.copy(
+                includeInactive = !_uiState.value.includeInactive
+            )
+        }
+        doSearch()
     }
     fun doSearch () {
         val members = _uiState.value.members
