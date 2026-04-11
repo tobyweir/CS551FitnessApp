@@ -63,60 +63,15 @@ import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 import com.example.cs551fitnessapp.ui.viewmodels.MembersViewModel
 import java.util.Date
 
-val members = listOf<Member>(
-    Member(id = 0,
-        name ="John Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member( id = 1,
-        name ="Mike Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member(id = 2,
-        name ="Major Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member(id = 3,
-        name ="John Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member( id = 4,
-        name ="Mike Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member(id = 5,
-        name ="Major Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member(id = 6,
-        name ="John Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member( id = 7,
-        name ="Mike Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member(id = 8,
-        name ="Major Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",)
-)
+
+
 
 @Composable
 fun MembersScreen(modifier: Modifier = Modifier, viewmodel : MembersViewModel = viewModel(factory = ViewModelFactory.Factory)){
     val uiState = viewmodel.uiState.collectAsState()
     Scaffold(modifier = modifier , floatingActionButton = {AddMemberButton()} , floatingActionButtonPosition = FabPosition.EndOverlay) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
-            SearchBar(currentSearch = viewmodel.searchEntry , updateSearchQuery = {viewmodel.searchEntry = it}, runSearch = {})
+            SearchBar(currentSearch = viewmodel.searchEntry , updateSearchQuery = {viewmodel.searchEntry = it}, runSearch = {viewmodel.doSearch()})
             SortingButtons(currentStatus = "Active", {}, {}, {})
             MembersList(members = uiState.value.sortedMembers)
         }

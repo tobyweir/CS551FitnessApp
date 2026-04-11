@@ -23,17 +23,17 @@ class MembersViewModel : ViewModel() {
             name ="Mike Smith" ,
             joinDate = Date(2026 , 3 , 17) ,
             endDate = null ,
-            status = "Active",),
+            status = "Inactive",),
         Member(id = 2,
             name ="Major Smith" ,
             joinDate = Date(2026 , 3 , 17) ,
             endDate = null ,
-            status = "Active",),
+            status = "Inactive",),
         Member(id = 3,
             name ="John Smith" ,
             joinDate = Date(2026 , 3 , 17) ,
             endDate = null ,
-            status = "Active",),
+            status = "Nearly Finished",),
         Member( id = 4,
             name ="Mike Smith" ,
             joinDate = Date(2026 , 3 , 17) ,
@@ -43,7 +43,7 @@ class MembersViewModel : ViewModel() {
             name ="Major Smith" ,
             joinDate = Date(2026 , 3 , 17) ,
             endDate = null ,
-            status = "Active",),
+            status = "Nearly Finished",),
         Member(id = 6,
             name ="John Smith" ,
             joinDate = Date(2026 , 3 , 17) ,
@@ -53,16 +53,16 @@ class MembersViewModel : ViewModel() {
             name ="Mike Smith" ,
             joinDate = Date(2026 , 3 , 17) ,
             endDate = null ,
-            status = "Active",),
+            status = "Inactive",),
         Member(id = 8,
             name ="Major Smith" ,
             joinDate = Date(2026 , 3 , 17) ,
             endDate = null ,
-            status = "Active",)
+            status = "Nearly Finished",)
     )
     private val _uiState  = MutableStateFlow(MembersUiState(
-        listOf() ,
-        listOf() ,
+        members = members ,
+        sortedMembers = members ,
         includeActive = true ,
         includeInactive = true,
         includeNearlyFinished = true,
@@ -71,16 +71,56 @@ class MembersViewModel : ViewModel() {
 
     val uiState : StateFlow<MembersUiState> = _uiState.asStateFlow()
 
-    fun doSearch () {
+    fun pressActiveButton () {
 
+    }
+
+    fun pressNearlyFinishedButton () {
+
+    }
+
+    fun pressInactiveButton () {
+
+    }
+    fun doSearch () {
+        val members = _uiState.value.members
+        var sortedMembers : List<Member>
+        if (searchEntry == "") {
+            sortedMembers = members
+        } else {
+            sortedMembers = members.filter { it.name.lowercase().contains(searchEntry.lowercase()) }
+        }
+        sortedMembers = filterByButtons(sortedMembers)
+        updateState(sortedMembers)
+    }
+
+     fun filterByButtons (members : List<Member>) : List<Member> {
+        val isActive =_uiState.value.includeActive
+        val isInactive = _uiState.value.includeInactive
+        val isNearlyFinished = _uiState.value.includeNearlyFinished
+         var sortedMembers = members
+         sortedMembers = sortedMembers.filter { (it.status == "Active" && isActive) ||
+                 (it.status == "Inactive" && isInactive) ||
+                 (it.status == "Nearly Finished" && isNearlyFinished)}
+         return sortedMembers
     }
     var searchEntry by mutableStateOf("")
 
     private fun updateState () {
         _uiState.update { uiState ->
             uiState.copy(
-
+                includeActive = !_uiState.value.includeActive
             )
         }
     }
+
+    private fun updateState (sortedMembers : List<Member>) {
+        _uiState.update { uiState ->
+            uiState.copy(
+                sortedMembers = sortedMembers
+            )
+        }
+    }
+
+
 }
