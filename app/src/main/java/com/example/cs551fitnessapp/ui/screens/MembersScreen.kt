@@ -35,6 +35,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,66 +55,30 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cs551fitnessapp.R
+import com.example.cs551fitnessapp.ui.ViewModelFactory
 import com.example.cs551fitnessapp.ui.navigation.BottomBar
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
+import com.example.cs551fitnessapp.ui.viewmodels.MembersViewModel
 import java.util.Date
 
-val members = listOf<Member>(
-    Member(id = 0,
-        name ="John Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member( id = 1,
-        name ="Mike Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member(id = 2,
-        name ="Major Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member(id = 3,
-        name ="John Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member( id = 4,
-        name ="Mike Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member(id = 5,
-        name ="Major Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member(id = 6,
-        name ="John Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member( id = 7,
-        name ="Mike Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member(id = 8,
-        name ="Major Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",)
-)
+
+
 
 @Composable
-fun MembersScreen(modifier: Modifier = Modifier){
+fun MembersScreen(modifier: Modifier = Modifier, viewmodel : MembersViewModel = viewModel(factory = ViewModelFactory.Factory)){
+    val uiState = viewmodel.uiState.collectAsState()
     Scaffold(modifier = modifier , floatingActionButton = {AddMemberButton()} , floatingActionButtonPosition = FabPosition.EndOverlay) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
-            SearchBar(currentSearch = "", updateSearchQuery = {}, runSearch = {})
-            SortingButtons(currentStatus = "Active", {}, {}, {})
-            MembersList(members = members)
+            SearchBar(currentSearch = viewmodel.searchEntry , updateSearchQuery = {viewmodel.searchEntry = it}, runSearch = {viewmodel.doSearch()})
+            SortingButtons(isActive = uiState.value.includeActive ,
+                isInactive = uiState.value.includeInactive ,
+                isNearlyFinished = uiState.value.includeNearlyFinished,
+                {viewmodel.pressActiveButton()},
+                {viewmodel.pressNearlyFinishedButton()},
+                {viewmodel.pressInactiveButton()})
+            MembersList(members = uiState.value.sortedMembers)
         }
     }
 
@@ -122,7 +87,7 @@ fun MembersScreen(modifier: Modifier = Modifier){
 
 
 @Composable
-fun SearchBar(currentSearch : String = "" , updateSearchQuery : () -> Unit , runSearch : () -> Unit) {
+fun SearchBar(currentSearch : String = "" , updateSearchQuery : (String) -> Unit , runSearch : () -> Unit) {
     val focusManager = LocalFocusManager.current
     Card (modifier = Modifier.fillMaxWidth().fillMaxHeight(0.15f) , shape = RectangleShape, colors = CardDefaults.cardColors(containerColor = Color.Blue)) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center , modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
@@ -132,11 +97,8 @@ fun SearchBar(currentSearch : String = "" , updateSearchQuery : () -> Unit , run
                 modifier = Modifier
                     .fillMaxWidth(0.85f)
                     ,
-
-
-                onValueChange = {
-                    updateSearchQuery()
-                },
+                onValueChange = updateSearchQuery
+                ,
                 shape = RoundedCornerShape(100.dp),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
@@ -172,11 +134,23 @@ fun SearchBar(currentSearch : String = "" , updateSearchQuery : () -> Unit , run
 }
 
 @Composable
-fun SortingButtons(currentStatus : String , selectActive : () -> Unit , selectNearlyFinished : () -> Unit , selectInactive : () -> Unit) {
+fun SortingButtons( isActive : Boolean , isInactive : Boolean , isNearlyFinished : Boolean , selectActive : () -> Unit , selectNearlyFinished : () -> Unit , selectInactive : () -> Unit) {
     Row(horizontalArrangement = Arrangement.SpaceEvenly , modifier = Modifier.fillMaxWidth().padding(top = 10.dp , bottom = 10.dp)) {
-        ElevatedButton(onClick = {} ,  ) { Text(text = "Active")}
-        ElevatedButton(onClick = {}) { Text (text = "Nearly Finished")}
-        ElevatedButton(onClick = {}) { Text (text = " Inactive")}
+        ElevatedButton(onClick = {} , enabled = isActive,  ) {
+            Box (modifier = Modifier.clickable(onClick = selectActive)) {
+                Text(text = "Active")
+            }
+        }
+        ElevatedButton(onClick = {} , enabled = isNearlyFinished) {
+            Box (modifier = Modifier.clickable(onClick = selectNearlyFinished)) {
+                Text(text = "Nearly Finished")
+            }
+        }
+        ElevatedButton(onClick = {} , enabled = isInactive) {
+            Box (modifier = Modifier.clickable(onClick = selectInactive)) {
+                Text(text = " Inactive")
+            }
+        }
     }
 }
 
