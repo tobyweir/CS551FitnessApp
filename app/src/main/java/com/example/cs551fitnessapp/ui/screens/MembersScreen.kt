@@ -56,9 +56,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.ui.ViewModelFactory
 import com.example.cs551fitnessapp.ui.navigation.BottomBar
+import com.example.cs551fitnessapp.ui.navigation.MemberPage
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 import com.example.cs551fitnessapp.ui.viewmodels.MembersViewModel
 import java.util.Date
@@ -67,7 +69,7 @@ import java.util.Date
 
 
 @Composable
-fun MembersScreen(modifier: Modifier = Modifier, viewmodel : MembersViewModel = viewModel(factory = ViewModelFactory.Factory)){
+fun MembersScreen(navController : NavHostController , modifier: Modifier = Modifier, viewmodel : MembersViewModel = viewModel(factory = ViewModelFactory.Factory)){
     val uiState = viewmodel.uiState.collectAsState()
     Scaffold(modifier = modifier , floatingActionButton = {AddMemberButton()} , floatingActionButtonPosition = FabPosition.EndOverlay) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
@@ -78,7 +80,7 @@ fun MembersScreen(modifier: Modifier = Modifier, viewmodel : MembersViewModel = 
                 {viewmodel.pressActiveButton()},
                 {viewmodel.pressNearlyFinishedButton()},
                 {viewmodel.pressInactiveButton()})
-            MembersList(members = uiState.value.sortedMembers)
+            MembersList(members = uiState.value.sortedMembers , navController = navController)
         }
     }
 
@@ -160,7 +162,7 @@ fun AddMemberButton() {
 }
 //drawBehind modifier taken from https://stackoverflow.com/questions/68592618/how-to-add-border-on-bottom-only-in-jetpack-compose
 @Composable
-fun MembersList(members : List<Member> , modifier: Modifier = Modifier) {
+fun MembersList(navController : NavHostController , members : List<Member> , modifier: Modifier = Modifier) {
     LazyColumn(horizontalAlignment = Alignment.CenterHorizontally , modifier = modifier.fillMaxSize()) {
         items(items = members, key = { it.id }) { item ->
                 MemberCard(
@@ -175,7 +177,7 @@ fun MembersList(members : List<Member> , modifier: Modifier = Modifier) {
                                 strokeWidth
                             )
                         }
-                        .clickable(onClick = {}))
+                        .clickable(onClick = {navController.navigate(MemberPage(item.id))}))
         }
     }
 }
@@ -234,6 +236,6 @@ data class Member(val id : Int , val name : String , val joinDate : Date , val e
 @Composable
 fun GreetingPreview() {
     CS551FitnessAppTheme {
-        MembersScreen()
+        //MembersScreen()
     }
 }
