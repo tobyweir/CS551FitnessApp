@@ -3,6 +3,8 @@ package com.example.cs551fitnessapp.ui.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 
@@ -13,204 +15,92 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModelProvider
 
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-
-import com.example.cs551fitnessapp.R
+import com.example.cs551fitnessapp.ui.ViewModelFactory
 import com.example.cs551fitnessapp.ui.screens.MembersScreen
-import com.example.cs551fitnessapp.ui.screens.TodayScreen
-import com.example.cs551fitnessapp.ui.screens.MemberInfoScreen
+import com.example.cs551fitnessapp.ui.screens.SettingsScreen
 
-import com.example.cs551fitnessapp.ui.viewmodels.states.MemberUiState
+import com.example.cs551fitnessapp.ui.screens.TodayScreen
+
 
 
 
 @Composable
-fun AppNavHost(
-    navController: NavHostController,
-    modifier: Modifier = Modifier
-) {
-
-    NavHost(
-        navController = navController,
-        startDestination = "today"
-    ) {
-
-        composable("today") {
-            TodayScreen(navController)
+fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifier) {
+    NavHost(navController, startDestination = Today) {
+        composable<Members> {
+            MembersScreen(modifier = modifier ,)
         }
-
-        composable("members") {
-            MembersScreen(navController)
+        composable<Today> {
+            TodayScreen()
         }
-
-        composable("preferences") {
-            Text("preferences")
+        composable<PreferencesPage> {
+            //Text(text = "preferences")
+            SettingsScreen(onBack = { })
         }
-
-        composable(
-            route = "member_info/{name}/{image}"
-        ) { backStackEntry ->
-
-            val name =
-                backStackEntry.arguments
-                    ?.getString("name")
-                    ?: ""
-
-            val image =
-                backStackEntry.arguments
-                    ?.getString("image")
-                    ?.toIntOrNull()
-                    ?: R.drawable.profile1
-
-
-            MemberInfoScreen(
-
-                member = MemberUiState(
-                    name = name,
-                    image = image
-                )
-
-            )
-
-        }
-
     }
-
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(
-    navController: NavHostController,
-    showBackIcon: Boolean,
-    modifier: Modifier = Modifier
-) {
-
+fun TopBar(navController : NavHostController , showBackIcon : Boolean ,  modifier: Modifier = Modifier) {
     CenterAlignedTopAppBar(
+        title = {Text(text = "Fitness App")},
 
-        title = {
-            Text("Fitness App")
-        },
-
-        navigationIcon = {
-            BackNavigateIcon(navController, showBackIcon)
-        },
-
+        navigationIcon = {BackNavigateIcon(navController = navController , showBackIcon = showBackIcon)},
         actions = {
-
-            IconButton(
-                onClick = {
-                    navController.navigate("preferences")
-                }
-            ) {
-
-                Icon(
+            IconButton(onClick = {navController.navigate(PreferencesPage)}) {
+                Icon (
                     imageVector = Icons.Default.Settings,
-                    contentDescription = "Settings"
+                    contentDescription = "Settings Icon"
                 )
-
             }
-
         }
-
     )
-
 }
 
-
-
 @Composable
-fun BackNavigateIcon(
-    navController: NavHostController,
-    showBackIcon: Boolean
-) {
-
+fun BackNavigateIcon (navController: NavHostController , showBackIcon : Boolean , modifier: Modifier = Modifier) {
     if (showBackIcon) {
-
-        IconButton(
-            onClick = { navController.popBackStack() }
-        ) {
-
+        IconButton(onClick = { navController.popBackStack() }) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Back"
+                contentDescription = "Arrow Back Icon"
             )
-
         }
-
     }
 
 }
 
 
-
 @Composable
-fun BottomBar(
-    navController: NavHostController
-) {
-
-    val selectedNavigationIndex =
-        rememberSaveable {
-            mutableIntStateOf(0)
-        }
-
-    NavigationBar {
-
-        NavigationBarItem(
-
-            selected =
-                selectedNavigationIndex.intValue == 0,
-
-            onClick = {
-
-                selectedNavigationIndex.intValue = 0
-
-                navController.navigate("today")
-
-            },
-
-            icon = {
-
-                Icon(
-                    Icons.Default.DateRange,
-                    contentDescription = "Today"
-                )
-
-            }
-
-        )
-
-
-
-        NavigationBarItem(
-
-            selected =
-                selectedNavigationIndex.intValue == 1,
-
-            onClick = {
-
-                selectedNavigationIndex.intValue = 1
-
-                navController.navigate("members")
-
-            },
-
-            icon = {
-
-                Icon(
-                    Icons.Default.Person,
-                    contentDescription = "Members"
-                )
-
-            }
-
-        )
-
+fun BottomBar(navController : NavHostController, modifier: Modifier = Modifier) {
+    val selectedNavigationIndex = rememberSaveable {
+        mutableIntStateOf(0)
     }
 
+    NavigationBar() {
+        NavigationBarItem(
+            selected = selectedNavigationIndex.intValue == 0 ,
+            onClick = {
+                selectedNavigationIndex.intValue = 0
+                navController.navigate(Today)
+            },
+            icon = { Icon(imageVector = Icons.Default.DateRange , contentDescription = "Today") },
+            label = {}
+        )
+        NavigationBarItem(
+            selected = selectedNavigationIndex.intValue == 1 ,
+            onClick = {
+                selectedNavigationIndex.intValue = 1
+                navController.navigate(Members)
+            },
+            icon = { Icon(imageVector = Icons.Default.Person , contentDescription = "Members") },
+            label = {}
+        )
+    }
 }
