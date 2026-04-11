@@ -13,7 +13,7 @@ data class TodayUiState(
     val day5 : LocalDate,
     val day6 : LocalDate,
     val day7 : LocalDate,
-    val selectedDay : String,
+    val selectedDay : LocalDate,
     val workouts : List<Session>,
     val members : List<Member>
 )

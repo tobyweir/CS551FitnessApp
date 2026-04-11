@@ -32,18 +32,23 @@ class TodayViewModel() : ViewModel() {
         currentDate.minusDays(-1),
         currentDate.minusDays(-2),
         currentDate.minusDays(-3),
-        currentDate.dayOfMonth.toString(),
+        currentDate,
         listOf(),
         listOf()))
     @RequiresApi(Build.VERSION_CODES.O)
     val uiState : StateFlow<TodayUiState> = _uiState.asStateFlow()
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun updateSelectedDay (newDay : String) {
+    fun updateSelectedDay (newDay : LocalDate) {
         _uiState.update { uiState ->
             uiState.copy(
                 selectedDay = newDay
             )
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun filterWorkouts() {
+        val filteredWorkouts = _uiState.value.workouts.filter {true}
     }
 }

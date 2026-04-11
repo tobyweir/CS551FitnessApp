@@ -38,6 +38,7 @@ import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.ui.ViewModelFactory
 import com.example.cs551fitnessapp.ui.navigation.MemberPage
 import com.example.cs551fitnessapp.ui.viewmodels.TodayViewModel
+import java.time.LocalDate
 
 
 data class Session(
@@ -90,13 +91,13 @@ fun TodayScreen(
         DateSelector(
             selectedDate = uiState.value.selectedDay,
             onDateSelected = {viewmodel.updateSelectedDay(it) },
-            dates = listOf(uiState.value.day1.dayOfMonth.toString(),
-                uiState.value.day2.dayOfMonth.toString(),
-                uiState.value.day3.dayOfMonth.toString(),
-                uiState.value.day4.dayOfMonth.toString(),
-                uiState.value.day5.dayOfMonth.toString(),
-                uiState.value.day6.dayOfMonth.toString(),
-                uiState.value.day7.dayOfMonth.toString(),
+            dates = listOf(uiState.value.day1,
+                uiState.value.day2,
+                uiState.value.day3,
+                uiState.value.day4,
+                uiState.value.day5,
+                uiState.value.day6,
+                uiState.value.day7,
                 )
         )
         LazyColumn {
@@ -110,11 +111,12 @@ fun TodayScreen(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DateSelector(
-    selectedDate: String,
-    onDateSelected: (String) -> Unit,
-    dates : List<String>
+    selectedDate: LocalDate,
+    onDateSelected: (LocalDate) -> Unit,
+    dates : List<LocalDate>
 ) {
     LazyRow(
         modifier = Modifier
@@ -125,7 +127,7 @@ fun DateSelector(
     ) {
         items(dates) {
             DateItem(
-                day = it,
+                day = it.dayOfMonth.toString(),
                 isSelected = it == selectedDate,
                 onClick = { onDateSelected(it) }
             )
