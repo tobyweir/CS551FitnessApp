@@ -230,7 +230,12 @@ fun MemberCardInfo(name : String ,
     }
 }
 //Temporary until database has these entities
-data class Member(val id : Int , val name : String , val joinDate : Date , val endDate : Date? , val status: String)
+data class Member(val id : Int ,
+                  val name : String ,
+                  val joinDate : Date ,
+                  val endDate : Date? ,
+                  val status: String,
+                  )
 
 @Preview(showBackground = true)
 @Composable

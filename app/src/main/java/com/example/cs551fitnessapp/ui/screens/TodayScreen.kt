@@ -40,45 +40,14 @@ import com.example.cs551fitnessapp.ui.navigation.MemberPage
 import com.example.cs551fitnessapp.ui.viewmodels.TodayViewModel
 import java.time.LocalDate
 
-
-data class Session(
-    val name: String,
+data class Workout(
+    val id : Int,
+    val date : LocalDate,
     val start: String,
-    val duration: String,
-    val progress: String,
-    val image: Int
+    val duration : String,
+    val memberId : Int
 )
 
-val sessions = listOf(
-    Session(
-        "Alexander Bennett",
-        "10:00 AM",
-        "1 hr",
-        "2/10",
-        R.drawable.profile1
-    ),
-    Session(
-        "Jessica J.",
-        "02:00 PM",
-        "1 hr",
-        "8/10",
-        R.drawable.profile2
-    ),
-    Session(
-        "Olivia Turner",
-        "05:30 PM",
-        "1 hr",
-        "3/15",
-        R.drawable.profile3
-    ),
-    Session(
-        "Sophia M.",
-        "07:00 PM",
-        "2 hr",
-        "4/10",
-        R.drawable.profile4
-    )
-)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TodayScreen(
@@ -101,9 +70,11 @@ fun TodayScreen(
                 )
         )
         LazyColumn {
-            items(sessions) {
+            items(uiState.value.filteredWorkouts) {
+                val currWorkout = it
                 SessionCard(
-                    session = it,
+                    workout = it,
+                    member = uiState.value.members.first{ it.id == currWorkout.memberId },
                     navController = navController
                 )
             }
@@ -162,8 +133,9 @@ fun DateItem(
 
 @Composable
 fun SessionCard(
-    session: Session,
-    navController: NavController
+    workout: Workout,
+    member: Member,
+    navController: NavController,
 ) {
     Card(
         modifier = Modifier
@@ -178,7 +150,7 @@ fun SessionCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(session.image),
+                painter = painterResource(R.drawable.profile1),
                 contentDescription = "Member Profile Picture",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -187,11 +159,11 @@ fun SessionCard(
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(session.name,
+                Text(member.name,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF2962FF))
-                Text("Start : ${session.start}")
-                Text("Duration : ${session.duration}")
+                Text("Start : ${workout.start}")
+                Text("Duration : ${workout.duration}")
                 Row {
                     Button(
                         onClick = { /*navController.navigate() */ }, //This will go to workoutInfo
@@ -204,7 +176,7 @@ fun SessionCard(
                     }
                 }
             }
-            AssistChip(onClick = { }, label = { Text("session ${session.progress}") })
+            //AssistChip(onClick = { }, label = { Text("session ${member.progress}") })
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.example.cs551fitnessapp.ui.viewmodels.states
 
 import com.example.cs551fitnessapp.ui.screens.Member
-import com.example.cs551fitnessapp.ui.screens.Session
+import com.example.cs551fitnessapp.ui.screens.Workout
 import java.time.LocalDate
 import java.util.Date
 
@@ -14,6 +14,7 @@ data class TodayUiState(
     val day6 : LocalDate,
     val day7 : LocalDate,
     val selectedDay : LocalDate,
-    val workouts : List<Session>,
+    val workouts : List<Workout>,
+    val filteredWorkouts : List<Workout>,
     val members : List<Member>
 )
