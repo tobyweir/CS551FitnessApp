@@ -2,4 +2,5 @@
     <string name="app_name">CS551FitnessApp</string>
     <string name="tell_us_about_yourself">Tell us about yourself</string>
     <string name="Sample_Text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
+    <string name="Birthday">When is your birthday?</string>
 </resources>

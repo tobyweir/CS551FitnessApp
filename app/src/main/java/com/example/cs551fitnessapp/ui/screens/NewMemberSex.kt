@@ -35,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cs551fitnessapp.R
+import com.example.cs551fitnessapp.ui.reusable.Description
 import com.example.cs551fitnessapp.ui.reusable.NextScreenButton
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 
@@ -46,7 +47,7 @@ fun NewMemberSexScreen (modifier: Modifier = Modifier) {
             .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Description()
+        Description(R.string.tell_us_about_yourself, R.string.Sample_Text)
 
         SexButton()
 
@@ -55,19 +56,6 @@ fun NewMemberSexScreen (modifier: Modifier = Modifier) {
     }
 
 
-}
-
-@Composable
-fun Description (modifier: Modifier = Modifier) {
-    Column(modifier = Modifier) {
-        Text(
-            text = stringResource(R.string.tell_us_about_yourself),
-            style = MaterialTheme.typography.displayMedium
-        )
-        Text(
-            text = stringResource(R.string.Sample_Text)
-        )
-    }
 }
 
 val circleMod = Modifier
