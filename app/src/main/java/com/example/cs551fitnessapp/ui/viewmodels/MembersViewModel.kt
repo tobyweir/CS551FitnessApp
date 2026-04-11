@@ -9,6 +9,7 @@ import com.example.cs551fitnessapp.ui.viewmodels.states.MembersUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import java.util.Date
 
 class MembersViewModel : ViewModel() {
@@ -70,5 +71,16 @@ class MembersViewModel : ViewModel() {
 
     val uiState : StateFlow<MembersUiState> = _uiState.asStateFlow()
 
+    fun doSearch () {
+
+    }
     var searchEntry by mutableStateOf("")
+
+    private fun updateState () {
+        _uiState.update { uiState ->
+            uiState.copy(
+
+            )
+        }
+    }
 }
