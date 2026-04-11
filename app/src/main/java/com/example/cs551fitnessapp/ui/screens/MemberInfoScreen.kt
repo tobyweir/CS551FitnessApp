@@ -36,11 +36,15 @@ import com.example.cs551fitnessapp.ui.viewmodels.states.MemberUiState
 
 @Composable
 fun MemberInfoScreen(
-    member: MemberUiState
+    id : Int,
+    member: MemberUiState = MemberUiState(
+        name = "Test",
+        image = R.drawable.profile1
+    ),
+    modifier: Modifier
 ) {
-
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
 
         Column(

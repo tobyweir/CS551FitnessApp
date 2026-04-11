@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 import com.example.cs551fitnessapp.R
+import com.example.cs551fitnessapp.ui.navigation.MemberPage
 
 
 data class Session(
@@ -44,7 +45,7 @@ data class Session(
 
 @Composable
 fun TodayScreen(
-    navController: NavController
+    navController: NavController , modifier: Modifier
 ) {
 
     var selectedDate by remember {
@@ -250,11 +251,7 @@ fun SessionCard(
                     Button(
 
                         onClick = {
-
-                            navController.navigate(
-                                "member_info/${session.name}/${session.image}"
-                            )
-
+                            navController.navigate(MemberPage(1)) //needs updated with member id
                         },
 
                         colors = ButtonDefaults.buttonColors(
