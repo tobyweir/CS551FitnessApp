@@ -1,9 +1,12 @@
 package com.example.cs551fitnessapp.ui.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -27,131 +30,81 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 import androidx.navigation.NavController
 
 import com.example.cs551fitnessapp.R
+import com.example.cs551fitnessapp.ui.ViewModelFactory
 import com.example.cs551fitnessapp.ui.navigation.MemberPage
+import com.example.cs551fitnessapp.ui.viewmodels.TodayViewModel
+import java.time.LocalDate
 
-
-data class Session(
-    val name: String,
+data class Workout(
+    val id : Int,
+    val date : LocalDate,
     val start: String,
-    val duration: String,
-    val progress: String,
-    val image: Int
+    val duration : String,
+    val memberId : Int
 )
 
-
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TodayScreen(
-    navController: NavController , modifier: Modifier
+    navController: NavController , modifier: Modifier, viewmodel: TodayViewModel = viewModel(factory = ViewModelFactory.Factory)
 ) {
-
-    var selectedDate by remember {
-        mutableStateOf("24")
-    }
-
-
-    val sessions = listOf(
-
-        Session(
-            "Alexander Bennett",
-            "10:00 AM",
-            "1 hr",
-            "2/10",
-            R.drawable.profile1
-        ),
-
-        Session(
-            "Jessica J.",
-            "02:00 PM",
-            "1 hr",
-            "8/10",
-            R.drawable.profile2
-        ),
-
-        Session(
-            "Olivia Turner",
-            "05:30 PM",
-            "1 hr",
-            "3/15",
-            R.drawable.profile3
-        ),
-
-        Session(
-            "Sophia M.",
-            "07:00 PM",
-            "2 hr",
-            "4/10",
-            R.drawable.profile4
-        )
-    )
-
-
+    val uiState = viewmodel.uiState.collectAsState()
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
-
         DateSelector(
-            selectedDate = selectedDate,
-            onDateSelected = { selectedDate = it }
+            selectedDate = uiState.value.selectedDay,
+            onDateSelected = {viewmodel.updateSelectedDay(it) },
+            dates = listOf(uiState.value.day1,
+                uiState.value.day2,
+                uiState.value.day3,
+                uiState.value.day4,
+                uiState.value.day5,
+                uiState.value.day6,
+                uiState.value.day7,
+                )
         )
-
-
         LazyColumn {
-
-            items(sessions) {
-
+            items(uiState.value.filteredWorkouts) {
+                val currWorkout = it
                 SessionCard(
-                    session = it,
+                    workout = it,
+                    member = uiState.value.members.first{ it.id == currWorkout.memberId },
                     navController = navController
                 )
             }
-
         }
-
     }
-
 }
 
-
-
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DateSelector(
-    selectedDate: String,
-    onDateSelected: (String) -> Unit
+    selectedDate: LocalDate,
+    onDateSelected: (LocalDate) -> Unit,
+    dates : List<LocalDate>
 ) {
-
-    val dates = listOf("21","22","23","24","25","26","27")
-
-
     LazyRow(
-
         modifier = Modifier
             .fillMaxWidth()
             .background(Color(0xFFE3E8FF))
-            .padding(vertical = 10.dp, horizontal = 12.dp),
-
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
-
+            .padding(vertical = 10.dp, horizontal = 0.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-
         items(dates) {
-
             DateItem(
-                day = it,
+                day = it.dayOfMonth.toString(),
                 isSelected = it == selectedDate,
                 onClick = { onDateSelected(it) }
             )
-
         }
-
     }
-
 }
-
-
 
 @Composable
 fun DateItem(
@@ -159,9 +112,7 @@ fun DateItem(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-
     Box(
-
         modifier = Modifier
             .clip(RoundedCornerShape(20.dp))
             .background(
@@ -170,127 +121,62 @@ fun DateItem(
             )
             .padding(horizontal = 18.dp, vertical = 12.dp)
             .clickable { onClick() }
-
     ) {
-
         Text(
             day,
             color =
                 if (isSelected) Color.White
                 else Color.Black
         )
-
     }
-
 }
-
-
 
 @Composable
 fun SessionCard(
-    session: Session,
-    navController: NavController
+    workout: Workout,
+    member: Member,
+    navController: NavController,
 ) {
-
     Card(
-
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp),
-
         shape = RoundedCornerShape(20.dp),
-
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFFDCE3F3)
         )
-
     ) {
-
         Row(
-
             modifier = Modifier.padding(16.dp),
-
             verticalAlignment = Alignment.CenterVertically
-
         ) {
-
-
             Image(
-
-                painter = painterResource(session.image),
-
-                contentDescription = null,
-
+                painter = painterResource(R.drawable.profile1),
+                contentDescription = "Member Profile Picture",
                 contentScale = ContentScale.Crop,
-
                 modifier = Modifier
                     .size(70.dp)
                     .clip(CircleShape)
-
             )
-
-
             Spacer(modifier = Modifier.width(16.dp))
-
-
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-
-                Text(
-                    session.name,
+            Column(modifier = Modifier.weight(1f)) {
+                Text(member.name,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF2962FF)
-                )
-
-                Text("Start : ${session.start}")
-                Text("Duration : ${session.duration}")
-
-
+                    color = Color(0xFF2962FF))
+                Text("Start : ${workout.start}")
+                Text("Duration : ${workout.duration}")
                 Row {
-
                     Button(
-
-                        onClick = {
-                            navController.navigate(MemberPage(1)) //needs updated with member id
-                        },
-
+                        onClick = { /*navController.navigate() */ }, //This will go to workoutInfo
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF5C6BC0)
-                        )
-
-                    ) {
-
-                        Text("Info")
-
-                    }
-
-
+                            containerColor = Color(0xFF5C6BC0))
+                    ) { Text("Info") }
                     Spacer(modifier = Modifier.width(8.dp))
-
-
                     IconButton(onClick = { }) {
-
-                        Icon(
-                            Icons.Default.DateRange,
-                            contentDescription = null
-                        )
-
+                        Icon(Icons.Default.DateRange, contentDescription = null)
                     }
-
                 }
-
             }
-
-
-            AssistChip(
-                onClick = { },
-                label = {
-                    Text("session ${session.progress}")
-                }
-            )
-
+            //AssistChip(onClick = { }, label = { Text("session ${member.progress}") })
         }
-
     }
-
 }
