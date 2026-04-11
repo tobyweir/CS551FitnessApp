@@ -43,12 +43,17 @@ fun NewMemberSexScreen (modifier: Modifier = Modifier) {
     Column(
         modifier
             .padding(20.dp)
-            .fillMaxSize()
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         Description()
 
         SexButton()
+
+        SubmissionButtons()
+
     }
+
 
 }
 
@@ -68,13 +73,13 @@ fun Description (modifier: Modifier = Modifier) {
 val circleMod = Modifier
     .clip(CircleShape)
     .size(100.dp)
-    .border(4.dp,Color.LightGray,CircleShape)
+    .border(4.dp, Color.LightGray, CircleShape)
     .background(Color.LightGray)
 
 val circleModFilled = Modifier
     .clip(CircleShape)
     .size(100.dp)
-    .border(4.dp,Color.DarkGray,CircleShape)
+    .border(4.dp, Color.DarkGray, CircleShape)
     .background(Color.DarkGray)
 
 
@@ -84,8 +89,11 @@ fun SexButton (modifier: Modifier = Modifier) {
     var isToggledF by rememberSaveable { mutableStateOf(false) }
     Row(
         modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly
+            .fillMaxWidth()
+           // .padding(top = 100.dp),
+        ,horizontalArrangement = Arrangement.SpaceEvenly
+
+
     ) {
         Column() {
 
@@ -145,7 +153,11 @@ fun SexButton (modifier: Modifier = Modifier) {
 
 @Composable
 fun SubmissionButtons (modifier: Modifier = Modifier) {
-    Column {
+    Column (
+        modifier
+            //.padding(top = 200.dp)
+
+    ) {
 
         OutlinedButton(
             onClick = { },
