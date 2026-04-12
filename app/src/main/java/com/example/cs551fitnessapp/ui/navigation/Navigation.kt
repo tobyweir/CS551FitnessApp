@@ -20,6 +20,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.cs551fitnessapp.ui.screens.MembersScreen
+import com.example.cs551fitnessapp.ui.screens.SearchWorkoutScreen
 import com.example.cs551fitnessapp.ui.screens.SettingsScreen
 
 import com.example.cs551fitnessapp.ui.screens.TodayScreen

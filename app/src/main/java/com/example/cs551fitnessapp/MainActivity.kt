@@ -1,6 +1,7 @@
 package com.example.cs551fitnessapp
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -13,19 +14,26 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
 
 import androidx.compose.runtime.getValue
 
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
 
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.cs551fitnessapp.database.Exercise
 
 import com.example.cs551fitnessapp.ui.navigation.AppNavHost
 import com.example.cs551fitnessapp.ui.navigation.BottomBar
 import com.example.cs551fitnessapp.ui.navigation.TopBar
+import com.example.cs551fitnessapp.ui.screens.SearchWorkoutScreen
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
+import com.example.cs551fitnessapp.ui.navigation.AppNavGraph
+import com.example.cs551fitnessapp.ui.screens.WorkoutPlanScreen
+import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -37,6 +45,7 @@ class MainActivity : ComponentActivity() {
     }
 
 
+    @SuppressLint("ViewModelConstructorInComposable")
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -55,7 +64,6 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-
             CS551FitnessAppTheme {
 
                 val navController = rememberNavController()
@@ -78,8 +86,25 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     )
 
+
                 }
+
+
             }
+        }
+    }
+    @SuppressLint("ViewModelConstructorInComposable")
+    @Preview(showBackground = true)
+    @Composable
+    fun GreetingPreview() {
+        CS551FitnessAppTheme {
+            WorkoutPlanScreen(
+                planViewModel = WorkoutPlanViewModel(),
+                onBackClick = { },
+                onAddWorkout = { },
+                onCancelClick = { },
+                onDoneClick = { }
+            )
         }
     }
 }
