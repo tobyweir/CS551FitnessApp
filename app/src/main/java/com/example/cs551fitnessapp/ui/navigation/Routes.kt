@@ -10,3 +10,7 @@ object Members
 
 @Serializable
 object PreferencesPage
+
+@Serializable
+data class MemberPage(val id: Int)
+

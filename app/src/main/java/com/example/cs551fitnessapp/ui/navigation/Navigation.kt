@@ -15,10 +15,14 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModelProvider
 
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
+import com.example.cs551fitnessapp.ui.ViewModelFactory
+import com.example.cs551fitnessapp.ui.screens.MemberInfoScreen
 import com.example.cs551fitnessapp.ui.screens.MembersScreen
 import com.example.cs551fitnessapp.ui.screens.SearchWorkoutScreen
 import com.example.cs551fitnessapp.ui.screens.SettingsScreen
@@ -32,14 +36,18 @@ import com.example.cs551fitnessapp.ui.screens.TodayScreen
 fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifier) {
     NavHost(navController, startDestination = Today) {
         composable<Members> {
-            MembersScreen(modifier = modifier)
+            MembersScreen(modifier = modifier , navController = navController)
         }
         composable<Today> {
-            TodayScreen()
+            TodayScreen(navController = navController , modifier = modifier)
         }
         composable<PreferencesPage> {
             //Text(text = "preferences")
             SettingsScreen(onBack = { })
+        }
+        composable<MemberPage> { backStackEntry ->
+            val member : MemberPage = backStackEntry.toRoute()
+            MemberInfoScreen(member.id , modifier = modifier)
         }
     }
 }
