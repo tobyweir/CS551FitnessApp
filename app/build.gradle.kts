@@ -68,6 +68,17 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    // Retrofit + Gson
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // Coil (image loading)
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("io.coil-kt:coil-gif:2.6.0")
+
+    implementation ("androidx.compose.material:material-icons-extended")
+
     testImplementation("androidx.room:room-testing:2.6.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

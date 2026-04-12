@@ -24,6 +24,7 @@ import androidx.navigation.toRoute
 import com.example.cs551fitnessapp.ui.ViewModelFactory
 import com.example.cs551fitnessapp.ui.screens.MemberInfoScreen
 import com.example.cs551fitnessapp.ui.screens.MembersScreen
+import com.example.cs551fitnessapp.ui.screens.SearchWorkoutScreen
 import com.example.cs551fitnessapp.ui.screens.SettingsScreen
 
 import com.example.cs551fitnessapp.ui.screens.TodayScreen
