@@ -36,8 +36,11 @@ import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
 import com.example.cs551fitnessapp.ui.components.TimePickerDialog
 import androidx.compose.material.icons.filled.AccessTimeFilled
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.database.WorkoutPlanData
+import com.example.cs551fitnessapp.ui.navigation.AppNavGraph
+import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.*
 
@@ -526,3 +529,5 @@ private fun WorkoutPlanBottomBar(
         }
     }
 }
+
+
