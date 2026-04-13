@@ -47,4 +47,14 @@ interface SessionDao {
         WHERE ownerUserId = :userId
     """)
     fun getAllSessionsWithExercises(userId: Long): Flow<List<SessionWithExercises>>
+
+    @Query("""
+        SELECT COUNT(*) FROM sessions
+        WHERE :startAt < dtStartSession
+          AND :endAt > dtEndSession
+    """)
+    suspend fun countDuplicateSessions(
+        startAt           : Long,
+        endAt             : Long
+    ): Int
 }

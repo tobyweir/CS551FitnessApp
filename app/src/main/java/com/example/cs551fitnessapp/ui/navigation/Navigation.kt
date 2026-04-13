@@ -1,6 +1,7 @@
 package com.example.cs551fitnessapp.ui.navigation
 
 import android.annotation.SuppressLint
+import android.app.Application
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
@@ -8,19 +9,32 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
+import com.example.cs551fitnessapp.ui.components.SuccessDialog
 import com.example.cs551fitnessapp.ui.screens.MembersScreen
+import com.example.cs551fitnessapp.ui.screens.SearchWorkoutScreen
 import com.example.cs551fitnessapp.ui.screens.SettingsScreen
 import com.example.cs551fitnessapp.ui.screens.TodayScreen
 import com.example.cs551fitnessapp.ui.screens.WorkoutPlanScreen
+import com.example.cs551fitnessapp.ui.viewmodels.SavePlanResult
+import com.example.cs551fitnessapp.ui.viewmodels.SearchWorkoutViewModel
 import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
+import com.example.cs551fitnessapp.ui.navigation.SearchWorkoutPage
 
 
 
@@ -37,8 +51,8 @@ fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifi
         }
         composable<PreferencesPage> {
             SettingsScreen(onBack = { })
-
         }
+
     }
 }
 

@@ -13,3 +13,6 @@ object PreferencesPage
 
 @Serializable
 object WorkoutPlanPage
+
+@Serializable
+object SearchWorkoutPage

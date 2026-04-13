@@ -5,6 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.cs551fitnessapp.database.DatabaseModule
 import com.example.cs551fitnessapp.database.WorkoutEntry
@@ -88,13 +89,22 @@ class WorkoutPlanViewModel(application: Application) : AndroidViewModel(applicat
     fun savePlan(plan: WorkoutPlanData) {
         viewModelScope.launch {
             _saveResult.value = SavePlanResult.Loading
-            try {
-                val sessionId = repository.saveWorkoutPlan(
-                    userId = 1, // hardcoded for now
-                    plan   = plan
-                )
-                _saveResult.value = SavePlanResult.Success(sessionId)
 
+            try {
+//                val sessionId = repository.saveWorkoutPlan(
+//                    userId = 1, // hardcoded for now
+//                    plan   = plan
+//                )
+                when (val result = repository.saveWorkoutPlan(1, plan)) { // hardcoded for now
+
+                    is SavePlanResult.Success ->
+                        _saveResult.value = SavePlanResult.Success(result.sessionId)
+
+                    is SavePlanResult.Error ->
+                        _saveResult.value = SavePlanResult.Error(result.message)
+
+                    else -> {}
+                }
 
             } catch (e: Exception) {
                 _saveResult.value = SavePlanResult.Error(
@@ -118,4 +128,5 @@ class WorkoutPlanViewModel(application: Application) : AndroidViewModel(applicat
         _endMin.value       = 0
         _saveResult.value   = SavePlanResult.Idle
     }
+
 }

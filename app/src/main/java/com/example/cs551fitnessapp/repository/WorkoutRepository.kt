@@ -13,6 +13,7 @@ import com.example.cs551fitnessapp.database.UserEntity
 import com.example.cs551fitnessapp.database.WorkoutEntry
 import com.example.cs551fitnessapp.database.WorkoutPlanData
 import com.example.cs551fitnessapp.ui.utils.DateTimeUtils
+import com.example.cs551fitnessapp.ui.viewmodels.SavePlanResult
 
 import kotlinx.coroutines.flow.Flow
 import java.util.Calendar
@@ -48,47 +49,66 @@ class WorkoutRepository(
     suspend fun saveWorkoutPlan(
         userId : Long,
         plan   : WorkoutPlanData
-    ): Long {
+    ): SavePlanResult {
+        return try {
 
-        val startAt = DateTimeUtils.DtToEpochMillis(
-            dateStr = plan.date,
-            hour    = plan.startHour,
-            minute  = plan.startMin
-        )
-        val endAt = DateTimeUtils.DtToEpochMillis(
-            dateStr = plan.date,
-            hour    = plan.endHour,
-            minute  = plan.endMin
-        )
-        val duration = DateTimeUtils.TimeDurationMinute(plan.startHour, plan.startMin, plan.endHour, plan.endMin)
-
-        // 1. Cache exercises locally
-        val exerciseEntities = plan.entries.map { it.exercise.toEntity() }
-        exerciseDao.insertExercises(exerciseEntities)
-
-        // 2. Insert session
-        val sessionId = sessionDao.insertSession(
-            SessionEntity(
-                ownerUserId = userId,
-                sessionName = plan.sessionName,
-                dtStartSession = startAt, //hard code
-                dtEndSession = endAt, //hard code
-                duration = duration.toDouble()
+            val startAt = DateTimeUtils.DtToEpochMillis(
+                dateStr = plan.date,
+                hour = plan.startHour,
+                minute = plan.startMin
             )
-        )
-
-        // 3. Insert session exercises
-        val sessionExercises = plan.entries.mapIndexed { index, entry ->
-            entry.toSessionExerciseEntity(
-                sessionId = sessionId,
-                order     = index
+            val endAt = DateTimeUtils.DtToEpochMillis(
+                dateStr = plan.date,
+                hour = plan.endHour,
+                minute = plan.endMin
             )
+            val duration = DateTimeUtils.TimeDurationMinute(
+                plan.startHour,
+                plan.startMin,
+                plan.endHour,
+                plan.endMin
+            )
+
+            val dupSessionCount = sessionDao.countDuplicateSessions(
+                startAt = startAt,
+                endAt = endAt
+            )
+
+            if (dupSessionCount > 0) {
+                return SavePlanResult.Error("Duplicate time slot")
+            }
+
+            // 1. Cache exercises locally
+            val exerciseEntities = plan.entries.map { it.exercise.toEntity() }
+            exerciseDao.insertExercises(exerciseEntities)
+
+            // 2. Insert session
+            val sessionId = sessionDao.insertSession(
+                SessionEntity(
+                    ownerUserId = userId,
+                    sessionName = plan.sessionName,
+                    dtStartSession = startAt, //hard code
+                    dtEndSession = endAt, //hard code
+                    duration = duration.toDouble()
+                )
+            )
+
+            // 3. Insert session exercises
+            val sessionExercises = plan.entries.mapIndexed { index, entry ->
+                entry.toSessionExerciseEntity(
+                    sessionId = sessionId,
+                    order = index
+                )
+            }
+            sessionExerciseDao.insertAll(sessionExercises)
+
+            SavePlanResult.Success(sessionId)
+
+        } catch (e: Exception) {
+            SavePlanResult.Error(e.message ?: "Failed to save workout session")
+
         }
-        sessionExerciseDao.insertAll(sessionExercises)
-
-        return sessionId
     }
-
     suspend fun deleteSession(sessionId: Long) {
         val session = sessionDao.getSessionById(sessionId) ?: return
         sessionDao.deleteSession(session)
