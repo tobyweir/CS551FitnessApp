@@ -3,4 +3,10 @@
     <string name="tell_us_about_yourself">Tell us about yourself</string>
     <string name="Sample_Text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
     <string name="Birthday">When is your birthday?</string>
+    <string name="Weight">Your weight</string>
+    <string name="Pounds">lbs</string>
+    <string name="Kilograms">kg</string>
+    <string name="Height">Your height</string>
+    <string name="Feet">ft</string>
+    <string name="Centimeters">cm</string>
 </resources>
