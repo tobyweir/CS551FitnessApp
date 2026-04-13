@@ -2,21 +2,51 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "fe140626138a1acab1174015ac299558",
+    "identityHash": "d65d85d23fd9123b85608ed9ef6f37ed",
     "entities": [
       {
-        "tableName": "userAppointment",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `userFirstname` TEXT NOT NULL, `dtStartSession` INTEGER NOT NULL, `dtEndSession` INTEGER NOT NULL, `duration` REAL NOT NULL, PRIMARY KEY(`id`))",
+        "tableName": "users",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL)",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "userId",
+            "columnName": "userId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "userFirstname",
-            "columnName": "userFirstname",
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "userId"
+          ]
+        }
+      },
+      {
+        "tableName": "sessions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`sessionId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `ownerUserId` INTEGER NOT NULL, `sessionName` TEXT NOT NULL, `dtStartSession` INTEGER NOT NULL, `dtEndSession` INTEGER NOT NULL, `duration` REAL NOT NULL, FOREIGN KEY(`ownerUserId`) REFERENCES `users`(`userId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "sessionId",
+            "columnName": "sessionId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ownerUserId",
+            "columnName": "ownerUserId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sessionName",
+            "columnName": "sessionName",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -40,16 +70,185 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
+          "columnNames": [
+            "sessionId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_sessions_ownerUserId",
+            "unique": false,
+            "columnNames": [
+              "ownerUserId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_sessions_ownerUserId` ON `${TABLE_NAME}` (`ownerUserId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "users",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ownerUserId"
+            ],
+            "referencedColumns": [
+              "userId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "session_exercises",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `ownerSessionId` INTEGER NOT NULL, `exerciseRefId` TEXT NOT NULL, `sets` INTEGER NOT NULL, `reps` INTEGER NOT NULL, `timeHr` INTEGER NOT NULL, `timeMin` INTEGER NOT NULL, `note` TEXT NOT NULL, FOREIGN KEY(`ownerSessionId`) REFERENCES `sessions`(`sessionId`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`exerciseRefId`) REFERENCES `exercises`(`exerciseId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ownerSessionId",
+            "columnName": "ownerSessionId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "exerciseRefId",
+            "columnName": "exerciseRefId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sets",
+            "columnName": "sets",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reps",
+            "columnName": "reps",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timeHr",
+            "columnName": "timeHr",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timeMin",
+            "columnName": "timeMin",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
           "columnNames": [
             "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_session_exercises_ownerSessionId",
+            "unique": false,
+            "columnNames": [
+              "ownerSessionId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_session_exercises_ownerSessionId` ON `${TABLE_NAME}` (`ownerSessionId`)"
+          },
+          {
+            "name": "index_session_exercises_exerciseRefId",
+            "unique": false,
+            "columnNames": [
+              "exerciseRefId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_session_exercises_exerciseRefId` ON `${TABLE_NAME}` (`exerciseRefId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "sessions",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ownerSessionId"
+            ],
+            "referencedColumns": [
+              "sessionId"
+            ]
+          },
+          {
+            "table": "exercises",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "exerciseRefId"
+            ],
+            "referencedColumns": [
+              "exerciseId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "exercises",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`exerciseId` TEXT NOT NULL, `name` TEXT NOT NULL, `gifUrl` TEXT, `bodyParts` TEXT NOT NULL, `cachedAt` INTEGER NOT NULL, PRIMARY KEY(`exerciseId`))",
+        "fields": [
+          {
+            "fieldPath": "exerciseId",
+            "columnName": "exerciseId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gifUrl",
+            "columnName": "gifUrl",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "bodyParts",
+            "columnName": "bodyParts",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cachedAt",
+            "columnName": "cachedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "exerciseId"
           ]
         }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fe140626138a1acab1174015ac299558')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd65d85d23fd9123b85608ed9ef6f37ed')"
     ]
   }
 }

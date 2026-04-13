@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
-@Entity(tableName = "userAppointment")
+@Entity(tableName = "userAppointment") //unused for now
 data class UserAppointmentEntity(
     @PrimaryKey val id: Int,
     val userFirstname: String,
@@ -13,3 +13,4 @@ data class UserAppointmentEntity(
     val dtEndSession: Long,
     val duration: Double
 )
+

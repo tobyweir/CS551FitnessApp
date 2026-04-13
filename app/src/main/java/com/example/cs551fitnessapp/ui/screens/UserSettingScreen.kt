@@ -28,6 +28,7 @@ import com.example.cs551fitnessapp.scheduler.NotificationScheduler
 
 @Composable
 fun SettingsScreen(
+
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -102,6 +103,7 @@ fun SettingsScreenContent(
             )
 //            Button(
 //                onClick =  ontest,
+//
 //                modifier = Modifier.padding(16.dp)) {
 //                Text("Test")
 //            }

@@ -98,13 +98,14 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun GreetingPreview() {
         CS551FitnessAppTheme {
-            WorkoutPlanScreen(
-                planViewModel = WorkoutPlanViewModel(),
-                onBackClick = { },
-                onAddWorkout = { },
-                onCancelClick = { },
-                onDoneClick = { }
-            )
+//            AppNavGraph(
+//                onFlowComplete = { data ->
+//                    // Save plan to your DB / repository here
+//                },
+//                onFlowCancel = {
+//                    finish()
+//                }
+//            )
         }
     }
 }

@@ -1,33 +1,31 @@
 package com.example.cs551fitnessapp.ui.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
-
 import androidx.compose.material3.*
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-
 import androidx.compose.ui.Modifier
-
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.cs551fitnessapp.ui.screens.MembersScreen
-import com.example.cs551fitnessapp.ui.screens.SearchWorkoutScreen
 import com.example.cs551fitnessapp.ui.screens.SettingsScreen
-
 import com.example.cs551fitnessapp.ui.screens.TodayScreen
+import com.example.cs551fitnessapp.ui.screens.WorkoutPlanScreen
+import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
 
 
 
 
+@SuppressLint("ViewModelConstructorInComposable")
 @Composable
 fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifier) {
     NavHost(navController, startDestination = Today) {
@@ -38,8 +36,8 @@ fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifi
             TodayScreen()
         }
         composable<PreferencesPage> {
-            //Text(text = "preferences")
             SettingsScreen(onBack = { })
+
         }
     }
 }

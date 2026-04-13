@@ -10,7 +10,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.example.cs551fitnessapp.database.UserAppointmentEntity
+import com.example.cs551fitnessapp.database.SessionEntity
 import com.example.cs551fitnessapp.worker.ReminderWorker
 import java.util.concurrent.TimeUnit
 
@@ -39,7 +39,7 @@ class NotificationScheduler(context: Context) {
         )
     }
 
-    fun scheduleEventReminder(context: Context, event: UserAppointmentEntity) {
+    fun scheduleEventReminder(context: Context, event: SessionEntity) {
         val now = System.currentTimeMillis()
         val triggerTime = event.dtStartSession - (30 * 60 * 1000) //remind earier 30 mins before session start
         val delay = triggerTime - System.currentTimeMillis()
@@ -53,7 +53,7 @@ class NotificationScheduler(context: Context) {
                 workDataOf(
                     "type" to "event",
                     "title" to "Upcoming Session",
-                    "msg" to event.userFirstname +" session is about to start in 30 mins",
+                    "msg" to event.ownerUserId.toString() +" session is about to start in 30 mins",
                     "eventTimeMillis" to event.dtStartSession
                 )
             )
@@ -61,7 +61,7 @@ class NotificationScheduler(context: Context) {
             .build()
 
         WorkManager.getInstance(context).enqueueUniqueWork(
-            "event_${event.id}",
+            "event_${event.sessionId}",
             ExistingWorkPolicy.REPLACE,
             request
         )

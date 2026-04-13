@@ -10,3 +10,6 @@ object Members
 
 @Serializable
 object PreferencesPage
+
+@Serializable
+object WorkoutPlanPage

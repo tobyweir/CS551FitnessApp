@@ -1,13 +1,35 @@
 package com.example.cs551fitnessapp.ui.viewmodels
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.cs551fitnessapp.database.DatabaseModule
 import com.example.cs551fitnessapp.database.WorkoutEntry
+import com.example.cs551fitnessapp.database.WorkoutPlanData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
-class WorkoutPlanViewModel : ViewModel() {
+// -- Save result  ---------------------------------------------------------------
+sealed class SavePlanResult {
+    data object Idle    : SavePlanResult()
+    data object Loading : SavePlanResult()
+    data class Success(val sessionId: Long) : SavePlanResult()
+    data class Error(val message: String)   : SavePlanResult()
+}
+
+class WorkoutPlanViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val repository = DatabaseModule.provideRepository(application)
+
+    // -- Save result state -------------------------------------------------------
+    private val _saveResult = MutableStateFlow<SavePlanResult>(SavePlanResult.Idle)
+    val saveResult: StateFlow<SavePlanResult> = _saveResult.asStateFlow()
 
     // -- Workout entries -------------------------------------------------------
     private val _addedEntries = MutableStateFlow<List<WorkoutEntry>>(emptyList())
@@ -25,9 +47,7 @@ class WorkoutPlanViewModel : ViewModel() {
         _addedEntries.value.any { it.exercise.id == exerciseId }
 
     // -- Form fields -------------------------------------------------------
-
     private val _sessionName  = MutableStateFlow("Session")
-
     private val _selectedDate = MutableStateFlow(todayFormatted())
 
     // Spinners store Int — default 0
@@ -50,11 +70,11 @@ class WorkoutPlanViewModel : ViewModel() {
     fun onEndHourChange(value: Int)         { _endHour.value      = value }
     fun onEndMinChange(value: Int)          { _endMin.value       = value }
 
-    // ── Helper ─────────────────────────────────────────────────────────────
+    // -- Helper -------------------------------------------------------
     private fun todayFormatted(): String {
         val monthNames = listOf(
-            "Jan","Feb","Mar","Apr","May","Jun",
-            "Jul","Aug","Sep","Oct","Nov","Dec"
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
         )
         val cal = Calendar.getInstance()
         return "%02d %s %d".format(
@@ -62,5 +82,40 @@ class WorkoutPlanViewModel : ViewModel() {
             monthNames[cal.get(Calendar.MONTH)],
             cal.get(Calendar.YEAR)
         )
+    }
+    
+    // -- Save workout plan to db -------------------------------------------------------
+    fun savePlan(plan: WorkoutPlanData) {
+        viewModelScope.launch {
+            _saveResult.value = SavePlanResult.Loading
+            try {
+                val sessionId = repository.saveWorkoutPlan(
+                    userId = 1, // hardcoded for now
+                    plan   = plan
+                )
+                _saveResult.value = SavePlanResult.Success(sessionId)
+
+
+            } catch (e: Exception) {
+                _saveResult.value = SavePlanResult.Error(
+                    e.message ?: "Failed to save workout session"
+                )
+            }
+        }
+    }
+
+    fun resetSaveResult() {
+        _saveResult.value = SavePlanResult.Idle
+    }
+
+    fun clearAllValue() {
+        _addedEntries.value = emptyList()
+        _sessionName.value  = ""
+        _selectedDate.value = todayFormatted()
+        _startHour.value    = 0
+        _startMin.value     = 0
+        _endHour.value      = 0
+        _endMin.value       = 0
+        _saveResult.value   = SavePlanResult.Idle
     }
 }
