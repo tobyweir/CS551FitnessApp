@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.ui.reusable.ChoiceButton
 import com.example.cs551fitnessapp.ui.reusable.Description
+import com.example.cs551fitnessapp.ui.reusable.NextScreenButton
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 
 @Composable
@@ -25,6 +26,8 @@ fun WeightScreen (modifier: Modifier = Modifier) {
         Description(R.string.Weight, R.string.Sample_Text)
 
         ChoiceButton(R.string.Pounds, R.string.Kilograms)
+
+        NextScreenButton({})
     }
 }
 
