@@ -130,8 +130,25 @@ fun AppNavGraph(
         }
 
         Screen.MEMBER_MEDICAL -> {
-            MedicalConcernScreen(onBackClick = {currentScreen = Screen.MEMBER_GOAL}, modifier = modifier)
-        //Is this the final screen?
+
+            MedicalConcernScreen(
+
+                onBackClick = {
+
+                    currentScreen = Screen.MEMBER_GOAL
+
+                },
+
+                onNextClick = { selectedId, note ->
+
+                    currentScreen = Screen.MEMBER_SEX
+
+                },
+
+                modifier = modifier
+
+            )
+
         }
 
         Screen.MEMBER_BIRTHDAY -> {
