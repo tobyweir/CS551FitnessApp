@@ -51,7 +51,7 @@ fun NewMemberSexScreen (modifier: Modifier = Modifier , onBackClick : () -> Unit
 
         SexButton()
 
-        SubmissionButtons()
+        SubmissionButtons(onNextClick = onNextClick)
 
     }
 
@@ -140,7 +140,7 @@ fun SexButton (modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SubmissionButtons (modifier: Modifier = Modifier) {
+fun SubmissionButtons (modifier: Modifier = Modifier , onNextClick: () -> Unit) {
     Column (
         modifier
             //.padding(top = 200.dp)
@@ -156,7 +156,7 @@ fun SubmissionButtons (modifier: Modifier = Modifier) {
         }
 
 
-        NextScreenButton({})
+        NextScreenButton(onNextClick)
 
     }
 }

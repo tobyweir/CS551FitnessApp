@@ -55,13 +55,15 @@ private val medicalOptions = listOf(
 fun MedicalConcernScreen(
 
     onBackClick   : () -> Unit = {},
-    onNextClick   : (selectedId: Int, note: String) -> Unit = { _, _ -> }
+    onNextClick   : (selectedId: Int, note: String) -> Unit = { _, _ -> },
+    modifier: Modifier
 ) {
     // -- State ------------------------------------------------
     var selectedId by remember { mutableStateOf(0) }
     var note       by remember { mutableStateOf("") }
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             MedicalTopBar(onBackClick = onBackClick)
         },

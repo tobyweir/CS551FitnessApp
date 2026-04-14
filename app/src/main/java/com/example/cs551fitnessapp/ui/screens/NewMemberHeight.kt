@@ -28,7 +28,7 @@ fun HeightScreen (modifier: Modifier = Modifier , onBackClick : () -> Unit = {} 
 
         ChoiceButton(R.string.Feet, R.string.Centimeters)
 
-        NextScreenButton({})
+        NextScreenButton(onNextClick)
     }
 
 }
