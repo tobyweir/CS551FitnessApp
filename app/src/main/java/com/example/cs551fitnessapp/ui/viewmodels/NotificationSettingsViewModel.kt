@@ -18,6 +18,7 @@ import com.example.cs551fitnessapp.repository.EventRepository
 import com.example.cs551fitnessapp.database.Database
 import com.example.cs551fitnessapp.database.UserAppointmentDao
 import com.example.cs551fitnessapp.database.UserAppointmentEntity
+import com.example.cs551fitnessapp.database.SessionEntity
 import com.example.cs551fitnessapp.repository.NotificationSettings
 import com.example.cs551fitnessapp.repository.NotificationSettingsRepository
 import com.example.cs551fitnessapp.scheduler.NotificationScheduler
@@ -74,7 +75,7 @@ class NotificationSettingsViewModel(
             combine(
                 repository.notificationSettings.map { it.isDynamicEnabled },
                 eventsFlow
-            ) { enabled: Boolean, events: List<UserAppointmentEntity> ->
+            ) { enabled: Boolean, events: List<SessionEntity> ->
                 Pair(enabled, events)
             }.collect { (enabled, events) ->
                 if (enabled) {

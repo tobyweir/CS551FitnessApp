@@ -1,18 +1,16 @@
 package com.example.cs551fitnessapp.ui.navigation
 
+import android.app.Application
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.cs551fitnessapp.database.Exercise
-import com.example.cs551fitnessapp.database.WorkoutEntry
 import com.example.cs551fitnessapp.database.WorkoutPlanData
 import com.example.cs551fitnessapp.ui.screens.SearchWorkoutScreen
 import com.example.cs551fitnessapp.ui.screens.WorkoutInfoScreen
 import com.example.cs551fitnessapp.ui.screens.WorkoutPlanScreen
 import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.platform.LocalContext
 
-
-// -- Make Screen saveable across rotation ------------------------
 private enum class Screen {
     WORKOUT_PLAN,
     SEARCH_WORKOUT,
@@ -26,16 +24,17 @@ fun AppNavGraph(
 ) {
     val planViewModel : WorkoutPlanViewModel = viewModel()
 
-    // rememberSaveable — survives rotation
+    //  rememberSaveable — survives rotation
     var currentScreen by rememberSaveable {
         mutableStateOf(Screen.WORKOUT_PLAN)
     }
 
+    //  Store only the exercise ID
     var selectedExerciseId by rememberSaveable {
         mutableStateOf<String?>(null)
     }
 
-    // using the search viewmodel last successful result
+    // Resolve Exercise from ID using the search VM's last successful result
     val searchViewModel: com.example.cs551fitnessapp.ui.viewmodels.SearchWorkoutViewModel = viewModel()
     val currentExercise = remember(selectedExerciseId) {
         val state = searchViewModel.uiState.value
@@ -52,7 +51,7 @@ fun AppNavGraph(
                 onBackClick   = onFlowCancel,
                 onAddWorkout  = { currentScreen = Screen.SEARCH_WORKOUT },
                 onCancelClick = onFlowCancel,
-                onDoneClick   = { data -> onFlowComplete(data) }
+                onDoneClick   = { data -> planViewModel.savePlan(data) }
             )
         }
 
@@ -70,6 +69,7 @@ fun AppNavGraph(
         }
 
         Screen.WORKOUT_INFO -> {
+            // Guard: if exercise lost fall back to search
             val exercise = currentExercise
             if (exercise == null) {
                 currentScreen = Screen.SEARCH_WORKOUT

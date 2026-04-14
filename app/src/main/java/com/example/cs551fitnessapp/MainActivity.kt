@@ -32,6 +32,8 @@ import com.example.cs551fitnessapp.ui.navigation.TopBar
 import com.example.cs551fitnessapp.ui.screens.SearchWorkoutScreen
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 import com.example.cs551fitnessapp.ui.navigation.AppNavGraph
+import com.example.cs551fitnessapp.ui.screens.MedicalConcernScreen
+import com.example.cs551fitnessapp.ui.screens.MemberGoalScreen
 import com.example.cs551fitnessapp.ui.screens.WorkoutPlanScreen
 import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
 
@@ -88,8 +90,6 @@ class MainActivity : ComponentActivity() {
 
 
                 }
-
-
             }
         }
     }
@@ -98,13 +98,14 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun GreetingPreview() {
         CS551FitnessAppTheme {
-            WorkoutPlanScreen(
-                planViewModel = WorkoutPlanViewModel(),
-                onBackClick = { },
-                onAddWorkout = { },
-                onCancelClick = { },
-                onDoneClick = { }
-            )
+//            AppNavGraph(
+//                onFlowComplete = { data ->
+//                    // Save plan to your DB / repository here
+//                },
+//                onFlowCancel = {
+//                    finish()
+//                }
+//            )
         }
     }
 }

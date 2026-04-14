@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
@@ -26,7 +25,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -34,14 +32,9 @@ import androidx.compose.ui.unit.sp
 import com.example.cs551fitnessapp.database.WorkoutEntry
 import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
 import com.example.cs551fitnessapp.ui.components.TimePickerDialog
-import androidx.compose.material.icons.filled.AccessTimeFilled
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.database.WorkoutPlanData
-import com.example.cs551fitnessapp.ui.navigation.AppNavGraph
-import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
-import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.*
 
 private val PrimaryBlue = Color(0xFF2962FF)
@@ -52,11 +45,11 @@ private val LightGray   = Color(0xFFBDBDBD)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WorkoutPlanScreen(
-    planViewModel : WorkoutPlanViewModel,
-    onBackClick   : () -> Unit,
-    onAddWorkout  : () -> Unit,
-    onCancelClick : () -> Unit,
-    onDoneClick   : (WorkoutPlanData) -> Unit
+    planViewModel: WorkoutPlanViewModel,
+    onBackClick: () -> Unit,
+    onAddWorkout: () -> Unit,
+    onCancelClick: () -> Unit,
+    onDoneClick: (WorkoutPlanData) -> Unit
 ) {
     val addedEntries by planViewModel.addedEntries.collectAsState() //Workout list
     val sessionName  by planViewModel.sessionName.collectAsState()
@@ -65,6 +58,7 @@ fun WorkoutPlanScreen(
     val startMin     by planViewModel.startMin.collectAsState()
     val endHour      by planViewModel.endHour.collectAsState()
     val endMin       by planViewModel.endMin.collectAsState()
+
 
     // -- TimePicker visibility ---------------------------------------------
     var showStartPicker by remember { mutableStateOf(false) }
@@ -529,5 +523,3 @@ private fun WorkoutPlanBottomBar(
         }
     }
 }
-
-
