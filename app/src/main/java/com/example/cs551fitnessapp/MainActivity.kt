@@ -15,27 +15,23 @@ import androidx.compose.foundation.layout.padding
 
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-
 import androidx.compose.runtime.getValue
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+
 import androidx.core.content.ContextCompat
 
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.cs551fitnessapp.database.Exercise
+
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 import com.example.cs551fitnessapp.ui.navigation.AppNavHost
 import com.example.cs551fitnessapp.ui.navigation.BottomBar
 import com.example.cs551fitnessapp.ui.navigation.TopBar
-import com.example.cs551fitnessapp.ui.screens.SearchWorkoutScreen
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
-import com.example.cs551fitnessapp.ui.navigation.AppNavGraph
-import com.example.cs551fitnessapp.ui.screens.MedicalConcernScreen
-import com.example.cs551fitnessapp.ui.screens.MemberGoalScreen
-import com.example.cs551fitnessapp.ui.screens.WorkoutPlanScreen
-import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
+import com.example.cs551fitnessapp.ui.viewmodels.ThemeViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -43,7 +39,7 @@ class MainActivity : ComponentActivity() {
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
-        // Permission result handled
+
     }
 
 
@@ -53,8 +49,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
-        
-        //Request permission for notifications
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
                     this,
@@ -66,46 +61,63 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            CS551FitnessAppTheme {
+
+            val themeViewModel: ThemeViewModel = viewModel()
+
+            CS551FitnessAppTheme(
+                darkTheme = themeViewModel.isDarkTheme.value
+            ) {
 
                 val navController = rememberNavController()
+
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val canGoBack = navBackStackEntry != null && navController.previousBackStackEntry != null
+
+                val canGoBack =
+                    navBackStackEntry != null &&
+                            navController.previousBackStackEntry != null
+
                 Scaffold(
+
                     modifier = Modifier.fillMaxSize(),
+
                     topBar = {
+
                         TopBar(
+
                             navController = navController,
                             showBackIcon = canGoBack
                         )
                     },
-                    bottomBar = {
-                        BottomBar(navController)
-                    }
-                ) { innerPadding ->
-                    AppNavHost(
-                        navController = navController,
-                        modifier = Modifier.padding(innerPadding)
-                    )
 
+                    bottomBar = {
+
+                        BottomBar(navController)
+
+                    }
+
+                ) { innerPadding ->
+
+                    AppNavHost(
+
+                        navController = navController,
+
+                        modifier = Modifier.padding(innerPadding)
+
+                    )
 
                 }
             }
         }
     }
-    @SuppressLint("ViewModelConstructorInComposable")
+
+
+
     @Preview(showBackground = true)
     @Composable
     fun GreetingPreview() {
+
         CS551FitnessAppTheme {
-//            AppNavGraph(
-//                onFlowComplete = { data ->
-//                    // Save plan to your DB / repository here
-//                },
-//                onFlowCancel = {
-//                    finish()
-//                }
-//            )
+
         }
     }
 }

@@ -1,14 +1,71 @@
 package com.example.cs551fitnessapp.ui.viewmodels
 
+import android.app.Application
+
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 
-class ThemeViewModel : ViewModel() {
+import androidx.lifecycle.AndroidViewModel
 
-    var isDarkTheme = mutableStateOf(false)
+import androidx.lifecycle.viewModelScope
+
+import com.example.cs551fitnessapp.database.provideRepository
+
+import kotlinx.coroutines.flow.collectLatest
+
+import kotlinx.coroutines.launch
+
+
+
+class ThemeViewModel(
+
+    application: Application
+
+) : AndroidViewModel(application) {
+
+
+
+    private val repository =
+
+        application.provideRepository()
+
+
+
+    var isDarkTheme =
+
+        mutableStateOf(false)
+
         private set
 
-    fun toggleTheme(value: Boolean) {
-        isDarkTheme.value = value
+
+
+    init {
+
+        viewModelScope.launch {
+
+            repository.isDarkThemeEnabled.collectLatest {
+
+                isDarkTheme.value = it
+
+            }
+
+        }
+
     }
+
+
+
+    fun toggleTheme(enabled: Boolean) {
+
+        isDarkTheme.value = enabled
+
+
+
+        viewModelScope.launch {
+
+            repository.setDarkThemeEnabled(enabled)
+
+        }
+
+    }
+
 }
