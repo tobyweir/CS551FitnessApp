@@ -35,8 +35,7 @@ enum class Screen {
 fun AppNavGraph(
     onFlowComplete : (WorkoutPlanData) -> Unit = {},
     onFlowCancel   : () -> Unit                = {},
-    startScreen : Screen = Screen.WORKOUT_PLAN,
-    modifier: Modifier
+    startScreen : Screen = Screen.WORKOUT_PLAN, modifier: androidx.compose.ui.Modifier
 ) {
     val planViewModel : WorkoutPlanViewModel = viewModel()
 
@@ -67,7 +66,8 @@ fun AppNavGraph(
                 onBackClick   = onFlowCancel,
                 onAddWorkout  = { currentScreen = Screen.SEARCH_WORKOUT },
                 onCancelClick = onFlowCancel,
-                onDoneClick   = { data -> planViewModel.savePlan(data) }
+                onDoneClick   = { data -> planViewModel.savePlan(data) },
+                modifier = modifier
             )
         }
 
@@ -80,7 +80,8 @@ fun AppNavGraph(
                 onAddExercise  = { exercise ->
                     selectedExerciseId = exercise.id
                     currentScreen      = Screen.WORKOUT_INFO
-                }
+                },
+                modifier = modifier
             )
         }
 
@@ -98,7 +99,8 @@ fun AppNavGraph(
                 onAddClick    = { entry ->
                     planViewModel.addEntry(entry)
                     currentScreen = Screen.SEARCH_WORKOUT
-                }
+                },
+                modifier = modifier
             )
         }
 
