@@ -12,7 +12,5 @@ object Members
 object PreferencesPage
 
 @Serializable
-object WorkoutPlanPage
+data class MemberPage(val id: Int)
 
-@Serializable
-object SearchWorkoutPage
