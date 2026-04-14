@@ -32,6 +32,8 @@ import com.example.cs551fitnessapp.database.WorkoutPlanData
 import com.example.cs551fitnessapp.ui.screens.*
 
 import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
+import com.example.cs551fitnessapp.ui.viewmodels.SearchWorkoutViewModel
+import com.example.cs551fitnessapp.ui.viewmodels.states.ExerciseUiState
 
 
 
@@ -41,14 +43,15 @@ enum class Screen {
     SEARCH_WORKOUT,
     WORKOUT_INFO,
 
+    MEMBER_SEX,
+    MEMBER_BIRTHDAY,
+    MEMBER_WEIGHT,
+    MEMBER_HEIGHT,
     MEMBER_GOAL,
     MEMBER_MEDICAL,
-    MEMBER_BIRTHDAY,
-    MEMBER_HEIGHT,
-    MEMBER_SEX,
-    MEMBER_WEIGHT,
 
-    MEMBER_NAME   // final screen
+    MEMBER_NAME,
+    MEMBER_SUCCESS
 }
 
 
@@ -70,12 +73,16 @@ fun AppNavGraph(
 
     val planViewModel: WorkoutPlanViewModel = viewModel()
 
+    val searchViewModel: SearchWorkoutViewModel = viewModel()
+
+
 
     var currentScreen by rememberSaveable {
 
         mutableStateOf(startScreen)
 
     }
+
 
 
     var selectedExerciseId by rememberSaveable {
@@ -86,19 +93,21 @@ fun AppNavGraph(
 
 
 
-    val searchViewModel: com.example.cs551fitnessapp.ui.viewmodels.SearchWorkoutViewModel = viewModel()
-
-
-
     val currentExercise = remember(selectedExerciseId) {
 
         val state = searchViewModel.uiState.value
 
-        if (state is com.example.cs551fitnessapp.ui.viewmodels.states.ExerciseUiState.Success) {
+        if (state is ExerciseUiState.Success) {
 
-            state.exercises.find { it.id == selectedExerciseId }
+            state.exercises.find {
 
-        } else null
+                it.id == selectedExerciseId
+
+            }
+
+        }
+
+        else null
 
     }
 
@@ -108,19 +117,39 @@ fun AppNavGraph(
 
 
 
+        // ---------------- WORKOUT FLOW ----------------
+
+
+
         Screen.WORKOUT_PLAN -> {
 
             WorkoutPlanScreen(
 
                 planViewModel = planViewModel,
 
-                onBackClick = { navController.popBackStack() },
+                onBackClick = {
 
-                onAddWorkout = { currentScreen = Screen.SEARCH_WORKOUT },
+                    navController.popBackStack()
 
-                onCancelClick = { navController.popBackStack() },
+                },
 
-                onDoneClick = { data -> planViewModel.savePlan(data) },
+                onAddWorkout = {
+
+                    currentScreen = Screen.SEARCH_WORKOUT
+
+                },
+
+                onCancelClick = {
+
+                    navController.popBackStack()
+
+                },
+
+                onDoneClick = { data ->
+
+                    planViewModel.savePlan(data)
+
+                },
 
                 modifier = modifier
 
@@ -138,9 +167,17 @@ fun AppNavGraph(
 
                 searchViewModel = searchViewModel,
 
-                onBackClick = { currentScreen = Screen.WORKOUT_PLAN },
+                onBackClick = {
 
-                onSaveClick = { currentScreen = Screen.WORKOUT_PLAN },
+                    currentScreen = Screen.WORKOUT_PLAN
+
+                },
+
+                onSaveClick = {
+
+                    currentScreen = Screen.WORKOUT_PLAN
+
+                },
 
                 onAddExercise = { exercise ->
 
@@ -150,7 +187,11 @@ fun AppNavGraph(
 
                 },
 
-                onCancelClick = { navController.popBackStack() },
+                onCancelClick = {
+
+                    navController.popBackStack()
+
+                },
 
                 modifier = modifier
 
@@ -178,13 +219,21 @@ fun AppNavGraph(
 
                 exercise = exercise,
 
-                onBackClick = { currentScreen = Screen.SEARCH_WORKOUT },
+                onBackClick = {
 
-                onCancelClick = { navController.popBackStack() },
+                    currentScreen = Screen.SEARCH_WORKOUT
 
-                onAddClick = {
+                },
 
-                    planViewModel.addEntry(it)
+                onCancelClick = {
+
+                    navController.popBackStack()
+
+                },
+
+                onAddClick = { entry ->
+
+                    planViewModel.addEntry(entry)
 
                     currentScreen = Screen.SEARCH_WORKOUT
 
@@ -198,7 +247,7 @@ fun AppNavGraph(
 
 
 
-        // ---------- ADD MEMBER FLOW ----------
+        // ---------------- ADD MEMBER FLOW ----------------
 
 
 
@@ -206,19 +255,13 @@ fun AppNavGraph(
 
             Scaffold(
 
-                modifier = modifier,
-
                 topBar = {
 
-                    GenericTopBar(
+                    GenericTopBar {
 
-                        onBackClick = {
+                        navController.popBackStack()
 
-                            navController.popBackStack()
-
-                        }
-
-                    )
+                    }
 
                 }
 
@@ -254,19 +297,13 @@ fun AppNavGraph(
 
             Scaffold(
 
-                modifier = modifier,
-
                 topBar = {
 
-                    GenericTopBar(
+                    GenericTopBar {
 
-                        onBackClick = {
+                        currentScreen = Screen.MEMBER_SEX
 
-                            currentScreen = Screen.MEMBER_SEX
-
-                        }
-
-                    )
+                    }
 
                 }
 
@@ -302,19 +339,13 @@ fun AppNavGraph(
 
             Scaffold(
 
-                modifier = modifier,
-
                 topBar = {
 
-                    GenericTopBar(
+                    GenericTopBar {
 
-                        onBackClick = {
+                        currentScreen = Screen.MEMBER_BIRTHDAY
 
-                            currentScreen = Screen.MEMBER_BIRTHDAY
-
-                        }
-
-                    )
+                    }
 
                 }
 
@@ -350,19 +381,13 @@ fun AppNavGraph(
 
             Scaffold(
 
-                modifier = modifier,
-
                 topBar = {
 
-                    GenericTopBar(
+                    GenericTopBar {
 
-                        onBackClick = {
+                        currentScreen = Screen.MEMBER_WEIGHT
 
-                            currentScreen = Screen.MEMBER_WEIGHT
-
-                        }
-
-                    )
+                    }
 
                 }
 
@@ -454,11 +479,27 @@ fun AppNavGraph(
 
                 onSaveClick = {
 
-                    navController.popBackStack()
+                    currentScreen = Screen.MEMBER_SUCCESS
 
                 },
 
                 modifier = modifier
+
+            )
+
+        }
+
+
+
+        Screen.MEMBER_SUCCESS -> {
+
+            MemberSuccessScreen(
+
+                onFinished = {
+
+                    navController.popBackStack()
+
+                }
 
             )
 

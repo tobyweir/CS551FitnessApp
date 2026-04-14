@@ -1,7 +1,5 @@
 package com.example.cs551fitnessapp.ui.screens
 
-import android.net.Uri
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,9 +7,6 @@ import androidx.compose.foundation.layout.*
 
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 
 import androidx.compose.material3.*
 
@@ -25,12 +20,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-import androidx.compose.ui.platform.LocalContext
 
 import com.example.cs551fitnessapp.R
 
@@ -48,25 +41,11 @@ fun AddMemberNameScreen(
 ) {
 
     var name by remember {
-
-        mutableStateOf("Jessica J.")
-
+        mutableStateOf("")
     }
-
-
 
     var sessions by remember {
-
         mutableStateOf("20")
-
-    }
-
-
-
-    var selectedImageUri by remember {
-
-        mutableStateOf<Uri?>(null)
-
     }
 
 
@@ -78,7 +57,6 @@ fun AddMemberNameScreen(
             .fillMaxSize()
 
             .padding(20.dp),
-
 
         horizontalAlignment = Alignment.CenterHorizontally,
 
@@ -102,7 +80,7 @@ fun AddMemberNameScreen(
 
                 color = Color(0xFF2962FF),
 
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.Medium
 
             )
 
@@ -124,61 +102,31 @@ fun AddMemberNameScreen(
 
 
 
-            Spacer(Modifier.height(10.dp))
-
-
-
-            Text(
-
-                "Enter member details below",
-
-                fontSize = 13.sp,
-
-                color = Color.Gray
-
-            )
-
-
-
             Spacer(Modifier.height(20.dp))
 
 
 
-            Box(
+            Image(
 
-                contentAlignment = Alignment.Center
+                painter = painterResource(
 
-            ) {
+                    R.drawable.ic_launcher_background
 
+                ),
 
+                contentDescription = "profile",
 
-                Image(
+                contentScale = ContentScale.Crop,
 
-                    painter = painterResource(
+                modifier = Modifier
 
-                        id = R.drawable.ic_launcher_background   // default image
+                    .size(120.dp)
 
-                    ),
+                    .clip(CircleShape)
 
-                    contentDescription = "profile",
+                    .clickable { }
 
-                    contentScale = ContentScale.Crop,
-
-                    modifier = Modifier
-
-                        .size(120.dp)
-
-                        .clip(CircleShape)
-
-                        .clickable {
-
-                            // later we add gallery picker
-
-                        }
-
-                )
-
-            }
+            )
 
 
 
@@ -212,15 +160,11 @@ fun AddMemberNameScreen(
 
                 },
 
-                textStyle = androidx.compose.ui.text.TextStyle(
+                placeholder = {
 
-                    fontSize = 26.sp,
+                    Text("Full name")
 
-                    fontWeight = FontWeight.Medium
-
-                ),
-
-                singleLine = true,
+                },
 
                 modifier = Modifier.fillMaxWidth()
 
@@ -244,15 +188,13 @@ fun AddMemberNameScreen(
 
                     "Num Of Session :",
 
-                    fontSize = 14.sp,
-
                     color = Color.Gray
 
                 )
 
 
 
-                Spacer(Modifier.width(12.dp))
+                Spacer(Modifier.width(10.dp))
 
 
 
@@ -302,9 +244,7 @@ fun AddMemberNameScreen(
 
             Text(
 
-                "Save",
-
-                fontSize = 16.sp
+                "Save"
 
             )
 
