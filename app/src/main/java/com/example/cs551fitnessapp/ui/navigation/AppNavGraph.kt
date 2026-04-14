@@ -82,7 +82,7 @@ fun AppNavGraph(
         Screen.WORKOUT_PLAN -> {
             WorkoutPlanScreen(
                 planViewModel = planViewModel,
-                onBackClick   = onFlowCancel,
+                onBackClick   = { navController.popBackStack() },
                 onAddWorkout  = { currentScreen = Screen.SEARCH_WORKOUT },
                 onCancelClick = { navController.popBackStack() },
                 onDoneClick   = { data -> planViewModel.savePlan(data) },

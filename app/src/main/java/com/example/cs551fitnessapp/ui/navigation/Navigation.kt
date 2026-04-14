@@ -2,6 +2,7 @@ package com.example.cs551fitnessapp.ui.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
@@ -36,31 +37,51 @@ import com.example.cs551fitnessapp.ui.screens.TodayScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifier) {
+fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifier , canGoBack : Boolean) {
     NavHost(navController, startDestination = Today) {
+
         composable<Members> {
-            MembersScreen(modifier = modifier , navController = navController)
+            Scaffold(modifier = modifier, bottomBar = {BottomBar(navController = navController)},
+                topBar = {TopBar(navController = navController, showBackIcon =  canGoBack)}
+            ) { innerPadding ->
+                MembersScreen(modifier = modifier.padding(innerPadding), navController = navController)
+            }
         }
+
         composable<Today> {
-            TodayScreen(navController = navController , modifier = modifier)
+            Scaffold(modifier = modifier, bottomBar = {BottomBar(navController = navController)},
+                topBar = {TopBar(navController = navController, showBackIcon =  canGoBack)}
+            ) { innerPadding ->
+                TodayScreen(navController = navController, modifier = modifier.padding(innerPadding))
+            }
         }
+
         composable<PreferencesPage> {
             //Text(text = "preferences")
-            SettingsScreen(onBack = { })
+                SettingsScreen(onBack = { navController.popBackStack()} , modifier = modifier)
+
         }
+
         composable<MemberPage> { backStackEntry ->
             val member : MemberPage = backStackEntry.toRoute()
-            MemberInfoScreen(member.id , modifier = modifier , navController = navController)
+            Scaffold(modifier = modifier, bottomBar = {BottomBar(navController = navController)},
+                topBar = {TopBar(navController = navController, showBackIcon =  canGoBack)}
+            ) { innerPadding ->
+                MemberInfoScreen(member.id, modifier = modifier.padding(innerPadding), navController = navController)
+            }
         }
+
         composable<AddMemberFlow> {
             AppNavGraph (startScreen = Screen.MEMBER_SEX , modifier = modifier , navController = navController)
 
         }
+
         composable<AddWorkoutFlow> {  backStackEntry ->
             val member : AddWorkoutFlow = backStackEntry.toRoute()
             AppNavGraph (startScreen = Screen.WORKOUT_PLAN , modifier = modifier, navController = navController)
 
         }
+
     }
 }
 
