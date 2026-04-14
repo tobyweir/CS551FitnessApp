@@ -51,6 +51,7 @@ fun SearchWorkoutScreen(
     planViewModel  : WorkoutPlanViewModel,
     onBackClick    : () -> Unit,
     onSaveClick    : () -> Unit,
+    onCancelClick: () -> Unit,
     onAddExercise  : (Exercise) -> Unit,
     searchViewModel: SearchWorkoutViewModel =
         androidx.lifecycle.viewmodel.compose.viewModel(),
@@ -67,7 +68,7 @@ fun SearchWorkoutScreen(
     Scaffold(modifier = modifier,
         bottomBar = {
             BottomBar(
-                onCancelClick = onBackClick,
+                onCancelClick = onCancelClick,
                 onSaveClick   = onSaveClick
             )
         },

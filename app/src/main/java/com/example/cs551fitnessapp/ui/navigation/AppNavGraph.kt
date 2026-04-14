@@ -10,6 +10,7 @@ import com.example.cs551fitnessapp.ui.screens.WorkoutPlanScreen
 import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavHostController
 import com.example.cs551fitnessapp.ui.screens.BirthdayScreen
 import com.example.cs551fitnessapp.ui.screens.HeightScreen
 import com.example.cs551fitnessapp.ui.screens.MedicalConcernScreen
@@ -35,7 +36,8 @@ enum class Screen {
 fun AppNavGraph(
     onFlowComplete : (WorkoutPlanData) -> Unit = {},
     onFlowCancel   : () -> Unit                = {},
-    startScreen : Screen = Screen.WORKOUT_PLAN, modifier: androidx.compose.ui.Modifier
+    startScreen : Screen = Screen.WORKOUT_PLAN, modifier: androidx.compose.ui.Modifier,
+    navController : NavHostController
 ) {
     val planViewModel : WorkoutPlanViewModel = viewModel()
 
@@ -65,7 +67,7 @@ fun AppNavGraph(
                 planViewModel = planViewModel,
                 onBackClick   = onFlowCancel,
                 onAddWorkout  = { currentScreen = Screen.SEARCH_WORKOUT },
-                onCancelClick = onFlowCancel,
+                onCancelClick = { navController.popBackStack() },
                 onDoneClick   = { data -> planViewModel.savePlan(data) },
                 modifier = modifier
             )
@@ -81,6 +83,7 @@ fun AppNavGraph(
                     selectedExerciseId = exercise.id
                     currentScreen      = Screen.WORKOUT_INFO
                 },
+                onCancelClick = {navController.popBackStack()},
                 modifier = modifier
             )
         }
@@ -95,7 +98,7 @@ fun AppNavGraph(
             WorkoutInfoScreen(
                 exercise      = exercise,
                 onBackClick   = { currentScreen = Screen.SEARCH_WORKOUT },
-                onCancelClick = { currentScreen = Screen.SEARCH_WORKOUT },
+                onCancelClick = { navController.popBackStack() },
                 onAddClick    = { entry ->
                     planViewModel.addEntry(entry)
                     currentScreen = Screen.SEARCH_WORKOUT
