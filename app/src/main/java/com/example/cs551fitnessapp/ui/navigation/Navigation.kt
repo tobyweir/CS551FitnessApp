@@ -42,7 +42,7 @@ fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifi
 
         composable<Members> {
             Scaffold(modifier = modifier, bottomBar = {BottomBar(navController = navController)},
-                topBar = {TopBar(navController = navController, showBackIcon =  canGoBack)}
+                topBar = {TopBar(navController = navController, showBackIcon =  canGoBack , title = "Members")}
             ) { innerPadding ->
                 MembersScreen(modifier = modifier.padding(innerPadding), navController = navController)
             }
@@ -50,7 +50,7 @@ fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifi
 
         composable<Today> {
             Scaffold(modifier = modifier, bottomBar = {BottomBar(navController = navController)},
-                topBar = {TopBar(navController = navController, showBackIcon =  canGoBack)}
+                topBar = {TopBar(navController = navController, showBackIcon =  canGoBack, title = "Today")}
             ) { innerPadding ->
                 TodayScreen(navController = navController, modifier = modifier.padding(innerPadding))
             }
@@ -65,7 +65,7 @@ fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifi
         composable<MemberPage> { backStackEntry ->
             val member : MemberPage = backStackEntry.toRoute()
             Scaffold(modifier = modifier, bottomBar = {BottomBar(navController = navController)},
-                topBar = {TopBar(navController = navController, showBackIcon =  canGoBack)}
+                topBar = {TopBar(navController = navController, showBackIcon =  canGoBack , title = "Member")}
             ) { innerPadding ->
                 MemberInfoScreen(member.id, modifier = modifier.padding(innerPadding), navController = navController)
             }
@@ -87,9 +87,9 @@ fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(navController : NavHostController , showBackIcon : Boolean ,  modifier: Modifier = Modifier) {
+fun TopBar(navController : NavHostController , showBackIcon : Boolean ,  modifier: Modifier = Modifier , title : String = "Fitness App") {
     CenterAlignedTopAppBar(
-        title = {Text(text = "Fitness App")},
+        title = {Text(text = title)},
 
         navigationIcon = {BackNavigateIcon(navController = navController , showBackIcon = showBackIcon)},
         actions = {
