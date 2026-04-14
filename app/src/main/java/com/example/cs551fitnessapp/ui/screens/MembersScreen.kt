@@ -59,6 +59,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.ui.ViewModelFactory
+import com.example.cs551fitnessapp.ui.navigation.AddMemberFlow
 import com.example.cs551fitnessapp.ui.navigation.BottomBar
 import com.example.cs551fitnessapp.ui.navigation.MemberPage
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
@@ -71,7 +72,8 @@ import java.util.Date
 @Composable
 fun MembersScreen(navController : NavHostController , modifier: Modifier = Modifier, viewmodel : MembersViewModel = viewModel(factory = ViewModelFactory.Factory)){
     val uiState = viewmodel.uiState.collectAsState()
-    Scaffold(modifier = modifier , floatingActionButton = {AddMemberButton()} , floatingActionButtonPosition = FabPosition.EndOverlay) { innerPadding ->
+    Scaffold(modifier = modifier , floatingActionButton = {AddMemberButton(onClick = {navController.navigate(
+        AddMemberFlow)})} , floatingActionButtonPosition = FabPosition.EndOverlay) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             SearchBar(currentSearch = viewmodel.searchEntry , updateSearchQuery = {viewmodel.searchEntry = it}, runSearch = {viewmodel.doSearch()})
             SortingButtons(isActive = uiState.value.includeActive ,
@@ -157,8 +159,8 @@ fun SortingButtons( isActive : Boolean , isInactive : Boolean , isNearlyFinished
 }
 
 @Composable
-fun AddMemberButton() {
-    Button(onClick = {}) { Icon(imageVector = Icons.Default.Add , contentDescription = "Add a new member") }
+fun AddMemberButton(onClick : () -> Unit = {}) {
+    Button(onClick = onClick) { Icon(imageVector = Icons.Default.Add , contentDescription = "Add a new member") }
 }
 //drawBehind modifier taken from https://stackoverflow.com/questions/68592618/how-to-add-border-on-bottom-only-in-jetpack-compose
 @Composable

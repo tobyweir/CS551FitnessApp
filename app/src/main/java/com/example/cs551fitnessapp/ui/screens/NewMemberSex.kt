@@ -40,7 +40,7 @@ import com.example.cs551fitnessapp.ui.reusable.NextScreenButton
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 
 @Composable
-fun NewMemberSexScreen (modifier: Modifier = Modifier) {
+fun NewMemberSexScreen (modifier: Modifier = Modifier , onBackClick : () -> Unit = {} , onNextClick : () -> Unit = {}) {
     Column(
         modifier
             .padding(20.dp)

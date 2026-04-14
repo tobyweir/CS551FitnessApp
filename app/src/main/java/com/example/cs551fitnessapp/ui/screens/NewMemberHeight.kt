@@ -16,7 +16,7 @@ import com.example.cs551fitnessapp.ui.reusable.NextScreenButton
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 
 @Composable
-fun HeightScreen (modifier: Modifier = Modifier) {
+fun HeightScreen (modifier: Modifier = Modifier , onBackClick : () -> Unit = {} , onNextClick : () -> Unit = {}) {
     Column(
         modifier
             .fillMaxSize()

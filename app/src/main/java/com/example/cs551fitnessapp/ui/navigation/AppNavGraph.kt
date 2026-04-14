@@ -10,23 +10,39 @@ import com.example.cs551fitnessapp.ui.screens.WorkoutPlanScreen
 import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
+import com.example.cs551fitnessapp.ui.screens.BirthdayScreen
+import com.example.cs551fitnessapp.ui.screens.HeightScreen
+import com.example.cs551fitnessapp.ui.screens.MedicalConcernScreen
+import com.example.cs551fitnessapp.ui.screens.MemberGoalScreen
+import com.example.cs551fitnessapp.ui.screens.NewMemberSexScreen
+import com.example.cs551fitnessapp.ui.screens.WeightScreen
+import java.lang.reflect.Modifier
 
-private enum class Screen {
+enum class Screen {
     WORKOUT_PLAN,
     SEARCH_WORKOUT,
-    WORKOUT_INFO
+    WORKOUT_INFO,
+    MEMBER_GOAL,
+    MEMBER_MEDICAL,
+    MEMBER_BIRTHDAY,
+    MEMBER_HEIGHT,
+    MEMBER_SEX,
+    MEMBER_WEIGHT,
+
 }
 
 @Composable
 fun AppNavGraph(
     onFlowComplete : (WorkoutPlanData) -> Unit = {},
-    onFlowCancel   : () -> Unit                = {}
+    onFlowCancel   : () -> Unit                = {},
+    startScreen : Screen = Screen.WORKOUT_PLAN,
+    modifier: Modifier
 ) {
     val planViewModel : WorkoutPlanViewModel = viewModel()
 
     //  rememberSaveable — survives rotation
     var currentScreen by rememberSaveable {
-        mutableStateOf(Screen.WORKOUT_PLAN)
+        mutableStateOf(startScreen)
     }
 
     //  Store only the exercise ID
@@ -84,6 +100,36 @@ fun AppNavGraph(
                     currentScreen = Screen.SEARCH_WORKOUT
                 }
             )
+        }
+
+        Screen.MEMBER_GOAL -> {
+            MemberGoalScreen(onBackClick = {currentScreen = Screen.MEMBER_HEIGHT} ,
+                onNextClick = {currentScreen = Screen.MEMBER_MEDICAL})
+        }
+
+        Screen.MEMBER_MEDICAL -> {
+            MedicalConcernScreen(onBackClick = {currentScreen = Screen.MEMBER_GOAL})
+        //Is this the final screen?
+        }
+
+        Screen.MEMBER_BIRTHDAY -> {
+            BirthdayScreen(onBackClick = {currentScreen = Screen.MEMBER_SEX} ,
+                onNextClick = {currentScreen = Screen.MEMBER_WEIGHT})
+        }
+
+        Screen.MEMBER_HEIGHT -> {
+            HeightScreen(onBackClick = {currentScreen = Screen.MEMBER_WEIGHT} ,
+                onNextClick = {currentScreen = Screen.MEMBER_GOAL})
+        }
+
+        Screen.MEMBER_SEX -> {
+            NewMemberSexScreen(onBackClick = {/* go to members screen */} ,
+                onNextClick = {currentScreen = Screen.MEMBER_BIRTHDAY})
+        }
+
+        Screen.MEMBER_WEIGHT -> {
+            WeightScreen(onBackClick = {currentScreen = Screen.MEMBER_BIRTHDAY} ,
+                onNextClick = {currentScreen = Screen.MEMBER_HEIGHT})
         }
     }
 }

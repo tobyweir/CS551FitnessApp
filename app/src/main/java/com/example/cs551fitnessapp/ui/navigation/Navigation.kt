@@ -1,5 +1,7 @@
 package com.example.cs551fitnessapp.ui.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
@@ -32,6 +34,7 @@ import com.example.cs551fitnessapp.ui.screens.TodayScreen
 
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifier) {
     NavHost(navController, startDestination = Today) {
@@ -47,7 +50,16 @@ fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifi
         }
         composable<MemberPage> { backStackEntry ->
             val member : MemberPage = backStackEntry.toRoute()
-            MemberInfoScreen(member.id , modifier = modifier)
+            MemberInfoScreen(member.id , modifier = modifier , navController = navController)
+        }
+        composable<AddMemberFlow> {
+            AppNavGraph (startScreen = Screen.MEMBER_SEX)
+
+        }
+        composable<AddWorkoutFlow> {  backStackEntry ->
+            val member : AddWorkoutFlow = backStackEntry.toRoute()
+            AppNavGraph (startScreen = Screen.WORKOUT_PLAN)
+
         }
     }
 }

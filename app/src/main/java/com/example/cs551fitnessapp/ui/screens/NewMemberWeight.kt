@@ -15,7 +15,7 @@ import com.example.cs551fitnessapp.ui.reusable.NextScreenButton
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 
 @Composable
-fun WeightScreen (modifier: Modifier = Modifier) {
+fun WeightScreen (modifier: Modifier = Modifier , onBackClick : () -> Unit = {} , onNextClick : () -> Unit = {}) {
     Column(
         modifier
             .fillMaxSize()
@@ -27,7 +27,7 @@ fun WeightScreen (modifier: Modifier = Modifier) {
 
         ChoiceButton(R.string.Pounds, R.string.Kilograms)
 
-        NextScreenButton({})
+        NextScreenButton(onNextClick)
     }
 }
 
