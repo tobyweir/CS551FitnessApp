@@ -31,6 +31,7 @@ import com.example.cs551fitnessapp.database.WorkoutPlanData
 
 import com.example.cs551fitnessapp.ui.screens.*
 
+import com.example.cs551fitnessapp.ui.viewmodels.MembersViewModel
 import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
 import com.example.cs551fitnessapp.ui.viewmodels.SearchWorkoutViewModel
 import com.example.cs551fitnessapp.ui.viewmodels.states.ExerciseUiState
@@ -52,6 +53,7 @@ enum class Screen {
 
     MEMBER_NAME,
     MEMBER_SUCCESS
+
 }
 
 
@@ -62,6 +64,8 @@ fun AppNavGraph(
     navController: NavHostController,
 
     modifier: Modifier,
+
+    membersViewModel: MembersViewModel,
 
     onFlowComplete: (WorkoutPlanData) -> Unit = {},
 
@@ -105,9 +109,7 @@ fun AppNavGraph(
 
             }
 
-        }
-
-        else null
+        } else null
 
     }
 
@@ -204,6 +206,8 @@ fun AppNavGraph(
         Screen.WORKOUT_INFO -> {
 
             val exercise = currentExercise
+
+
 
             if (exercise == null) {
 
@@ -477,7 +481,19 @@ fun AppNavGraph(
 
                 },
 
-                onSaveClick = {
+                onSaveClick = { name, sessions ->
+
+
+
+                    membersViewModel.addMember(
+
+                        name = name,
+
+                        sessions = sessions
+
+                    )
+
+
 
                     currentScreen = Screen.MEMBER_SUCCESS
 
@@ -543,11 +559,7 @@ private fun GenericTopBar(
 
         navigationIcon = {
 
-            IconButton(
-
-                onClick = onBackClick
-
-            ) {
+            IconButton(onClick = onBackClick) {
 
                 Icon(
 

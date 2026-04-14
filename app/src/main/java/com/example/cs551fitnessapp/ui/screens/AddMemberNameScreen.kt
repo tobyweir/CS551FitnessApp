@@ -1,7 +1,6 @@
 package com.example.cs551fitnessapp.ui.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 
@@ -34,18 +33,24 @@ fun AddMemberNameScreen(
 
     onBackClick: () -> Unit,
 
-    onSaveClick: () -> Unit,
+    onSaveClick: (String, Int) -> Unit,
 
     modifier: Modifier = Modifier
 
 ) {
 
     var name by remember {
+
         mutableStateOf("")
+
     }
 
+
+
     var sessions by remember {
+
         mutableStateOf("20")
+
     }
 
 
@@ -224,7 +229,17 @@ fun AddMemberNameScreen(
 
         Button(
 
-            onClick = onSaveClick,
+            onClick = {
+
+                onSaveClick(
+
+                    name,
+
+                    sessions.toIntOrNull() ?: 0
+
+                )
+
+            },
 
             colors = ButtonDefaults.buttonColors(
 
@@ -242,11 +257,7 @@ fun AddMemberNameScreen(
 
         ) {
 
-            Text(
-
-                "Save"
-
-            )
+            Text("Save")
 
         }
 
