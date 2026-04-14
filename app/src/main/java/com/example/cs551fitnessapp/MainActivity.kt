@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -36,6 +37,7 @@ import com.example.cs551fitnessapp.ui.navigation.AppNavGraph
 import com.example.cs551fitnessapp.ui.screens.MedicalConcernScreen
 import com.example.cs551fitnessapp.ui.screens.MemberGoalScreen
 import com.example.cs551fitnessapp.ui.screens.WorkoutPlanScreen
+import com.example.cs551fitnessapp.ui.viewmodels.ThemeViewModel
 import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
 
 
@@ -68,7 +70,8 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            CS551FitnessAppTheme {
+            val themeViewModel: ThemeViewModel = viewModel()
+            CS551FitnessAppTheme(darkTheme = themeViewModel.isDarkTheme.value) {
 
                 val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()

@@ -19,125 +19,278 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+
 import com.example.cs551fitnessapp.database.AppDatabase
 import com.example.cs551fitnessapp.database.provideRepository
+
 import com.example.cs551fitnessapp.ui.viewmodels.states.NotificationSettingsUiState
 import com.example.cs551fitnessapp.ui.viewmodels.NotificationSettingsViewModel
+import com.example.cs551fitnessapp.ui.viewmodels.ThemeViewModel
+
 import com.example.cs551fitnessapp.scheduler.NotificationScheduler
 
 
 @Composable
 fun SettingsScreen(
-    modifier: Modifier,
     onBack: () -> Unit
 ) {
+
     val context = LocalContext.current
+
     val application = context.applicationContext as Application
 
-    // Build the repository once, then hand it to the factory.
-    val repository = remember(context) { context.provideRepository() }
-    val scheduler = remember(context) { NotificationScheduler(context) }
-    val appointmentDao = remember(context) { AppDatabase.getDatabase(context).appointmentDao() }
+
+    val repository = remember(context) {
+
+        context.provideRepository()
+
+    }
+
+    val scheduler = remember(context) {
+
+        NotificationScheduler(context)
+
+    }
+
+    val appointmentDao = remember(context) {
+
+        AppDatabase.getDatabase(context).appointmentDao()
+
+    }
+
 
     val viewModel: NotificationSettingsViewModel = viewModel(
+
         factory = NotificationSettingsViewModel.provideFactory(
+
             application,
             repository,
             scheduler,
             appointmentDao
+
         )
     )
 
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+
     SettingsScreenContent(
+
         state = uiState,
+
         onWeeklyNotiChange = viewModel::onNotiPeriodicToggled,
+
         onUpcomingSessionNotiChange = viewModel::onNotiDynamicToggled,
-        onBack = onBack,
-        modifier = modifier
+
+        onBack = onBack
+
     )
 }
+
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreenContent(
+
     state: NotificationSettingsUiState,
+
     onWeeklyNotiChange: (Boolean) -> Unit,
+
     onUpcomingSessionNotiChange: (Boolean) -> Unit,
-    onBack: () -> Unit,
-    modifier : Modifier
+
+    onBack: () -> Unit
+
 ) {
+
+    val themeViewModel: ThemeViewModel = viewModel()
+
+
     Scaffold(
-        modifier = modifier,
+
         topBar = {
+
             TopAppBar(
-                title = { Text("Notification Settings", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, "Back")
-                    }
+
+                title = {
+
+                    Text(
+
+                        "Settings",
+
+                        fontWeight = FontWeight.Bold
+
+                    )
+
                 },
+
+                navigationIcon = {
+
+                    IconButton(onClick = onBack) {
+
+                        Icon(
+
+                            Icons.Default.ArrowBack,
+
+                            contentDescription = "Back"
+
+                        )
+
+                    }
+
+                },
+
                 colors = TopAppBarDefaults.topAppBarColors(
+
                     containerColor = MaterialTheme.colorScheme.surface
+
                 )
+
             )
+
         }
+
     ) { padding ->
 
+
+
         Column(
+
             modifier = Modifier
+
                 .fillMaxSize()
+
                 .padding(padding)
+
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 20.dp, vertical = 16.dp),
+
+                .padding(
+
+                    horizontal = 20.dp,
+
+                    vertical = 16.dp
+
+                ),
+
+
             verticalArrangement = Arrangement.spacedBy(20.dp)
+
         ) {
+
+
+
             SettingsToggleRow(
+
                 label = "Weekly Summary Notification",
-                subtitle = "Weekly training summary notifications",
+
+                subtitle = "Receive weekly workout summary updates",
+
                 checked = state.isPeriodicEnabled,
+
                 onChecked = onWeeklyNotiChange
+
             )
+
+
+
             SettingsToggleRow(
+
                 label = "Upcoming Client Session Notification",
-                subtitle = "Upcoming client session notifications",
+
+                subtitle = "Get notified before scheduled sessions",
+
                 checked = state.isDynamicEnabled,
+
                 onChecked = onUpcomingSessionNotiChange
+
             )
-//            Button(
-//                onClick =  ontest,
-//
-//                modifier = Modifier.padding(16.dp)) {
-//                Text("Test")
-//            }
-//            SettingsToggleRow(
-//                label = "Dark Theme",
-//                subtitle = "Upcoming client session notifications",
-//                checked = state.isDynamicEnabled,
-//                onChecked = onUpcomingSessionNotiChange
-//            )
+
+
+
+            SettingsToggleRow(
+
+                label = "Dark Theme",
+
+                subtitle = "Switch app appearance between light and dark mode",
+
+                checked = themeViewModel.isDarkTheme.value,
+
+                onChecked = themeViewModel::toggleTheme
+
+            )
+
         }
+
     }
+
 }
+
+
+
 
 @Composable
 private fun SettingsToggleRow(
+
     label: String,
+
     subtitle: String,
+
     checked: Boolean,
+
     onChecked: (Boolean) -> Unit
+
 ) {
+
     Row(
+
         modifier = Modifier.fillMaxWidth(),
+
         verticalAlignment = Alignment.CenterVertically
+
     ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(label, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
+
+
+        Column(
+
+            modifier = Modifier.weight(1f)
+
+        ) {
+
+
             Text(
-                subtitle, style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+
+                text = label,
+
+                style = MaterialTheme.typography.bodyLarge,
+
+                fontWeight = FontWeight.Medium
+
             )
+
+
+            Text(
+
+                text = subtitle,
+
+                style = MaterialTheme.typography.bodySmall,
+
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+
+            )
+
         }
-        Switch(checked = checked, onCheckedChange = onChecked)
+
+
+        Switch(
+
+            checked = checked,
+
+            onCheckedChange = onChecked
+
+        )
+
     }
+
 }

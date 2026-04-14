@@ -58,7 +58,7 @@ fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifi
 
         composable<PreferencesPage> {
             //Text(text = "preferences")
-                SettingsScreen(onBack = { navController.popBackStack()} , modifier = modifier)
+                SettingsScreen(onBack = { navController.popBackStack()})
 
         }
 
