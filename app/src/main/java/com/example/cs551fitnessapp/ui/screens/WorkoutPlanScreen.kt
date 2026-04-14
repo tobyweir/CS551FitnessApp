@@ -49,7 +49,8 @@ fun WorkoutPlanScreen(
     onBackClick: () -> Unit,
     onAddWorkout: () -> Unit,
     onCancelClick: () -> Unit,
-    onDoneClick: (WorkoutPlanData) -> Unit
+    onDoneClick: (WorkoutPlanData) -> Unit,
+    modifier: Modifier
 ) {
     val addedEntries by planViewModel.addedEntries.collectAsState() //Workout list
     val sessionName  by planViewModel.sessionName.collectAsState()
@@ -116,7 +117,7 @@ fun WorkoutPlanScreen(
         )
     }
 
-    Scaffold(
+    Scaffold(modifier = modifier,
         topBar    = { WorkoutPlanTopBar(onBackClick = onBackClick) },
         bottomBar = {
             WorkoutPlanBottomBar(
