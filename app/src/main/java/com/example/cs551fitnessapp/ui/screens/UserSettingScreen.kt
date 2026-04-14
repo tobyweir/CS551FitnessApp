@@ -28,7 +28,7 @@ import com.example.cs551fitnessapp.scheduler.NotificationScheduler
 
 @Composable
 fun SettingsScreen(
-
+    modifier: Modifier,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -53,7 +53,8 @@ fun SettingsScreen(
         state = uiState,
         onWeeklyNotiChange = viewModel::onNotiPeriodicToggled,
         onUpcomingSessionNotiChange = viewModel::onNotiDynamicToggled,
-        onBack = onBack
+        onBack = onBack,
+        modifier = modifier
     )
 }
 
@@ -63,9 +64,11 @@ fun SettingsScreenContent(
     state: NotificationSettingsUiState,
     onWeeklyNotiChange: (Boolean) -> Unit,
     onUpcomingSessionNotiChange: (Boolean) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    modifier : Modifier
 ) {
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = { Text("Notification Settings", fontWeight = FontWeight.Bold) },

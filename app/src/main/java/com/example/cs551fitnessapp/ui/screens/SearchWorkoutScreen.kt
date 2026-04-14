@@ -51,9 +51,11 @@ fun SearchWorkoutScreen(
     planViewModel  : WorkoutPlanViewModel,
     onBackClick    : () -> Unit,
     onSaveClick    : () -> Unit,
+    onCancelClick: () -> Unit,
     onAddExercise  : (Exercise) -> Unit,
     searchViewModel: SearchWorkoutViewModel =
-        androidx.lifecycle.viewmodel.compose.viewModel()
+        androidx.lifecycle.viewmodel.compose.viewModel(),
+    modifier: Modifier
 ) {
     val searchQuery  by searchViewModel.searchQuery.collectAsState()
     val uiState      by searchViewModel.uiState.collectAsState()
@@ -63,10 +65,10 @@ fun SearchWorkoutScreen(
         searchViewModel.reloadIfIdle()
     }
 
-    Scaffold(
+    Scaffold(modifier = modifier,
         bottomBar = {
             BottomBar(
-                onCancelClick = onBackClick,
+                onCancelClick = onCancelClick,
                 onSaveClick   = onSaveClick
             )
         },

@@ -16,7 +16,7 @@ import com.example.cs551fitnessapp.ui.reusable.NextScreenButton
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 
 @Composable
-fun BirthdayScreen (modifier: Modifier = Modifier) {
+fun BirthdayScreen (modifier: Modifier = Modifier , onNextClick : () -> Unit = {} , onBackClick : () -> Unit = {}) {
     Column(
         modifier
             .fillMaxSize()
@@ -28,7 +28,7 @@ fun BirthdayScreen (modifier: Modifier = Modifier) {
 
         BirthdayDatePicker()
 
-        NextScreenButton({})
+        NextScreenButton(onNextClick)
 
 
 

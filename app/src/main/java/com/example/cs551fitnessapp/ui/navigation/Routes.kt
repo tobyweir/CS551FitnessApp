@@ -14,3 +14,8 @@ object PreferencesPage
 @Serializable
 data class MemberPage(val id: Int)
 
+@Serializable
+data class AddWorkoutFlow(val id: Int)
+
+@Serializable
+object AddMemberFlow
