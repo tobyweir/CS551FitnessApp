@@ -19,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -31,8 +32,7 @@ import com.example.cs551fitnessapp.ui.screens.SearchWorkoutScreen
 import com.example.cs551fitnessapp.ui.screens.SettingsScreen
 
 import com.example.cs551fitnessapp.ui.screens.TodayScreen
-
-
+import com.example.cs551fitnessapp.ui.viewmodels.MembersViewModel
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -40,12 +40,15 @@ import com.example.cs551fitnessapp.ui.screens.TodayScreen
 fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifier ,
                 canGoBack : Boolean , navIndex : Int,
                 updateIndex: (Int) -> Unit) {
+    // ONE shared ViewModel
+    val membersViewModel: MembersViewModel =
+        viewModel(factory = ViewModelFactory.Factory)
     NavHost(navController, startDestination = Today) {
         composable<Members> {
             Scaffold(modifier = modifier, bottomBar = {BottomBar(navController = navController , index = navIndex , updateIndex = updateIndex)},
                 topBar = {TopBar(navController = navController, showBackIcon =  false , title = "Members")}
             ) { innerPadding ->
-                MembersScreen(modifier = modifier.padding(innerPadding), navController = navController)
+                MembersScreen(modifier = modifier.padding(innerPadding), navController = navController , viewmodel = membersViewModel)
             }
         }
 
@@ -73,13 +76,13 @@ fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifi
         }
 
         composable<AddMemberFlow> {
-            AppNavGraph (startScreen = Screen.MEMBER_SEX , modifier = modifier , navController = navController)
+            AppNavGraph (startScreen = Screen.MEMBER_SEX , modifier = modifier , navController = navController , membersViewModel = membersViewModel)
 
         }
 
         composable<AddWorkoutFlow> {  backStackEntry ->
             val member : AddWorkoutFlow = backStackEntry.toRoute()
-            AppNavGraph (startScreen = Screen.WORKOUT_PLAN , modifier = modifier, navController = navController)
+            AppNavGraph (startScreen = Screen.WORKOUT_PLAN , modifier = modifier, navController = navController , membersViewModel = membersViewModel)
 
         }
 
