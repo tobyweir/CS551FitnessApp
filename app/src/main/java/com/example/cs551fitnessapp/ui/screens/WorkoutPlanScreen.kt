@@ -1,6 +1,7 @@
 package com.example.cs551fitnessapp.ui.screens
 
 import android.app.DatePickerDialog
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -45,6 +46,7 @@ private val LightGray   = Color(0xFFBDBDBD)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WorkoutPlanScreen(
+    userId : Int?,
     planViewModel: WorkoutPlanViewModel,
     onBackClick: () -> Unit,
     onAddWorkout: () -> Unit,
@@ -61,6 +63,8 @@ fun WorkoutPlanScreen(
     val endHour      by planViewModel.endHour.collectAsState()
     val endMin       by planViewModel.endMin.collectAsState()
     val saveResult   by planViewModel.saveResult.collectAsState()
+
+    //Toast.makeText(LocalContext.current, userId.toString(), Toast.LENGTH_SHORT).show()
 
     // Timepicker
     var showStartPicker by remember { mutableStateOf(false) }

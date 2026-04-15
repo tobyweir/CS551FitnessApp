@@ -38,7 +38,7 @@ import com.example.cs551fitnessapp.ui.viewmodels.states.MemberUiState
 
 @Composable
 fun MemberInfoScreen(
-    id : Int,
+    id : Int, //UserId
     navController : NavHostController,
     member: MemberUiState = MemberUiState(
         name = "Test",

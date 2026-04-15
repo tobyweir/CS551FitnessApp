@@ -1,5 +1,6 @@
 package com.example.cs551fitnessapp.ui.screens
 
+import android.R.attr.clickable
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -28,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.ui.ViewModelFactory
+import com.example.cs551fitnessapp.ui.navigation.MemberPage
 import com.example.cs551fitnessapp.ui.viewmodels.MemberSession
 import com.example.cs551fitnessapp.ui.viewmodels.TodayViewModel
 import java.time.LocalDate
@@ -86,7 +88,7 @@ fun TodayScreen(
                 //MemberRow(member = member)
                 SessionCard(
                     //workout = it.se,
-                    member = uiState.value.members.first { it.id == member.id },
+                    member = uiState.value.members.first { it.id == member.id }, //session id
                     navController = navController
                 )
             }
@@ -166,11 +168,13 @@ fun SessionCard(
 ) {
     Card(
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+        .clickable { navController.navigate(MemberPage(member.memberId)) },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFFDCE3F3)
         )
+
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -186,7 +190,7 @@ fun SessionCard(
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(member.name,
+                Text(member.name, //this is session name
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF2962FF))
                 Text("Start : ${member.dtSessionStart}")

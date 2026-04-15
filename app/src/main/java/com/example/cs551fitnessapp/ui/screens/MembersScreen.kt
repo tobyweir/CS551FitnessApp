@@ -229,7 +229,7 @@ fun MemberCardInfo(name : String ,
 }
 //Temporary until database has these entities
 data class Member(
-    val id: Int,
+    val id: Int, //change to Long depend on database
     val name: String,
     val joinDate: Date,
     val endDate: Date?,

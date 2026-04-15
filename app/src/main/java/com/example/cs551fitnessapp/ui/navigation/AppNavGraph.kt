@@ -59,7 +59,7 @@ enum class Screen {
 
 @Composable
 fun AppNavGraph(
-
+    id: Int?, //UserId
     navController: NavHostController,
 
     modifier: Modifier,
@@ -100,6 +100,7 @@ fun AppNavGraph(
 
         Screen.WORKOUT_PLAN -> {
             WorkoutPlanScreen(
+                userId = id,
                 planViewModel = planViewModel,
                 onBackClick   = { navController.popBackStack() },
                 onAddWorkout  = { currentScreen = Screen.SEARCH_WORKOUT },

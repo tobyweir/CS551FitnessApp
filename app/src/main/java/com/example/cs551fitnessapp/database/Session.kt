@@ -19,8 +19,8 @@ import androidx.room.PrimaryKey
 )
 data class SessionEntity(
     @PrimaryKey(autoGenerate = true)
-    val sessionId   : Long   = 0,
-    val ownerUserId     : Long,              // FK  users.userId
+    val sessionId   : Int   = 0,
+    val ownerUserId     : Int,              // FK  users.userId
     val sessionName : String,
     val dtStartSession : Long,
     val dtEndSession   : Long,

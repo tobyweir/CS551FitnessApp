@@ -45,7 +45,8 @@ class WorkoutRepository(
                         name = session.sessionName,
                         dtSessionStart = DateTimeUtils.toDisplayString(session.dtStartSession),
                         dtSessionEnd = DateTimeUtils.toDisplayString(session.dtEndSession),
-                        status = "Active"
+                        status = "Active", //hard code
+                        memberId = session.ownerUserId
                     )
                 }
             }
@@ -62,7 +63,7 @@ class WorkoutRepository(
 
     /** Saves a full workout plan in one transaction */
     suspend fun saveWorkoutPlan(
-        userId : Long,
+        userId : Int,
         plan   : WorkoutPlanData
     ): SavePlanResult {
         return try {
@@ -102,8 +103,8 @@ class WorkoutRepository(
                 SessionEntity(
                     ownerUserId = userId,
                     sessionName = plan.sessionName,
-                    dtStartSession = startAt, //hard code
-                    dtEndSession = endAt, //hard code
+                    dtStartSession = startAt,
+                    dtEndSession = endAt,
                     duration = duration.toDouble()
                 )
             )

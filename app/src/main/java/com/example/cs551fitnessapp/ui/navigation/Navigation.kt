@@ -76,13 +76,13 @@ fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifi
         }
 
         composable<AddMemberFlow> {
-            AppNavGraph (startScreen = Screen.MEMBER_SEX , modifier = modifier , navController = navController , membersViewModel = membersViewModel)
+            AppNavGraph (startScreen = Screen.MEMBER_SEX , modifier = modifier , navController = navController , membersViewModel = membersViewModel, id = null)
 
         }
 
         composable<AddWorkoutFlow> {  backStackEntry ->
             val member : AddWorkoutFlow = backStackEntry.toRoute()
-            AppNavGraph (startScreen = Screen.WORKOUT_PLAN , modifier = modifier, navController = navController , membersViewModel = membersViewModel)
+            AppNavGraph (startScreen = Screen.WORKOUT_PLAN , modifier = modifier, navController = navController , membersViewModel = membersViewModel, id = member.id)
 
         }
 

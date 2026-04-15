@@ -18,11 +18,12 @@ import java.time.ZoneId
 
 //Temporary until database has these entities
 data class MemberSession(
-    val id: Long,
+    val id: Int,
     val name: String, //Session name
     val dtSessionStart: String, // Start Session
     val dtSessionEnd: String,
-    val status: String
+    val status: String,
+    val memberId: Int //userId
 )
 
 @RequiresApi(Build.VERSION_CODES.O)
