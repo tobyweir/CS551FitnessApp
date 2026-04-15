@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.update
 import java.util.Date
 
 class MembersViewModel : ViewModel() {
+    private var nextId = 100
     val members = listOf<Member>(
         Member(
             id = 0,
@@ -124,6 +125,34 @@ class MembersViewModel : ViewModel() {
                  (it.status == "Inactive" && isInactive) ||
                  (it.status == "Nearly Finished" && isNearlyFinished)}
          return sortedMembers
+    }
+
+    fun addMember(
+
+        name: String,
+
+        sessions: Int
+
+    ) {
+
+        val newMember = Member(
+            id = nextId++,
+            name = name,
+            joinDate = Date(),
+            endDate = null,
+            status = "Active"
+        )
+
+
+        val updatedList =
+            listOf(newMember) +
+                    _uiState.value.members
+        _uiState.update {
+            it.copy(
+                members = updatedList,
+                sortedMembers = updatedList
+            )
+        }
     }
     var searchEntry by mutableStateOf("")
 
