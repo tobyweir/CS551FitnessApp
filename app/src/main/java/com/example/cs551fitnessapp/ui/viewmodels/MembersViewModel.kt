@@ -13,129 +13,219 @@ import kotlinx.coroutines.flow.update
 import java.util.Date
 
 class MembersViewModel : ViewModel() {
-    val members = listOf<Member>(
-        Member(id = 0,
-            name ="John Smith" ,
-            joinDate = Date(2026 , 3 , 17) ,
-            endDate = null ,
-            status = "Active",),
-        Member( id = 1,
-            name ="Mike Smith" ,
-            joinDate = Date(2026 , 3 , 17) ,
-            endDate = null ,
-            status = "Inactive",),
-        Member(id = 2,
-            name ="Major Smith" ,
-            joinDate = Date(2026 , 3 , 17) ,
-            endDate = null ,
-            status = "Inactive",),
-        Member(id = 3,
-            name ="John Smith" ,
-            joinDate = Date(2026 , 3 , 17) ,
-            endDate = null ,
-            status = "Nearly Finished",),
-        Member( id = 4,
-            name ="Mike Smith" ,
-            joinDate = Date(2026 , 3 , 17) ,
-            endDate = null ,
-            status = "Active",),
-        Member(id = 5,
-            name ="Major Smith" ,
-            joinDate = Date(2026 , 3 , 17) ,
-            endDate = null ,
-            status = "Nearly Finished",),
-        Member(id = 6,
-            name ="John Smith" ,
-            joinDate = Date(2026 , 3 , 17) ,
-            endDate = null ,
-            status = "Active",),
-        Member( id = 7,
-            name ="Mike Smith" ,
-            joinDate = Date(2026 , 3 , 17) ,
-            endDate = null ,
-            status = "Inactive",),
-        Member(id = 8,
-            name ="Major Smith" ,
-            joinDate = Date(2026 , 3 , 17) ,
-            endDate = null ,
-            status = "Nearly Finished",)
+
+    private var nextId = 100
+
+
+
+    private val initialMembers = listOf(
+
+        Member(0,"John Smith", Date(2026 ,3 ,17), null ,"Active"),
+
+        Member(1,"Mike Smith", Date(2026 ,3 ,17), null ,"Inactive"),
+
+        Member(2,"Major Smith", Date(2026 ,3 ,17), null ,"Inactive"),
+
+        Member(3,"Anna Lee", Date(2026 ,3 ,17), null ,"Nearly Finished")
+
     )
-    private val _uiState  = MutableStateFlow(MembersUiState(
-        members = members ,
-        sortedMembers = members ,
-        includeActive = true ,
-        includeInactive = true,
-        includeNearlyFinished = true,
-        isError = false,
-    ))
 
-    val uiState : StateFlow<MembersUiState> = _uiState.asStateFlow()
 
-    fun pressActiveButton () {
-        _uiState.update { uiState ->
-            uiState.copy(
-                includeActive = !_uiState.value.includeActive
-            )
-        }
-        doSearch()
-    }
 
-    fun pressNearlyFinishedButton () {
-        _uiState.update { uiState ->
-            uiState.copy(
-                includeNearlyFinished = !_uiState.value.includeNearlyFinished
-            )
-        }
-        doSearch()
-    }
+    private val _uiState = MutableStateFlow(
 
-    fun pressInactiveButton () {
-        _uiState.update { uiState ->
-            uiState.copy(
-                includeInactive = !_uiState.value.includeInactive
-            )
-        }
-        doSearch()
-    }
-    fun doSearch () {
-        val members = _uiState.value.members
-        var sortedMembers : List<Member>
-        if (searchEntry == "") {
-            sortedMembers = members
-        } else {
-            sortedMembers = members.filter { it.name.lowercase().contains(searchEntry.lowercase()) }
-        }
-        sortedMembers = filterByButtons(sortedMembers)
-        updateState(sortedMembers)
-    }
+        MembersUiState(
 
-     fun filterByButtons (members : List<Member>) : List<Member> {
-        val isActive =_uiState.value.includeActive
-        val isInactive = _uiState.value.includeInactive
-        val isNearlyFinished = _uiState.value.includeNearlyFinished
-         var sortedMembers = members
-         sortedMembers = sortedMembers.filter { (it.status == "Active" && isActive) ||
-                 (it.status == "Inactive" && isInactive) ||
-                 (it.status == "Nearly Finished" && isNearlyFinished)}
-         return sortedMembers
-    }
+            members = initialMembers,
+
+            sortedMembers = initialMembers,
+
+            includeActive = true,
+
+            includeInactive = true,
+
+            includeNearlyFinished = true,
+
+            isError = false
+
+        )
+
+    )
+
+
+
+    val uiState: StateFlow<MembersUiState> = _uiState.asStateFlow()
+
+
+
     var searchEntry by mutableStateOf("")
 
-    private fun updateState () {
-        _uiState.update { uiState ->
-            uiState.copy(
-                includeActive = !_uiState.value.includeActive
+
+
+    fun addMember(
+
+        name: String,
+
+        sessions: Int
+
+    ) {
+
+        val newMember = Member(
+
+            id = nextId++,
+
+            name = name,
+
+            joinDate = Date(),
+
+            endDate = null,
+
+            status = "Active"
+
+        )
+
+
+
+        val updatedList =
+
+            listOf(newMember) +
+
+                    _uiState.value.members
+
+
+
+        _uiState.update {
+
+            it.copy(
+
+                members = updatedList,
+
+                sortedMembers = updatedList
+
             )
+
         }
+
     }
 
-    private fun updateState (sortedMembers : List<Member>) {
-        _uiState.update { uiState ->
-            uiState.copy(
-                sortedMembers = sortedMembers
+
+
+    fun pressActiveButton() {
+
+        _uiState.update {
+
+            it.copy(
+
+                includeActive = !it.includeActive
+
             )
+
         }
+
+        doSearch()
+
     }
 
+
+
+    fun pressInactiveButton() {
+
+        _uiState.update {
+
+            it.copy(
+
+                includeInactive = !it.includeInactive
+
+            )
+
+        }
+
+        doSearch()
+
+    }
+
+
+
+    fun pressNearlyFinishedButton() {
+
+        _uiState.update {
+
+            it.copy(
+
+                includeNearlyFinished = !it.includeNearlyFinished
+
+            )
+
+        }
+
+        doSearch()
+
+    }
+
+
+
+    fun doSearch() {
+
+        var filtered = _uiState.value.members
+
+
+
+        if (searchEntry.isNotEmpty()) {
+
+            filtered = filtered.filter {
+
+                it.name.contains(searchEntry,true)
+
+            }
+
+        }
+
+
+
+        filtered = filterByButtons(filtered)
+
+
+
+        _uiState.update {
+
+            it.copy(
+
+                sortedMembers = filtered
+
+            )
+
+        }
+
+    }
+
+
+
+    private fun filterByButtons(
+
+        members: List<Member>
+
+    ): List<Member> {
+
+
+
+        val active = _uiState.value.includeActive
+
+        val inactive = _uiState.value.includeInactive
+
+        val nearly = _uiState.value.includeNearlyFinished
+
+
+
+        return members.filter {
+
+            (it.status == "Active" && active) ||
+
+                    (it.status == "Inactive" && inactive) ||
+
+                    (it.status == "Nearly Finished" && nearly)
+
+        }
+
+    }
 
 }
