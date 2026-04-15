@@ -166,7 +166,7 @@ fun SessionCard(
                 Text("Duration : ${workout.duration}")
                 Row {
                     Button(
-                        onClick = { /*navController.navigate() */ }, //This will go to workoutInfo
+                        onClick = { navController.navigate(MemberPage(member.id))  },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFF5C6BC0))
                     ) { Text("Info") }
