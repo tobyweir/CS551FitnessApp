@@ -18,6 +18,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -73,8 +75,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val themeViewModel: ThemeViewModel = viewModel()
-            CS551FitnessAppTheme(darkTheme = themeViewModel.isDarkTheme.value) {
 
+            CS551FitnessAppTheme(darkTheme = themeViewModel.isDarkTheme.value) {
+                val selectedNavigationIndex = rememberSaveable {
+                    mutableIntStateOf(0)
+                }
+                val updateIndex : (Int) -> Unit = {selectedNavigationIndex.intValue = it}
                 val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val canGoBack = navBackStackEntry != null && navController.previousBackStackEntry != null
@@ -82,6 +88,8 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         modifier = Modifier.fillMaxSize(),
                         canGoBack  = canGoBack,
+                        navIndex = selectedNavigationIndex.intValue,
+                        updateIndex = updateIndex
                     )
 
             }
