@@ -37,20 +37,21 @@ import com.example.cs551fitnessapp.ui.screens.TodayScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifier , canGoBack : Boolean) {
+fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifier ,
+                canGoBack : Boolean , navIndex : Int,
+                updateIndex: (Int) -> Unit) {
     NavHost(navController, startDestination = Today) {
-
         composable<Members> {
-            Scaffold(modifier = modifier, bottomBar = {BottomBar(navController = navController)},
-                topBar = {TopBar(navController = navController, showBackIcon =  canGoBack , title = "Members")}
+            Scaffold(modifier = modifier, bottomBar = {BottomBar(navController = navController , index = navIndex , updateIndex = updateIndex)},
+                topBar = {TopBar(navController = navController, showBackIcon =  false , title = "Members")}
             ) { innerPadding ->
                 MembersScreen(modifier = modifier.padding(innerPadding), navController = navController)
             }
         }
 
         composable<Today> {
-            Scaffold(modifier = modifier, bottomBar = {BottomBar(navController = navController)},
-                topBar = {TopBar(navController = navController, showBackIcon =  canGoBack, title = "Today")}
+            Scaffold(modifier = modifier, bottomBar = {BottomBar(navController = navController , index = navIndex , updateIndex = updateIndex)},
+                topBar = {TopBar(navController = navController, showBackIcon =  false, title = "Today")}
             ) { innerPadding ->
                 TodayScreen(navController = navController, modifier = modifier.padding(innerPadding))
             }
@@ -64,7 +65,7 @@ fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifi
 
         composable<MemberPage> { backStackEntry ->
             val member : MemberPage = backStackEntry.toRoute()
-            Scaffold(modifier = modifier, bottomBar = {BottomBar(navController = navController)},
+            Scaffold(modifier = modifier, bottomBar = {BottomBar(navController = navController , index = navIndex , updateIndex = updateIndex)},
                 topBar = {TopBar(navController = navController, showBackIcon =  canGoBack , title = "Member")}
             ) { innerPadding ->
                 MemberInfoScreen(member.id, modifier = modifier.padding(innerPadding), navController = navController)
@@ -118,25 +119,23 @@ fun BackNavigateIcon (navController: NavHostController , showBackIcon : Boolean 
 
 
 @Composable
-fun BottomBar(navController : NavHostController, modifier: Modifier = Modifier) {
-    val selectedNavigationIndex = rememberSaveable {
-        mutableIntStateOf(0)
-    }
+fun BottomBar(navController : NavHostController, modifier: Modifier = Modifier , index : Int , updateIndex : (Int) -> Unit) {
+
 
     NavigationBar() {
         NavigationBarItem(
-            selected = selectedNavigationIndex.intValue == 0 ,
+            selected = index == 0 ,
             onClick = {
-                selectedNavigationIndex.intValue = 0
+                updateIndex(0)
                 navController.navigate(Today)
             },
             icon = { Icon(imageVector = Icons.Default.DateRange , contentDescription = "Today") },
             label = {}
         )
         NavigationBarItem(
-            selected = selectedNavigationIndex.intValue == 1 ,
+            selected = index == 1 ,
             onClick = {
-                selectedNavigationIndex.intValue = 1
+                updateIndex(1)
                 navController.navigate(Members)
             },
             icon = { Icon(imageVector = Icons.Default.Person , contentDescription = "Members") },
