@@ -27,6 +27,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.cs551fitnessapp.database.Exercise
+import com.example.cs551fitnessapp.ui.components.SuccessDialog
 
 import com.example.cs551fitnessapp.ui.navigation.AppNavHost
 import com.example.cs551fitnessapp.ui.navigation.BottomBar
@@ -36,6 +37,7 @@ import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 import com.example.cs551fitnessapp.ui.navigation.AppNavGraph
 import com.example.cs551fitnessapp.ui.screens.MedicalConcernScreen
 import com.example.cs551fitnessapp.ui.screens.MemberGoalScreen
+import com.example.cs551fitnessapp.ui.screens.TodayScreen
 import com.example.cs551fitnessapp.ui.screens.WorkoutPlanScreen
 import com.example.cs551fitnessapp.ui.viewmodels.ThemeViewModel
 import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel

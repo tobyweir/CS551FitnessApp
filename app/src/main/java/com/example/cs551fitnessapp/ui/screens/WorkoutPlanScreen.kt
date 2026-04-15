@@ -1,7 +1,5 @@
 package com.example.cs551fitnessapp.ui.screens
 
-// -- Workout Plan Session Screen ----------------------------------------------------------
-
 import android.app.DatePickerDialog
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,6 +33,8 @@ import com.example.cs551fitnessapp.ui.components.TimePickerDialog
 import androidx.compose.ui.res.painterResource
 import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.database.WorkoutPlanData
+import com.example.cs551fitnessapp.ui.viewmodels.SavePlanResult
+import com.example.cs551fitnessapp.ui.components.SuccessDialog
 import java.util.*
 
 private val PrimaryBlue = Color(0xFF2962FF)
@@ -50,7 +50,8 @@ fun WorkoutPlanScreen(
     onAddWorkout: () -> Unit,
     onCancelClick: () -> Unit,
     onDoneClick: (WorkoutPlanData) -> Unit,
-    modifier: Modifier
+    onNavigateToMemberInfo: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val addedEntries by planViewModel.addedEntries.collectAsState() //Workout list
     val sessionName  by planViewModel.sessionName.collectAsState()
@@ -59,9 +60,9 @@ fun WorkoutPlanScreen(
     val startMin     by planViewModel.startMin.collectAsState()
     val endHour      by planViewModel.endHour.collectAsState()
     val endMin       by planViewModel.endMin.collectAsState()
+    val saveResult   by planViewModel.saveResult.collectAsState()
 
-
-    // -- TimePicker visibility ---------------------------------------------
+    // Timepicker
     var showStartPicker by remember { mutableStateOf(false) }
     var showEndPicker   by remember { mutableStateOf(false) }
 
@@ -70,7 +71,7 @@ fun WorkoutPlanScreen(
             selectedDate.isNotBlank() &&
             addedEntries.isNotEmpty()
 
-    // -- Date picker ----------------------------------------------------------
+    // Date picker
     val context    = LocalContext.current
     val calendar   = Calendar.getInstance()
     val monthNames = listOf(
@@ -90,7 +91,6 @@ fun WorkoutPlanScreen(
         calendar.get(Calendar.DAY_OF_MONTH)
     )
 
-    // -- Time picker dialogs -----------------------------------------------------
     if (showStartPicker) {
         TimePickerDialog(
             initialHour   = startHour,
@@ -117,11 +117,36 @@ fun WorkoutPlanScreen(
         )
     }
 
-    Scaffold(modifier = modifier,
+    // Success Dialog
+    if (saveResult is SavePlanResult.Success) {
+        SuccessDialog(
+            msg = "Workout plan has been saved successfully.",
+            onDismiss = {
+                planViewModel.clearAllValue()
+                onNavigateToMemberInfo()
+            }
+        )
+    }
+
+    // Error Dialog
+    if (saveResult is SavePlanResult.Error) {
+        AlertDialog(
+            onDismissRequest = { planViewModel.resetSaveResult() },
+            title = { Text("Error") },
+            text = { Text((saveResult as SavePlanResult.Error).message) },
+            confirmButton = {
+                Button(onClick = { planViewModel.resetSaveResult() }) {
+                    Text("Retry")
+                }
+            }
+        )
+    }
+
+    Scaffold(
         topBar    = { WorkoutPlanTopBar(onBackClick = onBackClick) },
         bottomBar = {
             WorkoutPlanBottomBar(
-                isDoneEnabled = isDoneEnabled,
+                isDoneEnabled = isDoneEnabled && (saveResult !is SavePlanResult.Loading),
                 onCancelClick = onCancelClick,
                 onDoneClick   = {
                     onDoneClick(
@@ -138,7 +163,8 @@ fun WorkoutPlanScreen(
                 }
             )
         },
-        containerColor = Color.White
+        containerColor = Color.White,
+        modifier = modifier
     ) { innerPadding ->
 
         Column(
@@ -149,6 +175,10 @@ fun WorkoutPlanScreen(
                 .padding(horizontal = 20.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+
+            if (saveResult is SavePlanResult.Loading) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth(), color = PrimaryBlue)
+            }
 
             Text(
                 text       = "Workout Details",

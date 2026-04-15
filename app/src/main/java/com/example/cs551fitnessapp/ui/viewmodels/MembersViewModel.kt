@@ -14,7 +14,8 @@ import java.util.Date
 
 class MembersViewModel : ViewModel() {
     val members = listOf<Member>(
-        Member(id = 0,
+        Member(
+            id = 0,
             name ="John Smith" ,
             joinDate = Date(2026 , 3 , 17) ,
             endDate = null ,
@@ -24,12 +25,14 @@ class MembersViewModel : ViewModel() {
             joinDate = Date(2026 , 3 , 17) ,
             endDate = null ,
             status = "Inactive",),
-        Member(id = 2,
+        Member(
+            id = 2,
             name ="Major Smith" ,
             joinDate = Date(2026 , 3 , 17) ,
             endDate = null ,
             status = "Inactive",),
-        Member(id = 3,
+        Member(
+            id = 3,
             name ="John Smith" ,
             joinDate = Date(2026 , 3 , 17) ,
             endDate = null ,
@@ -39,12 +42,14 @@ class MembersViewModel : ViewModel() {
             joinDate = Date(2026 , 3 , 17) ,
             endDate = null ,
             status = "Active",),
-        Member(id = 5,
+        Member(
+            id = 5,
             name ="Major Smith" ,
             joinDate = Date(2026 , 3 , 17) ,
             endDate = null ,
             status = "Nearly Finished",),
-        Member(id = 6,
+        Member(
+            id = 6,
             name ="John Smith" ,
             joinDate = Date(2026 , 3 , 17) ,
             endDate = null ,
@@ -54,7 +59,8 @@ class MembersViewModel : ViewModel() {
             joinDate = Date(2026 , 3 , 17) ,
             endDate = null ,
             status = "Inactive",),
-        Member(id = 8,
+        Member(
+            id = 8,
             name ="Major Smith" ,
             joinDate = Date(2026 , 3 , 17) ,
             endDate = null ,

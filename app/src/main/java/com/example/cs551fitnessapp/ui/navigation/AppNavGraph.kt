@@ -86,6 +86,11 @@ fun AppNavGraph(
                 onAddWorkout  = { currentScreen = Screen.SEARCH_WORKOUT },
                 onCancelClick = { navController.popBackStack() },
                 onDoneClick   = { data -> planViewModel.savePlan(data) },
+                onNavigateToMemberInfo = {
+                    navController.navigate(MemberPage(id = 1)) { // Assuming ID 1 for now, or get from flow
+                        popUpTo<AddWorkoutFlow> { inclusive = true }
+                    }
+                },
                 modifier = modifier
             )
         }

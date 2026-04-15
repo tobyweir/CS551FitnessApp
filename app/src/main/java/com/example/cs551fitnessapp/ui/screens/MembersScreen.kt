@@ -1,19 +1,18 @@
 package com.example.cs551fitnessapp.ui.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -33,17 +32,14 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -60,7 +56,6 @@ import androidx.navigation.NavHostController
 import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.ui.ViewModelFactory
 import com.example.cs551fitnessapp.ui.navigation.AddMemberFlow
-import com.example.cs551fitnessapp.ui.navigation.BottomBar
 import com.example.cs551fitnessapp.ui.navigation.MemberPage
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 import com.example.cs551fitnessapp.ui.viewmodels.MembersViewModel
@@ -69,6 +64,7 @@ import java.util.Date
 
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MembersScreen(navController : NavHostController , modifier: Modifier = Modifier, viewmodel : MembersViewModel = viewModel(factory = ViewModelFactory.Factory)){
     val uiState = viewmodel.uiState.collectAsState()
@@ -232,11 +228,12 @@ fun MemberCardInfo(name : String ,
     }
 }
 //Temporary until database has these entities
-data class Member(val id : Int ,
-                  val name : String ,
-                  val joinDate : Date ,
-                  val endDate : Date? ,
-                  val status: String,
+data class Member(
+    val id: Int,
+    val name: String,
+    val joinDate: Date,
+    val endDate: Date?,
+    val status: String,
                   )
 
 @Preview(showBackground = true)
