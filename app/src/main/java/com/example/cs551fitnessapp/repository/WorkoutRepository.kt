@@ -13,10 +13,11 @@ import com.example.cs551fitnessapp.database.UserEntity
 import com.example.cs551fitnessapp.database.WorkoutEntry
 import com.example.cs551fitnessapp.database.WorkoutPlanData
 import com.example.cs551fitnessapp.ui.utils.DateTimeUtils
+import com.example.cs551fitnessapp.ui.viewmodels.MemberSession
 import com.example.cs551fitnessapp.ui.viewmodels.SavePlanResult
 
 import kotlinx.coroutines.flow.Flow
-import java.util.Calendar
+import kotlinx.coroutines.flow.map
 
 class WorkoutRepository(
     private val userDao            : UserDao,
@@ -25,7 +26,7 @@ class WorkoutRepository(
     private val sessionExerciseDao : SessionExerciseDao
 ) {
 
-    // -- User ---------------------------------------------------------------
+    // User
 
     suspend fun insertUser(name: String): Long =
         userDao.insertUser(UserEntity(name = name))
@@ -34,7 +35,21 @@ class WorkoutRepository(
     fun getUserWithSessions(userId: Long) =
         userDao.getUserWithSessions(userId)
 
-    // -- Session ---------------------------------------------------------------
+    // Session
+    fun getalluserSessions(dtStartSession: Long, dtEndtSession: Long) : Flow<List<MemberSession>> =
+        sessionDao.getSessionsbyDate(dtStartSession,dtEndtSession)     // returns Flow<List<SessionEntity>> //for debugging 1776204000000
+            .map { sessions ->
+                sessions.map { session ->
+                    MemberSession(
+                        id = session.sessionId,
+                        name = session.sessionName,
+                        dtSessionStart = DateTimeUtils.toDisplayString(session.dtStartSession),
+                        dtSessionEnd = DateTimeUtils.toDisplayString(session.dtEndSession),
+                        status = "Active"
+                    )
+                }
+            }
+
 
     fun getSessionsByUser(userId: Long) =
         sessionDao.getSessionsByUser(userId)

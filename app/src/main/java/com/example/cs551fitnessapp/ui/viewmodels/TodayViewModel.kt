@@ -4,66 +4,25 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cs551fitnessapp.ui.screens.Member
 import com.example.cs551fitnessapp.ui.screens.Workout
 import com.example.cs551fitnessapp.ui.viewmodels.states.TodayUiState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.util.Date
+import com.example.cs551fitnessapp.repository.WorkoutRepository
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
+import java.time.ZoneId
 
-val members = listOf<Member>(
-    Member(id = 0,
-        name ="John Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member( id = 1,
-        name ="Mike Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Inactive",),
-    Member(id = 2,
-        name ="Major Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Inactive",),
-    Member(id = 3,
-        name ="Jill Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Nearly Finished",),
-    Member( id = 4,
-        name ="Mike Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member(id = 5,
-        name ="Major Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Nearly Finished",),
-    Member(id = 6,
-        name ="John Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member( id = 7,
-        name ="Mike Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Inactive",),
-    Member(id = 8,
-        name ="Major Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Nearly Finished",)
+//Temporary until database has these entities
+data class MemberSession(
+    val id: Long,
+    val name: String, //Session name
+    val dtSessionStart: String, // Start Session
+    val dtSessionEnd: String,
+    val status: String
 )
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -75,13 +34,14 @@ val workouts = listOf<Workout>(
 )
 
 
-class TodayViewModel() : ViewModel() {
+@RequiresApi(Build.VERSION_CODES.O)
+class TodayViewModel(private val repository: WorkoutRepository) : ViewModel() {
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     val currentDate = LocalDate.now()
 
-    // Convert Date to Local Date, may be needed later
-    // dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
     @RequiresApi(Build.VERSION_CODES.O)
     private val _uiState  = MutableStateFlow(TodayUiState(currentDate.minusDays(3),
         currentDate.minusDays(2),
@@ -93,9 +53,43 @@ class TodayViewModel() : ViewModel() {
         currentDate,
         workouts,
         workouts.filter { it.date == currentDate },
-        members))
+        emptyList()))
+
     @RequiresApi(Build.VERSION_CODES.O)
     val uiState : StateFlow<TodayUiState> = _uiState.asStateFlow()
+
+    init {
+        loadMembers()
+    }
+
+    // Load members from repo
+    private fun loadMembers() {
+        viewModelScope.launch {
+            val (start, end) = getTodayRange()
+            repository.getalluserSessions(start, end)
+                .catch { e ->
+                    emit(emptyList())
+                }
+                .collect { MemberSession ->
+                    _uiState.update { state ->
+                        state.copy(members = MemberSession)
+                    }
+                }
+        }
+    }
+
+    fun getTodayRange(): Pair<Long, Long> {
+        val zoneId = ZoneId.systemDefault()
+        val today = LocalDate.now()
+
+        val startOfDay = today.atStartOfDay(zoneId).toInstant().toEpochMilli()
+        val endOfDay = today.plusDays(1)
+            .atStartOfDay(zoneId)
+            .toInstant()
+            .toEpochMilli() - 1
+
+        return Pair(startOfDay, endOfDay)
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun updateSelectedDay (newDay : LocalDate) {
@@ -112,7 +106,7 @@ class TodayViewModel() : ViewModel() {
         val newWorkouts = _uiState.value.workouts.filter {it.date == _uiState.value.selectedDay }
         _uiState.update { uiState ->
             uiState.copy(
-                 filteredWorkouts = newWorkouts
+                filteredWorkouts = newWorkouts
             )
         }
     }

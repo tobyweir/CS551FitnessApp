@@ -1,8 +1,6 @@
 package com.example.cs551fitnessapp.database
 
 import androidx.room.*
-import com.example.cs551fitnessapp.database.SessionEntity
-import com.example.cs551fitnessapp.database.SessionWithExercises
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -47,6 +45,13 @@ interface SessionDao {
         WHERE ownerUserId = :userId
     """)
     fun getAllSessionsWithExercises(userId: Long): Flow<List<SessionWithExercises>>
+
+    @Query("""
+        SELECT * FROM sessions
+        WHERE dtStartSession BETWEEN :date AND :end 
+        ORDER BY dtStartSession DESC
+    """)
+    fun getSessionsbyDate(date: Long, end: Long): Flow<List<SessionEntity>>
 
     @Query("""
         SELECT COUNT(*) FROM sessions

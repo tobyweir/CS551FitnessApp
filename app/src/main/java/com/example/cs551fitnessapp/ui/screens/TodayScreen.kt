@@ -6,22 +6,15 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
-
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-
 import androidx.compose.material3.*
-
 import androidx.compose.runtime.*
-
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,13 +23,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-
 import androidx.navigation.NavController
-
 import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.ui.ViewModelFactory
-import com.example.cs551fitnessapp.ui.navigation.MemberPage
+import com.example.cs551fitnessapp.ui.viewmodels.MemberSession
 import com.example.cs551fitnessapp.ui.viewmodels.TodayViewModel
 import java.time.LocalDate
 
@@ -67,17 +59,38 @@ fun TodayScreen(
                 uiState.value.day5,
                 uiState.value.day6,
                 uiState.value.day7,
-                )
+            )
         )
+        if (uiState.value.members.isEmpty()) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier         = Modifier.fillMaxSize()
+            ) {
+                Text("No members yet", color = Color.Gray)
+            }
+        } else {
         LazyColumn {
-            items(uiState.value.filteredWorkouts) {
-                val currWorkout = it
+//            items(uiState.value.filteredWorkouts) {
+//                val currWorkout = it
+//                SessionCard(
+//                    workout = it,
+//                    member = uiState.value.members.first{ it.id == currWorkout.memberId },
+//                    navController = navController
+//                )
+//            }
+            // ── Member rows ────────────────────────────────────────────
+            items(
+                items = uiState.value.members,
+                key = { it.id }
+            ) { member ->
+                //MemberRow(member = member)
                 SessionCard(
-                    workout = it,
-                    member = uiState.value.members.first{ it.id == currWorkout.memberId },
+                    //workout = it.se,
+                    member = uiState.value.members.first { it.id == member.id },
                     navController = navController
                 )
             }
+        }
         }
     }
 }
@@ -99,6 +112,7 @@ fun DateSelector(
         items(dates) {
             DateItem(
                 day = it.dayOfMonth.toString(),
+                date = it.dayOfWeek.name.take(3),
                 isSelected = it == selectedDate,
                 onClick = { onDateSelected(it) }
             )
@@ -109,32 +123,45 @@ fun DateSelector(
 @Composable
 fun DateItem(
     day: String,
+    date: String,
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
+            .width(48.dp)
+            .height(80.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(
                 if (isSelected) Color(0xFF2962FF)
                 else Color.White
             )
-            .padding(horizontal = 18.dp, vertical = 12.dp)
+            .padding(horizontal = 8.dp, vertical = 8.dp)
             .clickable { onClick() }
     ) {
-        Text(
-            day,
-            color =
-                if (isSelected) Color.White
-                else Color.Black
-        )
+        Column (
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                day,
+                color = if (isSelected) Color.White else Color.Black,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                date,
+                fontSize = 12.sp,
+                color = if (isSelected) Color.White else Color.Black
+            )
+        }
     }
 }
 
 @Composable
 fun SessionCard(
-    workout: Workout,
-    member: Member,
+    //workout: Workout,
+    member: MemberSession,
     navController: NavController,
 ) {
     Card(
@@ -162,11 +189,11 @@ fun SessionCard(
                 Text(member.name,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF2962FF))
-                Text("Start : ${workout.start}")
-                Text("Duration : ${workout.duration}")
+                Text("Start : ${member.dtSessionStart}")
+                Text("End : ${member.dtSessionEnd}")
                 Row {
                     Button(
-                        onClick = { navController.navigate(MemberPage(member.id))  },
+                        onClick = { /*navController.navigate() */ },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFF5C6BC0))
                     ) { Text("Info") }
@@ -176,7 +203,8 @@ fun SessionCard(
                     }
                 }
             }
-            //AssistChip(onClick = { }, label = { Text("session ${member.progress}") })
         }
     }
 }
+
+

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.width
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -56,8 +57,6 @@ enum class Screen {
 
 }
 
-
-
 @Composable
 fun AppNavGraph(
 
@@ -77,166 +76,71 @@ fun AppNavGraph(
 
     val planViewModel: WorkoutPlanViewModel = viewModel()
 
-    val searchViewModel: SearchWorkoutViewModel = viewModel()
-
 
 
     var currentScreen by rememberSaveable {
-
         mutableStateOf(startScreen)
-
     }
 
-
-
+    //  Store only the exercise ID
     var selectedExerciseId by rememberSaveable {
-
         mutableStateOf<String?>(null)
-
     }
 
-
-
+    // Resolve Exercise from ID using the search VM's last successful result
+    val searchViewModel: com.example.cs551fitnessapp.ui.viewmodels.SearchWorkoutViewModel = viewModel()
     val currentExercise = remember(selectedExerciseId) {
-
         val state = searchViewModel.uiState.value
-
-        if (state is ExerciseUiState.Success) {
-
-            state.exercises.find {
-
-                it.id == selectedExerciseId
-
-            }
-
+        if (state is com.example.cs551fitnessapp.ui.viewmodels.states.ExerciseUiState.Success) {
+            state.exercises.find { it.id == selectedExerciseId }
         } else null
-
     }
-
-
 
     when (currentScreen) {
 
-
-
-        // ---------------- WORKOUT FLOW ----------------
-
-
-
         Screen.WORKOUT_PLAN -> {
-
             WorkoutPlanScreen(
-
                 planViewModel = planViewModel,
-
-                onBackClick = {
-
-                    navController.popBackStack()
-
+                onBackClick   = { navController.popBackStack() },
+                onAddWorkout  = { currentScreen = Screen.SEARCH_WORKOUT },
+                onCancelClick = { navController.popBackStack() },
+                onDoneClick   = { data -> planViewModel.savePlan(data) },
+                onNavigateToMemberInfo = {
+                    navController.navigate(MemberPage(id = 1)) { // Assuming ID 1 for now, or get from flow
+                        popUpTo<AddWorkoutFlow> { inclusive = true }
+                    }
                 },
-
-                onAddWorkout = {
-
-                    currentScreen = Screen.SEARCH_WORKOUT
-
-                },
-
-                onCancelClick = {
-
-                    navController.popBackStack()
-
-                },
-
-                onDoneClick = { data ->
-
-                    planViewModel.savePlan(data)
-
-                },
-
                 modifier = modifier
-
             )
-
         }
-
-
 
         Screen.SEARCH_WORKOUT -> {
-
             SearchWorkoutScreen(
-
-                planViewModel = planViewModel,
-
+                planViewModel  = planViewModel,
                 searchViewModel = searchViewModel,
-
-                onBackClick = {
-
-                    currentScreen = Screen.WORKOUT_PLAN
-
-                },
-
-                onSaveClick = {
-
-                    currentScreen = Screen.WORKOUT_PLAN
-
-                },
-
-                onAddExercise = { exercise ->
-
+                onBackClick    = { currentScreen = Screen.WORKOUT_PLAN },
+                onSaveClick    = { currentScreen = Screen.WORKOUT_PLAN },
+                onAddExercise  = { exercise ->
                     selectedExerciseId = exercise.id
-
-                    currentScreen = Screen.WORKOUT_INFO
-
+                    currentScreen      = Screen.WORKOUT_INFO
                 },
-
-                onCancelClick = {
-
-                    navController.popBackStack()
-
-                },
-
+                onCancelClick = {navController.popBackStack()},
                 modifier = modifier
-
             )
-
         }
 
-
-
         Screen.WORKOUT_INFO -> {
-
+            // Guard: if exercise lost fall back to search
             val exercise = currentExercise
-
-
-
             if (exercise == null) {
-
                 currentScreen = Screen.SEARCH_WORKOUT
-
                 return
-
             }
-
-
-
             WorkoutInfoScreen(
-
-                exercise = exercise,
-
-                onBackClick = {
-
-                    currentScreen = Screen.SEARCH_WORKOUT
-
-                },
-
-                onCancelClick = {
-
-                    navController.popBackStack()
-
-                },
-
-                onAddClick = { entry ->
-
+                exercise      = exercise,
+                onBackClick   = { currentScreen = Screen.SEARCH_WORKOUT },
+                onCancelClick = { navController.popBackStack() },
+                onAddClick    = { entry ->
                     planViewModel.addEntry(entry)
 
                     currentScreen = Screen.SEARCH_WORKOUT
@@ -421,8 +325,6 @@ fun AppNavGraph(
 
         }
 
-
-
         Screen.MEMBER_GOAL -> {
 
             MemberGoalScreen(
@@ -520,77 +422,37 @@ fun AppNavGraph(
             )
 
         }
-
     }
-
 }
-
-
-
 private val PrimaryBlue = Color(0xFF2962FF)
-
-
-
+private val LightGrayBg = Color(0xFFF5F5F5)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GenericTopBar(
-
-    onBackClick: () -> Unit
-
+    //memberInitial : String,
+    onBackClick   : () -> Unit
 ) {
-
     CenterAlignedTopAppBar(
-
         title = {
-
             Text(
-
-                "Add Member",
-
+                text       = "Add Member",
                 fontWeight = FontWeight.Bold,
-
-                color = PrimaryBlue,
-
-                fontSize = 18.sp
-
+                color      = PrimaryBlue,
+                fontSize   = 18.sp
             )
-
         },
-
         navigationIcon = {
-
             IconButton(onClick = onBackClick) {
-
                 Icon(
-
-                    Icons.AutoMirrored.Filled.ArrowBack,
-
+                    Icons.Default.ArrowBack,
                     contentDescription = "Back",
-
-                    tint = PrimaryBlue
-
+                    tint               = PrimaryBlue
                 )
-
             }
-
         },
-
-        actions = {
-
-            Spacer(
-
-                modifier = Modifier.width(48.dp)
-
-            )
-
+        actions = { /* Set title in centre of screen */
+            Spacer(modifier = androidx.compose.ui.Modifier.width(48.dp))
         },
-
-        colors = TopAppBarDefaults.topAppBarColors(
-
-            containerColor = Color.White
-
-        )
-
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
     )
-
 }
