@@ -6,8 +6,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
+
 import androidx.compose.material3.*
 
 import androidx.compose.runtime.Composable
@@ -15,446 +18,128 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 
 import androidx.compose.ui.Modifier
-
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.ViewModelProvider
 
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-
 import com.example.cs551fitnessapp.ui.ViewModelFactory
 import com.example.cs551fitnessapp.ui.screens.MemberInfoScreen
 import com.example.cs551fitnessapp.ui.screens.MembersScreen
+import com.example.cs551fitnessapp.ui.screens.SearchWorkoutScreen
 import com.example.cs551fitnessapp.ui.screens.SettingsScreen
+
 import com.example.cs551fitnessapp.ui.screens.TodayScreen
 
-import com.example.cs551fitnessapp.ui.viewmodels.MembersViewModel
 
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AppNavHost(
-
-    navController: NavHostController,
-
-    modifier: Modifier = Modifier,
-
-    canGoBack: Boolean
-
-) {
-
-    // ONE shared ViewModel
-    val membersViewModel: MembersViewModel =
-        viewModel(factory = ViewModelFactory.Factory)
-
-
-
-    NavHost(
-
-        navController = navController,
-
-        startDestination = Today
-
-    ) {
-
-        // ---------------- MEMBERS ----------------
-
+fun AppNavHost (navController : NavHostController , modifier : Modifier = Modifier ,
+                canGoBack : Boolean , navIndex : Int,
+                updateIndex: (Int) -> Unit) {
+    NavHost(navController, startDestination = Today) {
         composable<Members> {
-
-            Scaffold(
-
-                modifier = modifier,
-
-                bottomBar = {
-
-                    BottomBar(navController)
-
-                },
-
-                topBar = {
-
-                    TopBar(
-
-                        navController = navController,
-
-                        showBackIcon = canGoBack,
-
-                        title = "Members"
-
-                    )
-
-                }
-
-            ) { padding ->
-
-
-
-                MembersScreen(
-
-                    navController = navController,
-
-                    modifier = modifier.padding(padding),
-
-                    viewmodel = membersViewModel   // SAME INSTANCE
-
-                )
-
+            Scaffold(modifier = modifier, bottomBar = {BottomBar(navController = navController , index = navIndex , updateIndex = updateIndex)},
+                topBar = {TopBar(navController = navController, showBackIcon =  false , title = "Members")}
+            ) { innerPadding ->
+                MembersScreen(modifier = modifier.padding(innerPadding), navController = navController)
             }
-
         }
-
-
-
-        // ---------------- TODAY ----------------
 
         composable<Today> {
-
-            Scaffold(
-
-                modifier = modifier,
-
-                bottomBar = {
-
-                    BottomBar(navController)
-
-                },
-
-                topBar = {
-
-                    TopBar(
-
-                        navController = navController,
-
-                        showBackIcon = canGoBack,
-
-                        title = "Today"
-
-                    )
-
-                }
-
-            ) { padding ->
-
-
-
-                TodayScreen(
-
-                    navController = navController,
-
-                    modifier = modifier.padding(padding)
-
-                )
-
+            Scaffold(modifier = modifier, bottomBar = {BottomBar(navController = navController , index = navIndex , updateIndex = updateIndex)},
+                topBar = {TopBar(navController = navController, showBackIcon =  false, title = "Today")}
+            ) { innerPadding ->
+                TodayScreen(navController = navController, modifier = modifier.padding(innerPadding))
             }
-
         }
-
-
-
-        // ---------------- SETTINGS ----------------
 
         composable<PreferencesPage> {
-
-            SettingsScreen(
-
-                onBack = {
-
-                    navController.popBackStack()
-
-                }
-
-            )
+            //Text(text = "preferences")
+                SettingsScreen(onBack = { navController.popBackStack()})
 
         }
-
-
-
-        // ---------------- MEMBER DETAILS ----------------
 
         composable<MemberPage> { backStackEntry ->
-
-            val member: MemberPage = backStackEntry.toRoute()
-
-
-
-            Scaffold(
-
-                modifier = modifier,
-
-                bottomBar = {
-
-                    BottomBar(navController)
-
-                },
-
-                topBar = {
-
-                    TopBar(
-
-                        navController = navController,
-
-                        showBackIcon = canGoBack,
-
-                        title = "Member"
-
-                    )
-
-                }
-
-            ) { padding ->
-
-
-
-                MemberInfoScreen(
-
-                    member.id,
-
-                    modifier = modifier.padding(padding),
-
-                    navController = navController
-
-                )
-
+            val member : MemberPage = backStackEntry.toRoute()
+            Scaffold(modifier = modifier, bottomBar = {BottomBar(navController = navController , index = navIndex , updateIndex = updateIndex)},
+                topBar = {TopBar(navController = navController, showBackIcon =  canGoBack , title = "Member")}
+            ) { innerPadding ->
+                MemberInfoScreen(member.id, modifier = modifier.padding(innerPadding), navController = navController)
             }
-
         }
-
-
-
-        // ---------------- ADD MEMBER FLOW ----------------
 
         composable<AddMemberFlow> {
-
-            AppNavGraph(
-
-                navController = navController,
-
-                modifier = modifier,
-
-                startScreen = Screen.MEMBER_SEX,
-
-                membersViewModel = membersViewModel   // SAME INSTANCE
-
-            )
+            AppNavGraph (startScreen = Screen.MEMBER_SEX , modifier = modifier , navController = navController)
 
         }
 
-
-
-        // ---------------- ADD WORKOUT FLOW ----------------
-
-        composable<AddWorkoutFlow> { backStackEntry ->
-
-            val member: AddWorkoutFlow = backStackEntry.toRoute()
-
-
-
-            AppNavGraph(
-
-                navController = navController,
-
-                modifier = modifier,
-
-                startScreen = Screen.WORKOUT_PLAN,
-
-                membersViewModel = membersViewModel
-
-            )
+        composable<AddWorkoutFlow> {  backStackEntry ->
+            val member : AddWorkoutFlow = backStackEntry.toRoute()
+            AppNavGraph (startScreen = Screen.WORKOUT_PLAN , modifier = modifier, navController = navController)
 
         }
 
     }
-
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(
-
-    navController: NavHostController,
-
-    showBackIcon: Boolean,
-
-    modifier: Modifier = Modifier,
-
-    title: String = "Fitness App"
-
-) {
-
+fun TopBar(navController : NavHostController , showBackIcon : Boolean ,  modifier: Modifier = Modifier , title : String = "Fitness App") {
     CenterAlignedTopAppBar(
+        title = {Text(text = title)},
 
-        title = {
-
-            Text(title)
-
-        },
-
-        navigationIcon = {
-
-            BackNavigateIcon(
-
-                navController,
-
-                showBackIcon
-
-            )
-
-        },
-
+        navigationIcon = {BackNavigateIcon(navController = navController , showBackIcon = showBackIcon)},
         actions = {
-
-            IconButton(
-
-                onClick = {
-
-                    navController.navigate(
-
-                        PreferencesPage
-
-                    )
-
-                }
-
-            ) {
-
-                Icon(
-
+            IconButton(onClick = {navController.navigate(PreferencesPage)}) {
+                Icon (
                     imageVector = Icons.Default.Settings,
-
-                    contentDescription = "Settings"
-
+                    contentDescription = "Settings Icon"
                 )
-
             }
-
         }
-
     )
-
 }
 
-
-
 @Composable
-fun BackNavigateIcon(
-
-    navController: NavHostController,
-
-    showBackIcon: Boolean,
-
-    modifier: Modifier = Modifier
-
-) {
-
+fun BackNavigateIcon (navController: NavHostController , showBackIcon : Boolean , modifier: Modifier = Modifier) {
     if (showBackIcon) {
-
-        IconButton(
-
-            onClick = {
-
-                navController.popBackStack()
-
-            }
-
-        ) {
-
+        IconButton(onClick = { navController.popBackStack() }) {
             Icon(
-
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-
-                contentDescription = "Back"
-
+                contentDescription = "Arrow Back Icon"
             )
-
         }
-
     }
 
 }
 
 
-
 @Composable
-fun BottomBar(
-
-    navController: NavHostController,
-
-    modifier: Modifier = Modifier
-
-) {
-
-    val selectedIndex = rememberSaveable {
-
-        mutableIntStateOf(0)
-
-    }
+fun BottomBar(navController : NavHostController, modifier: Modifier = Modifier , index : Int , updateIndex : (Int) -> Unit) {
 
 
-
-    NavigationBar {
-
+    NavigationBar() {
         NavigationBarItem(
-
-            selected = selectedIndex.intValue == 0,
-
+            selected = index == 0 ,
             onClick = {
-
-                selectedIndex.intValue = 0
-
+                updateIndex(0)
                 navController.navigate(Today)
-
             },
-
-            icon = {
-
-                Icon(
-
-                    Icons.Default.DateRange,
-
-                    contentDescription = "Today"
-
-                )
-
-            },
-
+            icon = { Icon(imageVector = Icons.Default.DateRange , contentDescription = "Today") },
             label = {}
-
         )
-
-
-
         NavigationBarItem(
-
-            selected = selectedIndex.intValue == 1,
-
+            selected = index == 1 ,
             onClick = {
-
-                selectedIndex.intValue = 1
-
+                updateIndex(1)
                 navController.navigate(Members)
-
             },
-
-            icon = {
-
-                Icon(
-
-                    Icons.Default.Person,
-
-                    contentDescription = "Members"
-
-                )
-
-            },
-
+            icon = { Icon(imageVector = Icons.Default.Person , contentDescription = "Members") },
             label = {}
-
         )
-
     }
-
 }
