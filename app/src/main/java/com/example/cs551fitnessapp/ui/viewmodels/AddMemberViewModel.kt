@@ -1,0 +1,186 @@
+package com.example.cs551fitnessapp.ui.viewmodels
+
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.cs551fitnessapp.database.DatabaseModule
+import com.example.cs551fitnessapp.database.member.MemberEntity
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+
+class AddMemberViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val repository = DatabaseModule.provideMemberRepository(application)
+
+    var sex by mutableStateOf("")
+        private set
+
+    var birthday by mutableStateOf("")
+        private set
+
+    var weight by mutableStateOf("")
+        private set
+
+    var weightUnit by mutableStateOf("lbs")
+        private set
+
+    var height by mutableStateOf("")
+        private set
+
+    var heightUnit by mutableStateOf("cm")
+        private set
+
+    var goal by mutableStateOf("")
+        private set
+
+    var goalId by mutableStateOf(0)
+        private set
+
+    var medicalConcern by mutableStateOf("")
+        private set
+
+    var medicalConcernId by mutableStateOf(0)
+        private set
+
+    var medicalNote by mutableStateOf("")
+        private set
+
+    var name by mutableStateOf("")
+        private set
+
+    var sessions by mutableStateOf(0)
+        private set
+
+    var sessionsInput by mutableStateOf("20")
+        private set
+
+    fun updateSex(value: String) {
+        sex = value
+    }
+
+    fun updateBirthday(value: String) {
+        birthday = value
+    }
+
+    fun updateWeight(value: String) {
+        weight = value
+    }
+
+    fun updateWeightUnit(value: String) {
+        weightUnit = value
+    }
+
+    fun updateHeight(value: String) {
+        height = value
+    }
+
+    fun updateHeightUnit(value: String) {
+        heightUnit = value
+    }
+
+    fun updateGoal(value: String) {
+        goal = value
+    }
+
+    fun updateGoalSelection(id: Int) {
+        goalId = id
+        goal = when (id) {
+            0 -> "Lose Weight"
+            1 -> "Build Muscle"
+            2 -> "Get Fit"
+            else -> "General Fitness"
+        }
+    }
+
+    fun updateMedicalConcern(value: String) {
+        medicalConcern = value
+    }
+
+    fun updateMedicalConcernSelection(id: Int) {
+        medicalConcernId = id
+        medicalConcern = when (id) {
+            0 -> "None"
+            1 -> "Heart Condition"
+            2 -> "Injury"
+            3 -> "Mobility Concern"
+            else -> "None"
+        }
+    }
+
+    fun updateMedicalNote(value: String) {
+        medicalNote = value
+    }
+
+    fun updateName(value: String) {
+        name = value
+    }
+
+    fun updateSessions(value: Int) {
+        sessions = value
+    }
+
+    fun updateSessionsInput(value: String) {
+        sessionsInput = value
+    }
+
+    fun saveMember(onSaved: () -> Unit) {
+        viewModelScope.launch {
+            val notesText = buildString {
+                if (medicalConcern.isNotBlank()) {
+                    append("Medical concern: ")
+                    append(medicalConcern)
+                }
+                if (medicalNote.isNotBlank()) {
+                    if (isNotBlank()) append(" | ")
+                    append("Note: ")
+                    append(medicalNote)
+                }
+                if (birthday.isNotBlank()) {
+                    if (isNotBlank()) append(" | ")
+                    append("Birthday: ")
+                    append(birthday)
+                }
+                if (sex.isNotBlank()) {
+                    if (isNotBlank()) append(" | ")
+                    append("Sex: ")
+                    append(sex)
+                }
+                if (weight.isNotBlank()) {
+                    if (isNotBlank()) append(" | ")
+                    append("Weight: ")
+                    append(weight)
+                    append(" ")
+                    append(weightUnit)
+                }
+                if (height.isNotBlank()) {
+                    if (isNotBlank()) append(" | ")
+                    append("Height: ")
+                    append(height)
+                    append(" ")
+                    append(heightUnit)
+                }
+                if (sessionsInput.isNotBlank()) {
+                    if (isNotBlank()) append(" | ")
+                    append("Sessions: ")
+                    append(sessionsInput)
+                }
+            }
+
+            val member = MemberEntity(
+                name = name,
+                joinDate = System.currentTimeMillis(),
+                endDate = null,
+                fitnessLevel = "Beginner",
+                goal = goal.ifBlank { "General fitness" },
+                notes = notesText,
+                imageUri = null,
+                status = "Active"
+            )
+
+            repository.addMember(member)
+            onSaved()
+        }
+    }
+}

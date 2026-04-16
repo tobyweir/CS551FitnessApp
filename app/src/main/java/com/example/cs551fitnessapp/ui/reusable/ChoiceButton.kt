@@ -68,7 +68,6 @@ fun ChoiceButton (optionOne: Int, optionTwo: Int, modifier: Modifier = Modifier)
                         0 -> Text(
                             stringResource(optionOne)
                         )
-
                         1 -> Text(
                             stringResource(optionTwo)
                         )
@@ -76,9 +75,6 @@ fun ChoiceButton (optionOne: Int, optionTwo: Int, modifier: Modifier = Modifier)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-
-
-
             )
         }
     }

@@ -106,24 +106,4 @@ class MembersViewModel(application: Application) : AndroidViewModel(application)
                     (it.status == "Nearly Finished" && includeNearlyFinished)
         }
     }
-
-    // Testing the database actually works
-    /**
-    fun insertTestMember() {
-        viewModelScope.launch {
-            repository.addMember(
-                MemberEntity(
-                    name = "Jessica J.",
-                    joinDate = System.currentTimeMillis(),
-                    endDate = null,
-                    fitnessLevel = "Beginner",
-                    goal = "Lose weight",
-                    notes = "Test member",
-                    imageUri = null,
-                    status = "Active"
-                )
-            )
-        }
-    }
-    **/
 }

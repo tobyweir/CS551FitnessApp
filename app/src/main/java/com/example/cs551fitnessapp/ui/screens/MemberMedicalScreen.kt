@@ -1,482 +1,285 @@
 package com.example.cs551fitnessapp.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.EmojiEmotions
-import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material.icons.filled.PersonalInjury
-import androidx.compose.material.icons.filled.Vaccines
-
-import androidx.compose.material3.*
-
-import androidx.compose.runtime.*
-
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Healing
+import androidx.compose.material.icons.filled.AccessibilityNew
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 
-
-
-private val PrimaryBlue = androidx.compose.ui.graphics.Color(0xFF2962FF)
-private val LightGrayBg = androidx.compose.ui.graphics.Color(0xFFF5F5F5)
-
-
+private val PrimaryBlue = Color(0xFF2962FF)
+private val LightGrayBg = Color(0xFFF5F5F5)
 
 data class MedicalOption(
-
     val id: Int,
     val title: String,
     val description: String,
     val icon: ImageVector
-
 )
-
-
 
 private val medicalOptions = listOf(
-
-    MedicalOption(
-        0,
-        "None",
-        "No medical concern.",
-        Icons.Default.EmojiEmotions
-    ),
-
-    MedicalOption(
-        1,
-        "Surgery",
-        "Previous surgery on body.",
-        Icons.Default.Vaccines
-    ),
-
-    MedicalOption(
-        2,
-        "Muscle pain",
-        "Pain in muscles or joints.",
-        Icons.Default.PersonalInjury
-    ),
-
-    MedicalOption(
-        3,
-        "Other",
-        "Describe your concern.",
-        Icons.Default.MoreHoriz
-    )
-
+    MedicalOption(0, "None", "No known medical concern.", Icons.Default.Check),
+    MedicalOption(1, "Heart Condition", "Client has a heart-related condition.", Icons.Default.Favorite),
+    MedicalOption(2, "Injury", "Client has a current or past injury.", Icons.Default.Healing),
+    MedicalOption(3, "Mobility Concern", "Client has a mobility-related concern.", Icons.Default.AccessibilityNew)
 )
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MedicalConcernScreen(
-
-    modifier: Modifier = Modifier,
-
+    selectedConcernId: Int,
+    note: String,
+    onConcernSelected: (Int) -> Unit,
+    onNoteChange: (String) -> Unit,
     onBackClick: () -> Unit = {},
-
-    onNextClick: (selectedId: Int, note: String) -> Unit
-
+    onNextClick: () -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
-
-    var selectedId by remember { mutableStateOf(0) }
-
-    var note by remember { mutableStateOf("") }
-
-
-
-    Scaffold(
-
+    androidx.compose.material3.Scaffold(
         modifier = modifier,
-
         topBar = {
-
-            MedicalTopBar(
-
-                onBackClick = onBackClick
-
-            )
-
+            MedicalTopBar(onBackClick = onBackClick)
         },
-
         bottomBar = {
-
             Box(
-
                 modifier = Modifier
-
                     .fillMaxWidth()
-
-                    .background(MaterialTheme.colorScheme.surface)
-
+                    .background(Color.White)
                     .padding(horizontal = 24.dp, vertical = 16.dp)
-
                     .navigationBarsPadding()
-
             ) {
-
                 Button(
-
-                    onClick = {
-
-                        onNextClick(selectedId, note)
-
-                    },
-
+                    onClick = onNextClick,
                     shape = RoundedCornerShape(50),
-
+                    colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue),
                     modifier = Modifier
-
                         .fillMaxWidth()
-
                         .height(54.dp)
-
                 ) {
-
                     Text(
-
-                        "Next",
-
+                        text = "Next",
                         fontSize = 17.sp,
-
-                        fontWeight = FontWeight.SemiBold
-
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.White
                     )
-
                 }
-
             }
-
         },
-
-        containerColor = MaterialTheme.colorScheme.background
-
+        containerColor = Color.White
     ) { innerPadding ->
 
-
-
         Column(
-
             modifier = Modifier
-
                 .fillMaxSize()
-
                 .padding(innerPadding)
-
                 .verticalScroll(rememberScrollState())
-
                 .padding(horizontal = 24.dp, vertical = 8.dp),
-
             verticalArrangement = Arrangement.spacedBy(12.dp)
-
         ) {
-
-
-
             Text(
-
                 text = "Medical concern",
-
                 fontSize = 30.sp,
-
                 fontWeight = FontWeight.ExtraBold,
-
-                color = MaterialTheme.colorScheme.onBackground
-
+                color = Color(0xFF111111)
             )
-
-
 
             Text(
-
-                text = "Choose the option that best matches your concern.",
-
+                text = "Select any medical concern that may affect training, and add a short note if needed.",
                 fontSize = 13.sp,
-
-                lineHeight = 20.sp,
-
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-
+                color = Color(0xFF757575),
+                lineHeight = 20.sp
             )
-
-
 
             Spacer(Modifier.height(4.dp))
 
-
-
             medicalOptions.forEach { option ->
-
                 MedicalOptionCard(
-
                     option = option,
-
-                    isSelected = selectedId == option.id,
-
-                    onClick = { selectedId = option.id }
-
+                    isSelected = selectedConcernId == option.id,
+                    onClick = { onConcernSelected(option.id) }
                 )
-
             }
-
-
-
-            TextField(
-
-                value = note,
-
-                onValueChange = { note = it },
-
-                placeholder = {
-
-                    Text("Additional notes")
-
-                },
-
-                shape = RoundedCornerShape(16.dp),
-
-                minLines = 4,
-
-                modifier = Modifier.fillMaxWidth()
-
-            )
-
-
 
             Spacer(Modifier.height(8.dp))
 
+            OutlinedTextField(
+                value = note,
+                onValueChange = onNoteChange,
+                modifier = Modifier.fillMaxWidth(),
+                label = {
+                    Text("Additional note")
+                },
+                placeholder = {
+                    Text("Add any relevant details")
+                },
+                minLines = 3,
+                maxLines = 5
+            )
+
+            Spacer(Modifier.height(8.dp))
         }
-
     }
-
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MedicalTopBar(
-
     onBackClick: () -> Unit
-
 ) {
-
     CenterAlignedTopAppBar(
-
         title = {
-
             Text(
-
-                "Add Member",
-
+                text = "Add Member",
                 fontWeight = FontWeight.Bold,
-
-                color = PrimaryBlue
-
+                color = PrimaryBlue,
+                fontSize = 18.sp
             )
-
         },
-
         navigationIcon = {
-
             IconButton(onClick = onBackClick) {
-
                 Icon(
-
-                    Icons.AutoMirrored.Filled.ArrowBack,
-
+                    Icons.Default.ArrowBack,
                     contentDescription = "Back",
-
                     tint = PrimaryBlue
-
                 )
-
             }
-
         },
-
-        colors = TopAppBarDefaults.topAppBarColors(
-
-            containerColor = MaterialTheme.colorScheme.surface
-
-        )
-
+        actions = {
+            Spacer(modifier = Modifier.width(48.dp))
+        },
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
     )
-
 }
-
-
 
 @Composable
 private fun MedicalOptionCard(
-
     option: MedicalOption,
-
     isSelected: Boolean,
-
     onClick: () -> Unit
-
 ) {
-
     Card(
-
         shape = RoundedCornerShape(16.dp),
-
-        colors = CardDefaults.cardColors(
-
-            containerColor = LightGrayBg
-
-        ),
-
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        colors = CardDefaults.cardColors(containerColor = LightGrayBg),
         modifier = Modifier
-
             .fillMaxWidth()
-
             .clickable { onClick() }
-
     ) {
-
-        Row(
-
+        androidx.compose.foundation.layout.Row(
             verticalAlignment = Alignment.CenterVertically,
-
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)
-
         ) {
 
-
-
             Box(
-
                 contentAlignment = Alignment.Center,
-
                 modifier = Modifier
-
-                    .size(48.dp)
-
+                    .height(48.dp)
+                    .width(48.dp)
                     .clip(CircleShape)
-
                     .background(PrimaryBlue)
-
             ) {
-
                 Icon(
-
                     imageVector = option.icon,
-
                     contentDescription = option.title,
-
-                    tint = androidx.compose.ui.graphics.Color.White
-
+                    tint = Color.White
                 )
-
             }
-
-
 
             Spacer(Modifier.width(14.dp))
 
-
-
-            Column(
-
-                modifier = Modifier.weight(1f)
-
-            ) {
-
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
-
-                    option.title,
-
-                    fontWeight = FontWeight.SemiBold
-
+                    text = option.title,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFF212121)
                 )
-
-
-
                 Text(
-
-                    option.description,
-
+                    text = option.description,
                     fontSize = 12.sp,
-
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-
+                    color = Color(0xFF9E9E9E)
                 )
-
             }
 
-
+            Spacer(Modifier.width(12.dp))
 
             if (isSelected) {
-
                 Box(
-
+                    contentAlignment = Alignment.Center,
                     modifier = Modifier
-
-                        .size(26.dp)
-
+                        .height(28.dp)
+                        .width(28.dp)
                         .clip(CircleShape)
-
-                        .background(PrimaryBlue),
-
-                    contentAlignment = Alignment.Center
-
+                        .background(PrimaryBlue)
                 ) {
-
                     Icon(
-
-                        Icons.Default.Check,
-
-                        contentDescription = "selected",
-
-                        tint = androidx.compose.ui.graphics.Color.White
-
+                        imageVector = Icons.Default.Check,
+                        contentDescription = "Selected",
+                        tint = Color.White
                     )
-
                 }
-
             } else {
-
                 Box(
-
                     modifier = Modifier
-
-                        .size(26.dp)
-
+                        .height(28.dp)
+                        .width(28.dp)
                         .clip(CircleShape)
-
-                        .border(
-
-                            2.dp,
-
-                            MaterialTheme.colorScheme.outline,
-
-                            CircleShape
-
-                        )
-
+                        .background(Color.Transparent)
                 )
-
             }
-
         }
-
     }
+}
 
+@Preview(showBackground = true)
+@Composable
+fun MedicalConcernScreenPreview() {
+    CS551FitnessAppTheme {
+        MedicalConcernScreen(
+            selectedConcernId = 0,
+            note = "",
+            onConcernSelected = {},
+            onNoteChange = {},
+            onBackClick = {},
+            onNextClick = {}
+        )
+    }
 }

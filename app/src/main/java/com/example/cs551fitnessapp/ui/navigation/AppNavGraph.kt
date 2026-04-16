@@ -1,5 +1,7 @@
 package com.example.cs551fitnessapp.ui.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -29,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 
 import com.example.cs551fitnessapp.database.WorkoutPlanData
+import com.example.cs551fitnessapp.ui.ViewModelFactory
 
 import com.example.cs551fitnessapp.ui.screens.*
 
@@ -36,7 +39,6 @@ import com.example.cs551fitnessapp.ui.viewmodels.MembersViewModel
 import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
 import com.example.cs551fitnessapp.ui.viewmodels.SearchWorkoutViewModel
 import com.example.cs551fitnessapp.ui.viewmodels.states.ExerciseUiState
-
 
 
 enum class Screen {
@@ -56,27 +58,22 @@ enum class Screen {
     MEMBER_SUCCESS
 
 }
-
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavGraph(
-
     navController: NavHostController,
-
     modifier: Modifier,
-
     membersViewModel: MembersViewModel,
-
     onFlowComplete: (WorkoutPlanData) -> Unit = {},
-
     onFlowCancel: () -> Unit = {},
-
     startScreen: Screen = Screen.WORKOUT_PLAN
 
 ) {
 
     val planViewModel: WorkoutPlanViewModel = viewModel()
 
-
+    val addMemberViewModel: com.example.cs551fitnessapp.ui.viewmodels.AddMemberViewModel =
+        viewModel(factory = ViewModelFactory.Factory)
 
     var currentScreen by rememberSaveable {
         mutableStateOf(startScreen)
@@ -142,269 +139,161 @@ fun AppNavGraph(
                 onCancelClick = { navController.popBackStack() },
                 onAddClick    = { entry ->
                     planViewModel.addEntry(entry)
-
                     currentScreen = Screen.SEARCH_WORKOUT
-
                 },
-
                 modifier = modifier
-
             )
-
         }
 
 
 
         // ---------------- ADD MEMBER FLOW ----------------
 
-
-
         Screen.MEMBER_SEX -> {
-
             Scaffold(
-
                 topBar = {
-
                     GenericTopBar {
-
                         navController.popBackStack()
-
                     }
-
                 }
-
             ) { padding ->
 
-
-
                 NewMemberSexScreen(
-
                     onBackClick = {
-
                         navController.popBackStack()
-
                     },
-
-                    onNextClick = {
-
+                    onNextClick = { selectedSex ->
+                        addMemberViewModel.updateSex(selectedSex)
                         currentScreen = Screen.MEMBER_BIRTHDAY
-
                     },
-
                     modifier = Modifier.padding(padding)
-
                 )
-
             }
-
         }
-
 
 
         Screen.MEMBER_BIRTHDAY -> {
-
             Scaffold(
-
                 topBar = {
-
                     GenericTopBar {
-
                         currentScreen = Screen.MEMBER_SEX
-
                     }
-
                 }
-
             ) { padding ->
-
-
-
                 BirthdayScreen(
-
+                    birthday = addMemberViewModel.birthday,
+                    onBirthdayChange = { addMemberViewModel.updateBirthday(it) },
                     onBackClick = {
-
                         currentScreen = Screen.MEMBER_SEX
-
                     },
-
                     onNextClick = {
-
                         currentScreen = Screen.MEMBER_WEIGHT
-
                     },
-
                     modifier = Modifier.padding(padding)
-
                 )
-
             }
-
         }
-
-
 
         Screen.MEMBER_WEIGHT -> {
-
             Scaffold(
-
                 topBar = {
-
                     GenericTopBar {
-
                         currentScreen = Screen.MEMBER_BIRTHDAY
-
                     }
-
                 }
-
             ) { padding ->
-
-
-
                 WeightScreen(
-
+                    weight = addMemberViewModel.weight,
+                    weightUnit = addMemberViewModel.weightUnit,
+                    onWeightChange = { addMemberViewModel.updateWeight(it) },
+                    onWeightUnitChange = { addMemberViewModel.updateWeightUnit(it) },
                     onBackClick = {
-
                         currentScreen = Screen.MEMBER_BIRTHDAY
-
                     },
-
                     onNextClick = {
-
                         currentScreen = Screen.MEMBER_HEIGHT
-
                     },
-
                     modifier = Modifier.padding(padding)
-
                 )
-
             }
-
         }
 
-
-
         Screen.MEMBER_HEIGHT -> {
-
             Scaffold(
-
                 topBar = {
-
                     GenericTopBar {
-
                         currentScreen = Screen.MEMBER_WEIGHT
-
                     }
-
                 }
-
             ) { padding ->
-
-
-
                 HeightScreen(
-
+                    height = addMemberViewModel.height,
+                    heightUnit = addMemberViewModel.heightUnit,
+                    onHeightChange = { addMemberViewModel.updateHeight(it) },
+                    onHeightUnitChange = { addMemberViewModel.updateHeightUnit(it) },
                     onBackClick = {
-
                         currentScreen = Screen.MEMBER_WEIGHT
-
                     },
-
                     onNextClick = {
-
                         currentScreen = Screen.MEMBER_GOAL
-
                     },
-
                     modifier = Modifier.padding(padding)
-
                 )
-
             }
-
         }
 
         Screen.MEMBER_GOAL -> {
-
             MemberGoalScreen(
-
+                selectedGoalId = addMemberViewModel.goalId,
+                onGoalSelected = { selectedId ->
+                    addMemberViewModel.updateGoalSelection(selectedId)
+                },
                 onBackClick = {
-
                     currentScreen = Screen.MEMBER_HEIGHT
-
                 },
-
                 onNextClick = {
-
                     currentScreen = Screen.MEMBER_MEDICAL
-
                 },
-
                 modifier = modifier
-
             )
-
         }
 
-
-
         Screen.MEMBER_MEDICAL -> {
-
             MedicalConcernScreen(
-
+                selectedConcernId = addMemberViewModel.medicalConcernId,
+                note = addMemberViewModel.medicalNote,
+                onConcernSelected = { selectedId ->
+                    addMemberViewModel.updateMedicalConcernSelection(selectedId)
+                },
+                onNoteChange = { addMemberViewModel.updateMedicalNote(it) },
                 onBackClick = {
-
                     currentScreen = Screen.MEMBER_GOAL
-
                 },
-
-                onNextClick = { _, _ ->
-
+                onNextClick = {
                     currentScreen = Screen.MEMBER_NAME
-
                 },
-
                 modifier = modifier
-
             )
-
         }
 
 
 
         Screen.MEMBER_NAME -> {
-
             AddMemberNameScreen(
-
+                name = addMemberViewModel.name,
+                sessions = addMemberViewModel.sessionsInput,
+                onNameChange = { addMemberViewModel.updateName(it) },
+                onSessionsChange = { addMemberViewModel.updateSessionsInput(it) },
                 onBackClick = {
-
                     currentScreen = Screen.MEMBER_MEDICAL
-
                 },
-
-                onSaveClick = { name, sessions ->
-
-
-
-                    membersViewModel.addMember(
-
-                        name = name,
-
-                        sessions = sessions
-
-                    )
-
-
-
-                    currentScreen = Screen.MEMBER_SUCCESS
-
+                onSaveClick = {
+                    addMemberViewModel.saveMember {
+                        currentScreen = Screen.MEMBER_SUCCESS
+                    }
                 },
-
                 modifier = modifier
-
             )
-
         }
 
 
