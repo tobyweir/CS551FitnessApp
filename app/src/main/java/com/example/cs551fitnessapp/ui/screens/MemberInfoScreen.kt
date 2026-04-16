@@ -28,8 +28,10 @@ import androidx.compose.ui.text.font.FontWeight
 
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
 import com.example.cs551fitnessapp.R
+import com.example.cs551fitnessapp.ui.navigation.AddWorkoutFlow
 import com.example.cs551fitnessapp.ui.viewmodels.states.MemberUiState
 
 
@@ -37,6 +39,7 @@ import com.example.cs551fitnessapp.ui.viewmodels.states.MemberUiState
 @Composable
 fun MemberInfoScreen(
     id: Int,
+    navController: NavHostController,
     member: MemberUiState = MemberUiState(),
     modifier: Modifier
 ) {
@@ -64,7 +67,7 @@ fun MemberInfoScreen(
 
         ExtendedFloatingActionButton(
 
-            onClick = { },
+            onClick = {navController.navigate(AddWorkoutFlow(id))},
 
             containerColor = Color(0xFFD7FF00),
 

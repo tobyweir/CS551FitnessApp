@@ -43,7 +43,8 @@ fun WorkoutInfoScreen(
     exercise    : Exercise,
     onBackClick : () -> Unit,
     onCancelClick: () -> Unit,
-    onAddClick  : (WorkoutEntry) -> Unit
+    onAddClick  : (WorkoutEntry) -> Unit,
+    modifier: Modifier
 ) {
 
     var sets    by remember { mutableStateOf("3")  }
@@ -59,7 +60,7 @@ fun WorkoutInfoScreen(
             .build()
     }
 
-    Scaffold(
+    Scaffold(modifier = modifier,
         topBar = {
             WorkoutInfoTopBar(onBackClick = onBackClick)
         },

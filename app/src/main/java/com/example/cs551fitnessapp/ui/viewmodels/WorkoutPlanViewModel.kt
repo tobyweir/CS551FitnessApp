@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
-// -- Save result  ---------------------------------------------------------------
+// Save result
 sealed class SavePlanResult {
     data object Idle    : SavePlanResult()
     data object Loading : SavePlanResult()
@@ -28,11 +28,11 @@ class WorkoutPlanViewModel(application: Application) : AndroidViewModel(applicat
 
     private val repository = DatabaseModule.provideRepository(application)
 
-    // -- Save result state -------------------------------------------------------
+    // Save result state
     private val _saveResult = MutableStateFlow<SavePlanResult>(SavePlanResult.Idle)
     val saveResult: StateFlow<SavePlanResult> = _saveResult.asStateFlow()
 
-    // -- Workout entries -------------------------------------------------------
+    // Workout entries (selected workout list)
     private val _addedEntries = MutableStateFlow<List<WorkoutEntry>>(emptyList())
     val addedEntries: StateFlow<List<WorkoutEntry>> = _addedEntries.asStateFlow()
 
@@ -47,7 +47,7 @@ class WorkoutPlanViewModel(application: Application) : AndroidViewModel(applicat
     fun isAdded(exerciseId: String): Boolean =
         _addedEntries.value.any { it.exercise.id == exerciseId }
 
-    // -- Form fields -------------------------------------------------------
+    // Form data
     private val _sessionName  = MutableStateFlow("Session")
     private val _selectedDate = MutableStateFlow(todayFormatted())
 
@@ -71,7 +71,7 @@ class WorkoutPlanViewModel(application: Application) : AndroidViewModel(applicat
     fun onEndHourChange(value: Int)         { _endHour.value      = value }
     fun onEndMinChange(value: Int)          { _endMin.value       = value }
 
-    // -- Helper -------------------------------------------------------
+    // Calendar helper
     private fun todayFormatted(): String {
         val monthNames = listOf(
             "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -85,7 +85,7 @@ class WorkoutPlanViewModel(application: Application) : AndroidViewModel(applicat
         )
     }
     
-    // -- Save workout plan to db -------------------------------------------------------
+    // Save workout plan to db
     fun savePlan(plan: WorkoutPlanData) {
         viewModelScope.launch {
             _saveResult.value = SavePlanResult.Loading
@@ -95,16 +95,21 @@ class WorkoutPlanViewModel(application: Application) : AndroidViewModel(applicat
 //                    userId = 1, // hardcoded for now
 //                    plan   = plan
 //                )
+
+                    val result = repository.saveWorkoutPlan(1, plan)
+                    _saveResult.value = result
+                /*
                 when (val result = repository.saveWorkoutPlan(1, plan)) { // hardcoded for now
 
                     is SavePlanResult.Success ->
                         _saveResult.value = SavePlanResult.Success(result.sessionId)
 
+
                     is SavePlanResult.Error ->
                         _saveResult.value = SavePlanResult.Error(result.message)
 
                     else -> {}
-                }
+                }*/
 
             } catch (e: Exception) {
                 _saveResult.value = SavePlanResult.Error(

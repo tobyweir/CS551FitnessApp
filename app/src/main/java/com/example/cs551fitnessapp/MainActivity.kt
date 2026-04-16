@@ -9,6 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -17,14 +18,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.cs551fitnessapp.database.Exercise
+import com.example.cs551fitnessapp.ui.components.SuccessDialog
 
 import com.example.cs551fitnessapp.ui.navigation.AppNavHost
 import com.example.cs551fitnessapp.ui.navigation.BottomBar
@@ -34,7 +39,9 @@ import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 import com.example.cs551fitnessapp.ui.navigation.AppNavGraph
 import com.example.cs551fitnessapp.ui.screens.MedicalConcernScreen
 import com.example.cs551fitnessapp.ui.screens.MemberGoalScreen
+import com.example.cs551fitnessapp.ui.screens.TodayScreen
 import com.example.cs551fitnessapp.ui.screens.WorkoutPlanScreen
+import com.example.cs551fitnessapp.ui.viewmodels.ThemeViewModel
 import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
 
 
@@ -47,6 +54,7 @@ class MainActivity : ComponentActivity() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("ViewModelConstructorInComposable")
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -66,30 +74,24 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            CS551FitnessAppTheme {
+            val themeViewModel: ThemeViewModel = viewModel()
 
+            CS551FitnessAppTheme(darkTheme = themeViewModel.isDarkTheme.value) {
+                val selectedNavigationIndex = rememberSaveable {
+                    mutableIntStateOf(0)
+                }
+                val updateIndex : (Int) -> Unit = {selectedNavigationIndex.intValue = it}
                 val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val canGoBack = navBackStackEntry != null && navController.previousBackStackEntry != null
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    topBar = {
-                        TopBar(
-                            navController = navController,
-                            showBackIcon = canGoBack
-                        )
-                    },
-                    bottomBar = {
-                        BottomBar(navController)
-                    }
-                ) { innerPadding ->
                     AppNavHost(
                         navController = navController,
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.fillMaxSize(),
+                        canGoBack  = canGoBack,
+                        navIndex = selectedNavigationIndex.intValue,
+                        updateIndex = updateIndex
                     )
 
-
-                }
             }
         }
     }

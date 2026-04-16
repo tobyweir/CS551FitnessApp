@@ -55,12 +55,14 @@ private val goalOptions = listOf(
 fun MemberGoalScreen(
 
     onBackClick   : () -> Unit = {},
-    onNextClick   : (selectedGoalId: Int) -> Unit = { _ -> }
+    onNextClick   : (selectedGoalId: Int) -> Unit = { _ -> },
+    modifier: Modifier
 ) {
     // -- State ------------------------------------------------
     var selectedGoalId by remember { mutableStateOf(0) }
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             GoalTopBar(onBackClick = onBackClick)
         },

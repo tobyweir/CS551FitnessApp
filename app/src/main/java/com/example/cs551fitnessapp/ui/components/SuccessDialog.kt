@@ -19,7 +19,7 @@ import androidx.compose.ui.window.Dialog
 private val PrimaryBlue = Color(0xFF2962FF)
 
 @Composable
-fun SuccessDialog(onDismiss: () -> Unit) {
+fun SuccessDialog(msg: String = "", onDismiss: () -> Unit) {
     Dialog(onDismissRequest = onDismiss) {
         Card(
             shape  = RoundedCornerShape(20.dp),
