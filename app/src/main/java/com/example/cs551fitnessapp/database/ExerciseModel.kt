@@ -20,5 +20,4 @@ data class Exercise(
     @SerializedName("name")           val name           : String,
     @SerializedName("gifUrl")         val gifUrl         : String?,
     @SerializedName("bodyParts")      val bodyParts      : List<String> = emptyList()
-
 )
