@@ -277,7 +277,6 @@ fun AppNavGraph(
         }
 
 
-
         Screen.MEMBER_NAME -> {
             AddMemberNameScreen(
                 name = addMemberViewModel.name,
@@ -297,13 +296,9 @@ fun AppNavGraph(
         }
 
 
-
         Screen.MEMBER_SUCCESS -> {
-
             MemberSuccessScreen(
-
                 onFinished = {
-
                     navController.popBackStack()
 
                 }
