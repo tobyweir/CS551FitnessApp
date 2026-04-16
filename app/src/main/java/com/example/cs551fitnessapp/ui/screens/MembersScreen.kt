@@ -1,5 +1,5 @@
 package com.example.cs551fitnessapp.ui.screens
-
+import com.example.cs551fitnessapp.database.member.MemberEntity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -63,8 +63,6 @@ import com.example.cs551fitnessapp.ui.navigation.BottomBar
 import com.example.cs551fitnessapp.ui.navigation.MemberPage
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 import com.example.cs551fitnessapp.ui.viewmodels.MembersViewModel
-import java.util.Date
-
 
 
 
@@ -162,9 +160,9 @@ fun AddMemberButton() {
 }
 //drawBehind modifier taken from https://stackoverflow.com/questions/68592618/how-to-add-border-on-bottom-only-in-jetpack-compose
 @Composable
-fun MembersList(navController : NavHostController , members : List<Member> , modifier: Modifier = Modifier) {
+fun MembersList(navController: NavHostController, members: List<MemberEntity>, modifier: Modifier = Modifier) {
     LazyColumn(horizontalAlignment = Alignment.CenterHorizontally , modifier = modifier.fillMaxSize()) {
-        items(items = members, key = { it.id }) { item ->
+        items(items = members, key = { it.memberId }) { item ->
                 MemberCard(
                     member = item, modifier = Modifier.fillMaxSize()
                         .drawBehind {
@@ -177,21 +175,23 @@ fun MembersList(navController : NavHostController , members : List<Member> , mod
                                 strokeWidth
                             )
                         }
-                        .clickable(onClick = {navController.navigate(MemberPage(item.id))}))
+                        .clickable(onClick = { navController.navigate(MemberPage(item.memberId.toInt())) }))
         }
     }
 }
 @Composable
-fun MemberCard(member : Member , modifier: Modifier = Modifier.fillMaxSize()) {
+fun MemberCard(member: MemberEntity, modifier: Modifier = Modifier.fillMaxSize()){
     Row(modifier = modifier.fillMaxSize(), horizontalArrangement = Arrangement.Center ,) {
         MemberCardImage(modifier = Modifier
             .fillMaxWidth(0.3f)
             .padding(10.dp))
-        MemberCardInfo(member.name ,
-            member.joinDate ,
+        MemberCardInfo(
+            name = member.name,
+            joinDate = member.joinDate,
             endDate = member.endDate,
             status = member.status,
-        modifier = Modifier.fillMaxWidth(0.7f))
+            modifier = Modifier.fillMaxWidth(0.7f)
+        )
     }
 }
 
@@ -209,33 +209,69 @@ fun MemberCardImage(modifier: Modifier = Modifier.fillMaxSize()) {
 }
 
 @Composable
-fun MemberCardInfo(name : String ,
-                   joinDate : Date,
-                   endDate: Date? ,
-                   status : String,
-                   modifier: Modifier
+fun MemberCardInfo(
+    name: String,
+    joinDate: Long,
+    endDate: Long?,
+    status: String,
+    modifier: Modifier
 ) {
     Column(verticalArrangement = Arrangement.SpaceAround , modifier = modifier.fillMaxHeight().padding (top = 10.dp , start = 10.dp , end = 10.dp , bottom = 10.dp)) {
         Text(text = name , Modifier.padding(bottom = 3.dp) , color = Color.Blue , fontWeight = FontWeight.Bold, style = TextStyle(fontSize = 18.sp))
-        Text(text = "Join : ${joinDate.date}/${joinDate.month}/${joinDate.year}" , modifier = Modifier.padding(bottom = 3.dp) , style = TextStyle(fontSize = 14.sp))
+        Text(
+            text = "Join : $joinDate",
+            modifier = Modifier.padding(bottom = 3.dp),
+            style = TextStyle(fontSize = 14.sp)
+        )
+
         if (endDate != null) {
-            Text(text = "End Session : ${endDate.date}/${endDate.month}/${endDate.year}" , modifier = Modifier.padding(bottom = 3.dp) , style = TextStyle(fontSize = 14.sp))
+            Text(
+                text = "End Session : $endDate",
+                modifier = Modifier.padding(bottom = 3.dp),
+                style = TextStyle(fontSize = 14.sp)
+            )
         } else {
-            Text(text = "End Session : - " , modifier = Modifier.padding(bottom = 3.dp) , style = TextStyle(fontSize = 14.sp))
+            Text(
+                text = "End Session : -",
+                modifier = Modifier.padding(bottom = 3.dp),
+                style = TextStyle(fontSize = 14.sp)
+            )
         }
-        Card(colors = CardDefaults.cardColors(containerColor = Color.Blue)) {
-            Text(text = status , modifier = Modifier
-                .padding (top = 1.dp , start = 10.dp , end = 10.dp) , color = Color.White)
-        }
+
+        StatusBadge(status)
     }
 }
-//Temporary until database has these entities
-data class Member(val id : Int ,
-                  val name : String ,
-                  val joinDate : Date ,
-                  val endDate : Date? ,
-                  val status: String,
-                  )
+
+
+@Composable
+fun StatusBadge(status: String) {
+    val backgroundColor = when (status) {
+        "Active" -> Color(0xFFDFF5E3)
+        "Inactive" -> Color(0xFFFDE2E1)
+        "Nearly Finished" -> Color(0xFFFFF4CC)
+        else -> Color.LightGray
+    }
+
+    val textColor = when (status) {
+        "Active" -> Color(0xFF2E7D32)
+        "Inactive" -> Color(0xFFC62828)
+        "Nearly Finished" -> Color(0xFF8D6E00)
+        else -> Color.DarkGray
+    }
+
+    Box(
+        modifier = Modifier
+            .background(backgroundColor, shape = RoundedCornerShape(12.dp))
+            .padding(horizontal = 10.dp, vertical = 4.dp)
+    ) {
+        Text(
+            text = status,
+            color = textColor,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Medium
+        )
+    }
+}
 
 @Preview(showBackground = true)
 @Composable

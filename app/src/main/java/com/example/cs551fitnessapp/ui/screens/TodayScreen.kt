@@ -48,6 +48,11 @@ data class Workout(
     val memberId : Int
 )
 
+data class TodayMember(
+    val id: Int,
+    val name: String
+)
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TodayScreen(
@@ -134,7 +139,7 @@ fun DateItem(
 @Composable
 fun SessionCard(
     workout: Workout,
-    member: Member,
+    member: TodayMember,
     navController: NavController,
 ) {
     Card(

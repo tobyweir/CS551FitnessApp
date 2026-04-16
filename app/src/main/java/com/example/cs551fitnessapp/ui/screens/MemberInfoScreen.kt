@@ -36,11 +36,8 @@ import com.example.cs551fitnessapp.ui.viewmodels.states.MemberUiState
 
 @Composable
 fun MemberInfoScreen(
-    id : Int,
-    member: MemberUiState = MemberUiState(
-        name = "Test",
-        image = R.drawable.profile1
-    ),
+    id: Int,
+    member: MemberUiState = MemberUiState(),
     modifier: Modifier
 ) {
     Box(
@@ -132,7 +129,7 @@ fun MemberHeader(
 
                 Image(
 
-                    painter = painterResource(member.image),
+                    painter = painterResource(R.drawable.profile1),
 
                     contentDescription = null,
 

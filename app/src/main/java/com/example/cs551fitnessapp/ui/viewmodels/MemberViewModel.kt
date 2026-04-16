@@ -8,15 +8,6 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class MemberViewModel : ViewModel() {
 
-    private val _uiState = MutableStateFlow(
-
-        MemberUiState(
-            name = "",
-            image = 0
-        )
-
-    )
-
+    private val _uiState = MutableStateFlow(MemberUiState())
     val uiState: StateFlow<MemberUiState> = _uiState.asStateFlow()
-
 }

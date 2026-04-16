@@ -4,7 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cs551fitnessapp.ui.screens.Member
+import com.example.cs551fitnessapp.ui.screens.TodayMember
 import com.example.cs551fitnessapp.ui.screens.Workout
 import com.example.cs551fitnessapp.ui.viewmodels.states.TodayUiState
 import kotlinx.coroutines.delay
@@ -18,52 +18,16 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.Date
 
-val members = listOf<Member>(
-    Member(id = 0,
-        name ="John Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member( id = 1,
-        name ="Mike Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Inactive",),
-    Member(id = 2,
-        name ="Major Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Inactive",),
-    Member(id = 3,
-        name ="Jill Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Nearly Finished",),
-    Member( id = 4,
-        name ="Mike Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member(id = 5,
-        name ="Major Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Nearly Finished",),
-    Member(id = 6,
-        name ="John Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Active",),
-    Member( id = 7,
-        name ="Mike Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Inactive",),
-    Member(id = 8,
-        name ="Major Smith" ,
-        joinDate = Date(2026 , 3 , 17) ,
-        endDate = null ,
-        status = "Nearly Finished",)
+val members = listOf(
+    TodayMember(id = 0, name = "John Smith"),
+    TodayMember(id = 1, name = "Mike Smith"),
+    TodayMember(id = 2, name = "Major Smith"),
+    TodayMember(id = 3, name = "Jill Smith"),
+    TodayMember(id = 4, name = "Mike Smith"),
+    TodayMember(id = 5, name = "Major Smith"),
+    TodayMember(id = 6, name = "John Smith"),
+    TodayMember(id = 7, name = "Mike Smith"),
+    TodayMember(id = 8, name = "Major Smith")
 )
 
 @RequiresApi(Build.VERSION_CODES.O)
