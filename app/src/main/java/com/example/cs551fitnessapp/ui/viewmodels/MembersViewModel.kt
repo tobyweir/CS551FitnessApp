@@ -27,6 +27,7 @@ class MembersViewModel(application: Application) : AndroidViewModel(application)
 
     init {
         observeMembers()
+        insertTestMember()
     }
 
     private fun observeMembers() {
@@ -108,7 +109,7 @@ class MembersViewModel(application: Application) : AndroidViewModel(application)
     }
 
     // Testing the database actually works
-    /**
+
     fun insertTestMember() {
         viewModelScope.launch {
             repository.addMember(
@@ -125,5 +126,5 @@ class MembersViewModel(application: Application) : AndroidViewModel(application)
             )
         }
     }
-    **/
+
 }
