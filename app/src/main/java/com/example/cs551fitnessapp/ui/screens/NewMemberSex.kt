@@ -13,16 +13,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,8 +27,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cs551fitnessapp.R
@@ -40,7 +35,13 @@ import com.example.cs551fitnessapp.ui.reusable.NextScreenButton
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 
 @Composable
-fun NewMemberSexScreen (modifier: Modifier = Modifier , onBackClick : () -> Unit = {} , onNextClick : () -> Unit = {}) {
+fun NewMemberSexScreen(
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit = {},
+    onNextClick: (String) -> Unit = {}
+) {
+    var selectedSex by rememberSaveable { mutableStateOf("") }
+
     Column(
         modifier
             .padding(20.dp)
@@ -49,13 +50,23 @@ fun NewMemberSexScreen (modifier: Modifier = Modifier , onBackClick : () -> Unit
     ) {
         Description(R.string.tell_us_about_yourself, R.string.Sample_Text)
 
-        SexButton()
+        SexSelector(
+            selectedSex = selectedSex,
+            onSexSelected = { selectedSex = it }
+        )
 
-        SubmissionButtons(onNextClick = onNextClick)
-
+        SubmissionButtons(
+            onPreferNotToSayClick = {
+                selectedSex = "Prefer not to say"
+                onNextClick(selectedSex)
+            },
+            onNextClick = {
+                if (selectedSex.isNotBlank()) {
+                    onNextClick(selectedSex)
+                }
+            }
+        )
     }
-
-
 }
 
 val circleMod = Modifier
@@ -70,103 +81,80 @@ val circleModFilled = Modifier
     .border(4.dp, Color.DarkGray, CircleShape)
     .background(Color.DarkGray)
 
-
 @Composable
-fun SexButton (modifier: Modifier = Modifier) {
-    var isToggledM by rememberSaveable { mutableStateOf(false) }
-    var isToggledF by rememberSaveable { mutableStateOf(false) }
+fun SexSelector(
+    selectedSex: String,
+    onSexSelected: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Row(
-        modifier
-            .fillMaxWidth()
-           // .padding(top = 100.dp),
-        ,horizontalArrangement = Arrangement.SpaceEvenly
-
-
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        Column() {
-
+        Column {
             IconButton(
-                onClick = {
-                    isToggledM = !isToggledM
-                    if (isToggledF) isToggledM = false
-                },
-                modifier
+                onClick = { onSexSelected("Male") },
+                modifier = Modifier
                     .height(100.dp)
                     .width(100.dp)
             ) {
-                // Attribution for readme: <a href="https://www.flaticon.com/free-icons/male" title="male icons">Male icons created by smashingstocks - Flaticon</a>
                 Image(
                     painter = painterResource(R.drawable.male),
-                    contentDescription = if (isToggledM) "Male Button Filled" else "Male Button",
+                    contentDescription = "Male Button",
                     contentScale = ContentScale.Inside,
-                    modifier = if (isToggledM) circleModFilled else circleMod
-
+                    modifier = if (selectedSex == "Male") circleModFilled else circleMod
                 )
             }
             Text(
                 text = "Male",
-                modifier
-                    .align(Alignment.CenterHorizontally)
-
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
 
-        Column() {
-
+        Column {
             IconButton(
-                onClick = {
-                    isToggledF = !isToggledF
-                    if (isToggledM) isToggledF = false
-                }, modifier
+                onClick = { onSexSelected("Female") },
+                modifier = Modifier
                     .height(100.dp)
                     .width(100.dp)
             ) {
-                // Attribution for readme: <a href="https://www.flaticon.com/free-icons/woman" title="woman icons">Woman icons created by Freepik - Flaticon</a>
                 Image(
                     painter = painterResource(R.drawable.female),
-                    contentDescription = if (isToggledF) "Female Button Filled" else "Female Button",
+                    contentDescription = "Female Button",
                     contentScale = ContentScale.Inside,
-                    modifier = if (isToggledF) circleModFilled else circleMod
+                    modifier = if (selectedSex == "Female") circleModFilled else circleMod
                 )
             }
             Text(
                 text = "Female",
-                modifier
-                    .align(Alignment.CenterHorizontally)
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
-
         }
     }
 }
 
 @Composable
-fun SubmissionButtons (modifier: Modifier = Modifier , onNextClick: () -> Unit) {
-    Column (
-        modifier
-            //.padding(top = 200.dp)
-
-    ) {
-
+fun SubmissionButtons(
+    modifier: Modifier = Modifier,
+    onPreferNotToSayClick: () -> Unit,
+    onNextClick: () -> Unit
+) {
+    Column(modifier) {
         OutlinedButton(
-            onClick = { },
-            modifier
-                .fillMaxWidth()
-            ) {
+            onClick = onPreferNotToSayClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text("Prefer not to say")
         }
 
-
         NextScreenButton(onNextClick)
-
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun ButtonPreview() {
-    CS551FitnessAppTheme() {
-        //SexButton()
-        //SubmissionButtons()
+    CS551FitnessAppTheme {
         NewMemberSexScreen()
     }
 }
