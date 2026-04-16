@@ -387,13 +387,13 @@ fun AppNavGraph(
 
 
 
-                    membersViewModel.addMember(
-
-                        name = name,
-
-                        sessions = sessions
-
-                    )
+//                    membersViewModel.addMember(
+//
+//                        name = name,
+//
+//                        sessions = sessions
+//
+//                    )
 
 
 

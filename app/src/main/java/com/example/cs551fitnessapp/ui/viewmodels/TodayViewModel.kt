@@ -70,9 +70,9 @@ class TodayViewModel(private val repository: WorkoutRepository) : ViewModel() {
                 .catch { e ->
                     emit(emptyList())
                 }
-                .collect { MemberSession ->
+                .collect { memberSession ->
                     _uiState.update { state ->
-                        state.copy(members = MemberSession)
+                        state.copy(members = memberSession)
                     }
                 }
         }

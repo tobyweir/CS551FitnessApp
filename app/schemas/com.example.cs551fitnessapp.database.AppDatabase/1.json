@@ -2,8 +2,72 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d65d85d23fd9123b85608ed9ef6f37ed",
+    "identityHash": "1b21be26b7f10b900d6ffc7f407d7259",
     "entities": [
+      {
+        "tableName": "members",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`memberId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `joinDate` INTEGER NOT NULL, `endDate` INTEGER, `fitnessLevel` TEXT NOT NULL, `goal` TEXT NOT NULL, `notes` TEXT NOT NULL, `imageUri` TEXT, `status` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "memberId",
+            "columnName": "memberId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "joinDate",
+            "columnName": "joinDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "endDate",
+            "columnName": "endDate",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "fitnessLevel",
+            "columnName": "fitnessLevel",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "goal",
+            "columnName": "goal",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageUri",
+            "columnName": "imageUri",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "memberId"
+          ]
+        }
+      },
       {
         "tableName": "users",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL)",
@@ -99,6 +163,47 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "exercises",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`exerciseId` TEXT NOT NULL, `name` TEXT NOT NULL, `gifUrl` TEXT, `bodyParts` TEXT NOT NULL, `cachedAt` INTEGER NOT NULL, PRIMARY KEY(`exerciseId`))",
+        "fields": [
+          {
+            "fieldPath": "exerciseId",
+            "columnName": "exerciseId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gifUrl",
+            "columnName": "gifUrl",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "bodyParts",
+            "columnName": "bodyParts",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cachedAt",
+            "columnName": "cachedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "exerciseId"
+          ]
+        }
       },
       {
         "tableName": "session_exercises",
@@ -205,50 +310,51 @@
         ]
       },
       {
-        "tableName": "exercises",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`exerciseId` TEXT NOT NULL, `name` TEXT NOT NULL, `gifUrl` TEXT, `bodyParts` TEXT NOT NULL, `cachedAt` INTEGER NOT NULL, PRIMARY KEY(`exerciseId`))",
+        "tableName": "userAppointment",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `userFirstname` TEXT NOT NULL, `dtStartSession` INTEGER NOT NULL, `dtEndSession` INTEGER NOT NULL, `duration` REAL NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
-            "fieldPath": "exerciseId",
-            "columnName": "exerciseId",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "gifUrl",
-            "columnName": "gifUrl",
-            "affinity": "TEXT"
-          },
-          {
-            "fieldPath": "bodyParts",
-            "columnName": "bodyParts",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "cachedAt",
-            "columnName": "cachedAt",
+            "fieldPath": "id",
+            "columnName": "id",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userFirstname",
+            "columnName": "userFirstname",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dtStartSession",
+            "columnName": "dtStartSession",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dtEndSession",
+            "columnName": "dtEndSession",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "REAL",
             "notNull": true
           }
         ],
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "exerciseId"
+            "id"
           ]
         }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd65d85d23fd9123b85608ed9ef6f37ed')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1b21be26b7f10b900d6ffc7f407d7259')"
     ]
   }
 }

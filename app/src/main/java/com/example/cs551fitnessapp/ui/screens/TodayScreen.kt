@@ -70,23 +70,12 @@ fun TodayScreen(
             }
         } else {
         LazyColumn {
-//            items(uiState.value.filteredWorkouts) {
-//                val currWorkout = it
-//                SessionCard(
-//                    workout = it,
-//                    member = uiState.value.members.first{ it.id == currWorkout.memberId },
-//                    navController = navController
-//                )
-//            }
-            // ── Member rows ────────────────────────────────────────────
             items(
                 items = uiState.value.members,
                 key = { it.id }
             ) { member ->
-                //MemberRow(member = member)
                 SessionCard(
-                    //workout = it.se,
-                    member = uiState.value.members.first { it.id == member.id },
+                    member = member,
                     navController = navController
                 )
             }
@@ -160,7 +149,6 @@ fun DateItem(
 
 @Composable
 fun SessionCard(
-    //workout: Workout,
     member: MemberSession,
     navController: NavController,
 ) {
@@ -206,5 +194,3 @@ fun SessionCard(
         }
     }
 }
-
-
