@@ -23,93 +23,42 @@ import androidx.compose.ui.unit.sp
 
 import kotlinx.coroutines.delay
 
-
-
 @Composable
 fun MemberSuccessScreen(
-
     onFinished: () -> Unit
-
 ) {
-
-
-
     LaunchedEffect(Unit) {
-
         delay(1000)
-
         onFinished()
-
     }
-
-
 
     Column(
-
         modifier = Modifier.fillMaxSize(),
-
         horizontalAlignment = Alignment.CenterHorizontally,
-
         verticalArrangement = Arrangement.Center
-
     ) {
-
-
-
         Text(
-
             "Successful",
-
             color = Color(0xFF2962FF)
-
         )
-
-
-
         Spacer(Modifier.height(40.dp))
-
-
-
         Icon(
-
             Icons.Default.CheckCircle,
-
             contentDescription = null,
-
             tint = Color(0xFF2962FF),
-
             modifier = Modifier.size(120.dp)
-
         )
-
-
-
         Spacer(Modifier.height(20.dp))
-
-
-
         Text(
-
             "Congratulation",
-
             fontSize = 24.sp,
-
             fontWeight = FontWeight.Bold,
-
             color = Color(0xFF2962FF)
-
         )
-
-
 
         Text(
-
             "New member added",
-
             color = Color(0xFF2962FF)
-
         )
-
     }
-
 }
