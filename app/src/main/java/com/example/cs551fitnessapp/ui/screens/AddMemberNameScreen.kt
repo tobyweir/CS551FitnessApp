@@ -14,8 +14,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -56,13 +61,9 @@ fun AddMemberNameScreen(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                "Add Member",
-                color = Color(0xFF2962FF),
-                fontWeight = FontWeight.Medium
-            )
 
-            Spacer(Modifier.height(10.dp))
+
+//            Spacer(Modifier.height(10.dp))
 
             Text(
                 "What's your name?",
@@ -76,6 +77,7 @@ fun AddMemberNameScreen(
                 painter = painterResource(R.drawable.ic_launcher_background),
                 contentDescription = "profile",
                 contentScale = ContentScale.Crop,
+                colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.primary),
                 modifier = Modifier
                     .size(120.dp)
                     .clip(CircleShape)
@@ -109,7 +111,7 @@ fun AddMemberNameScreen(
             ) {
                 Text(
                     "Num Of Session :",
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.onBackground
                 )
 
                 Spacer(Modifier.width(10.dp))
@@ -127,14 +129,15 @@ fun AddMemberNameScreen(
         Button(
             onClick = onSaveClick,
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF2E7D32)
+                containerColor = MaterialTheme.colorScheme.primary
             ),
             shape = RoundedCornerShape(50),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(55.dp)
         ) {
-            Text("Save")
+            Text("Save" , color = Color.White)
+
         }
     }
 }

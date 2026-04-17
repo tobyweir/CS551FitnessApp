@@ -5,6 +5,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 
 
 @Composable
@@ -14,6 +15,6 @@ import androidx.compose.ui.Modifier
             modifier
                 .fillMaxWidth()
         ) {
-            Text(text = "Next")
+            Text(text = "Next" , color = Color.White)
         }
     }

@@ -332,13 +332,13 @@ private fun GenericTopBar(
                 Icon(
                     Icons.Default.ArrowBack,
                     contentDescription = "Back",
-                    tint               = PrimaryBlue
+                    tint               = MaterialTheme.colorScheme.primary
                 )
             }
         },
         actions = { /* Set title in centre of screen */
             Spacer(modifier = androidx.compose.ui.Modifier.width(48.dp))
         },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
     )
 }
