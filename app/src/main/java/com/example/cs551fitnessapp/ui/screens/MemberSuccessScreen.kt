@@ -50,7 +50,7 @@ fun MemberSuccessScreen(
         )
         Spacer(Modifier.height(20.dp))
         Text(
-            "Congratulation",
+            "Congratulations",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF2962FF)

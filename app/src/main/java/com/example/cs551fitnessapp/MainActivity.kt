@@ -15,6 +15,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 
 import androidx.compose.runtime.getValue
@@ -54,6 +57,7 @@ class MainActivity : ComponentActivity() {
     }
 
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("ViewModelConstructorInComposable")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,8 +79,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val themeViewModel: ThemeViewModel = viewModel()
+            val windowSize = calculateWindowSizeClass(this)
 
-            CS551FitnessAppTheme(darkTheme = themeViewModel.isDarkTheme.value) {
+            CS551FitnessAppTheme(
+                darkTheme = themeViewModel.isDarkTheme.value
+            ) {
                 val selectedNavigationIndex = rememberSaveable {
                     mutableIntStateOf(0)
                 }
@@ -85,6 +92,7 @@ class MainActivity : ComponentActivity() {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val canGoBack = navBackStackEntry != null && navController.previousBackStackEntry != null
                     AppNavHost(
+                        windowSize = windowSize.widthSizeClass,
                         navController = navController,
                         modifier = Modifier.fillMaxSize(),
                         canGoBack  = canGoBack,
@@ -99,7 +107,8 @@ class MainActivity : ComponentActivity() {
     @Preview(showBackground = true)
     @Composable
     fun GreetingPreview() {
-        CS551FitnessAppTheme {
+        CS551FitnessAppTheme () {
+
 //            AppNavGraph(
 //                onFlowComplete = { data ->
 //                    // Save plan to your DB / repository here

@@ -151,10 +151,10 @@ fun SubmissionButtons(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ButtonPreview() {
-    CS551FitnessAppTheme {
-        NewMemberSexScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun ButtonPreview() {
+  //  CS551FitnessAppTheme {
+    //    NewMemberSexScreen()
+    //}
+//}

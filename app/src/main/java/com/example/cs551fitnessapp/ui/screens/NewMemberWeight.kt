@@ -96,17 +96,17 @@ fun WeightScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun WeightPreview() {
-    CS551FitnessAppTheme {
-        WeightScreen(
-            weight = "",
-            weightUnit = "lbs",
-            onWeightChange = {},
-            onWeightUnitChange = {},
-            onBackClick = {},
-            onNextClick = {}
-        )
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun WeightPreview() {
+//    CS551FitnessAppTheme {
+//        WeightScreen(
+//            weight = "",
+//            weightUnit = "lbs",
+//            onWeightChange = {},
+//            onWeightUnitChange = {},
+//            onBackClick = {},
+//            onNextClick = {}
+//        )
+//    }
+//}
