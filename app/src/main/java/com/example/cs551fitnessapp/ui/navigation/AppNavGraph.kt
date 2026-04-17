@@ -76,6 +76,7 @@ fun AppNavGraph(
 ) {
     val planViewModel: WorkoutPlanViewModel = viewModel(factory = ViewModelFactory.Factory)
     val addMemberViewModel: AddMemberViewModel = viewModel(factory = ViewModelFactory.Factory)
+    val uiState = addMemberViewModel.uiState.collectAsState()
     val searchViewModel: SearchWorkoutViewModel = viewModel()
 
     LaunchedEffect(memberId) {
@@ -183,7 +184,10 @@ fun AppNavGraph(
                         addMemberViewModel.updateSex(selectedSex)
                         currentScreen = Screen.MEMBER_BIRTHDAY
                     },
-                    modifier = Modifier.padding(padding)
+                    modifier = Modifier.padding(padding),
+                    enableNextButton = uiState.value.enableSexNext,
+                    selectedSex = addMemberViewModel.sex,
+                    updateSex = {addMemberViewModel.updateSex(it)}
                 )
             }
         }

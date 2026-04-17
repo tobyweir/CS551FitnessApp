@@ -9,11 +9,33 @@ import kotlinx.coroutines.launch
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.example.cs551fitnessapp.ui.viewmodels.states.AddMemberUiState
+import com.example.cs551fitnessapp.ui.viewmodels.states.EditMemberUiState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class AddMemberViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = DatabaseModule.provideMemberRepository(application)
-
+    private val _uiState  = MutableStateFlow(AddMemberUiState(
+        isSexError = false,
+        enableSexNext = false,
+        isBirthdayError = false,
+        isWeightError = false,
+        isHeightError = false,
+        isGoalError = false,
+        isMedicalConcernError = false,
+        isNameError = false,
+        enableBirthdayNext = false,
+        enableWeightNext = false,
+        enableHeightNext = false,
+        enableGoalNext = true,
+        enableMedicalNext = true,
+        enableSave = false
+    ))
+    val uiState : StateFlow<AddMemberUiState> = _uiState.asStateFlow()
     var sex by mutableStateOf("")
         private set
 
@@ -58,6 +80,11 @@ class AddMemberViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun updateSex(value: String) {
         sex = value
+        _uiState.update { uiState ->
+            uiState.copy(
+                enableSexNext = true
+            )
+        }
     }
 
     fun updateBirthday(value: String) {

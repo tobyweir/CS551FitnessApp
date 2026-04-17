@@ -33,14 +33,17 @@ import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.ui.reusable.Description
 import com.example.cs551fitnessapp.ui.reusable.NextScreenButton
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
+import com.example.cs551fitnessapp.ui.viewmodels.AddMemberViewModel
 
 @Composable
 fun NewMemberSexScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {},
-    onNextClick: (String) -> Unit = {}
+    onNextClick: (String) -> Unit = {},
+    enableNextButton: Boolean,
+    selectedSex: String,
+    updateSex : (String) -> Unit = {}
 ) {
-    var selectedSex by rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier
@@ -52,19 +55,20 @@ fun NewMemberSexScreen(
 
         SexSelector(
             selectedSex = selectedSex,
-            onSexSelected = { selectedSex = it }
+            onSexSelected = updateSex
         )
 
         SubmissionButtons(
             onPreferNotToSayClick = {
-                selectedSex = "Prefer not to say"
-                onNextClick(selectedSex)
+                updateSex("Prefer not to say")
+                onNextClick("Prefer not to say")
             },
             onNextClick = {
                 if (selectedSex.isNotBlank()) {
                     onNextClick(selectedSex)
                 }
-            }
+            },
+            enableNextButton = enableNextButton
         )
     }
 }
@@ -137,7 +141,8 @@ fun SexSelector(
 fun SubmissionButtons(
     modifier: Modifier = Modifier,
     onPreferNotToSayClick: () -> Unit,
-    onNextClick: () -> Unit
+    onNextClick: () -> Unit,
+    enableNextButton : Boolean
 ) {
     Column(modifier) {
         OutlinedButton(
@@ -147,7 +152,7 @@ fun SubmissionButtons(
             Text("Prefer not to say")
         }
 
-        NextScreenButton(onNextClick)
+        NextScreenButton(onNextClick , enabled = enableNextButton)
     }
 }
 
