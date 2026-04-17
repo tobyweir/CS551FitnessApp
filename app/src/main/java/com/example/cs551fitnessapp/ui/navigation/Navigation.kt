@@ -223,7 +223,7 @@ fun AppNavHost (navController : NavHostController ,
                         topBar = {
                             TopBar(
                                 navController = navController,
-                                showBackIcon = false,
+                                showBackIcon = canGoBack,
                                 title = "Member"
                             )
                         }
@@ -244,7 +244,7 @@ fun AppNavHost (navController : NavHostController ,
                         Column {
                             TopBar(
                                 navController = navController,
-                                showBackIcon = false,
+                                showBackIcon = canGoBack,
                                 title = "Member"
                             )
                             Row {
