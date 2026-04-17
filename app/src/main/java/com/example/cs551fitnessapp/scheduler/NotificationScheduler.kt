@@ -53,7 +53,7 @@ class NotificationScheduler(context: Context) {
                 workDataOf(
                     "type" to "event",
                     "title" to "Upcoming Session",
-                    "msg" to event.ownerUserId.toString() +" session is about to start in 30 mins",
+                    "msg" to "Member ${event.ownerMemberId} session is about to start in 30 mins",
                     "eventTimeMillis" to event.dtStartSession
                 )
             )
