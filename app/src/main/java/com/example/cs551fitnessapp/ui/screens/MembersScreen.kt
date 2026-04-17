@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.cs551fitnessapp.database.member.MemberEntity
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -29,6 +31,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -108,7 +111,7 @@ fun MembersScreen(
 @Composable
 fun SearchBar(currentSearch : String = "" , updateSearchQuery : (String) -> Unit , runSearch : () -> Unit) {
     val focusManager = LocalFocusManager.current
-    Card (modifier = Modifier.fillMaxWidth().fillMaxHeight(0.15f) , shape = RectangleShape, colors = CardDefaults.cardColors(containerColor = Color.Blue)) {
+    Card (modifier = Modifier.fillMaxWidth().fillMaxHeight(0.15f) , shape = RectangleShape, colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center , modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
             OutlinedTextField(
                 leadingIcon = {Icon(imageVector = Icons.Default.Search , contentDescription = "Search icon" )},
@@ -121,11 +124,11 @@ fun SearchBar(currentSearch : String = "" , updateSearchQuery : (String) -> Unit
                 shape = RoundedCornerShape(100.dp),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
-                    cursorColor = Color.Black,
-                    focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedContainerColor = Color.White
+                    cursorColor = MaterialTheme.colorScheme.onBackground,
+                    focusedBorderColor = MaterialTheme.colorScheme.background,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    focusedContainerColor = MaterialTheme.colorScheme.background
 
                 ),
                 placeholder = {
@@ -200,10 +203,12 @@ fun MembersList(navController: NavHostController, members: List<MemberEntity>, m
 }
 @Composable
 fun MemberCard(member: MemberEntity, modifier: Modifier = Modifier.fillMaxSize()){
-    Row(modifier = modifier.fillMaxSize(), horizontalArrangement = Arrangement.Center ,) {
+    Row(modifier = modifier.fillMaxSize().padding(top = 10.dp , bottom = 10.dp), horizontalArrangement = Arrangement.Center ,) {
         MemberCardImage(modifier = Modifier
             .fillMaxWidth(0.3f)
-            .padding(10.dp))
+            .fillMaxHeight(0.8f)
+            .padding(top = 10.dp),
+        member = member)
         MemberCardInfo(
             name = member.name,
             joinDate = member.joinDate,
@@ -215,15 +220,29 @@ fun MemberCard(member: MemberEntity, modifier: Modifier = Modifier.fillMaxSize()
 }
 
 @Composable
-fun MemberCardImage(modifier: Modifier = Modifier.fillMaxSize()) {
-    Image(
-        painter = painterResource(id = R.drawable.ic_launcher_background),
-        contentDescription = "Image of member",
-        contentScale = ContentScale.Crop,
-        modifier = modifier
+fun MemberCardImage(modifier: Modifier = Modifier.fillMaxSize() , member : MemberEntity) {
+//    Image(
+//        painter = painterResource(id = R.drawable.profile1),
+//        contentDescription = "Image of member",
+//        contentScale = ContentScale.Crop,
+//        modifier = modifier
+//            .aspectRatio(1f)
+//            .clip(CircleShape)
+//    )
+    Box(
+        modifier = Modifier
+            .size(80.dp)
             .aspectRatio(1f)
-            .clip(CircleShape)
-    )
+            .background(MaterialTheme.colorScheme.secondary, CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = member.name.firstOrNull()?.uppercase() ?: "",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
+    }
 
 }
 
@@ -262,6 +281,9 @@ fun StatusBadge(status: String) {
         "Inactive" -> Color(0xFFFDE2E1)
         "Nearly Finished" -> Color(0xFFFFF4CC)
         else -> Color.LightGray
+    }
+    Card (modifier = Modifier , colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary)) {
+        Text(text = status , modifier = Modifier.padding(5.dp))
     }
 }
 
