@@ -26,21 +26,22 @@ APP CUSTOM COLORS (used for dark/light theme)
 */
 
 // LIGHT MODE
-val PrimaryLight = Color(0xFF2E7D32)
-val SecondaryLight = Color(0xFF66BB6A)
+val PrimaryLight = Color(0xFF2260ff)
+val SecondaryLight = Color(0xFFcad6ff)
 
-val BackgroundLight = Color(0xFFF5F5F5)
+val BackgroundLight = Color(0xFFffffff)
 val SurfaceLight = Color(0xFFFFFFFF)
-
-val TextLight = Color(0xFF1C1B1F)
+val TextLight = Color(0xFF000000)
+val AltTextLight = Color(0xFFFFFFFF) //use this for light backgrounds
+val HighLight = Color(0xFFe0fe10)
 
 
 
 // DARK MODE
-val PrimaryDark = Color(0xFF81C784)
-val SecondaryDark = Color(0xFF388E3C)
-
-val BackgroundDark = Color(0xFF121212)
+val PrimaryDark = Color(0xFF2260ff)
+val SecondaryDark = Color(0xFFcad6ff)
+val BackgroundDark = Color(0xFF000000)
 val SurfaceDark = Color(0xFF1E1E1E)
-
-val TextDark = Color(0xFFE6E1E5)
+val TextDark = Color(0xFFFFFFFF)
+val AltTextDark = Color(0xFF000000) //use this for light backgrounds
+val HighLightDark = Color(0xFFe0fe10)
