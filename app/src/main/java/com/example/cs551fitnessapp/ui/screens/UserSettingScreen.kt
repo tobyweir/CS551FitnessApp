@@ -52,22 +52,17 @@ fun SettingsScreen(
 
     }
 
-    val appointmentDao = remember(context) {
-
-        AppDatabase.getDatabase(context).appointmentDao()
-
+    val sessionDao = remember(context) {
+        AppDatabase.getDatabase(context).sessionDao()
     }
 
 
     val viewModel: NotificationSettingsViewModel = viewModel(
-
         factory = NotificationSettingsViewModel.provideFactory(
-
             application,
             repository,
             scheduler,
-            appointmentDao
-
+            sessionDao
         )
     )
 

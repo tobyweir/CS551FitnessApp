@@ -14,6 +14,7 @@ import com.example.cs551fitnessapp.R
 import java.util.concurrent.TimeUnit
 import com.example.cs551fitnessapp.database.AppDatabase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 class ReminderWorker(private val context: Context, workerParams: WorkerParameters) :
@@ -22,24 +23,23 @@ class ReminderWorker(private val context: Context, workerParams: WorkerParameter
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
 
         val type = inputData.getString("type") ?: "notification type"
-        var title = inputData.getString("title") ?: "Reminder"
+        val title = inputData.getString("title") ?: "Reminder"
         var msg = inputData.getString("msg") ?: "notification msg"
 
         if (type == "periodic") {
-            val appointmentDao = AppDatabase.getDatabase(applicationContext).appointmentDao()
+            val sessionDao = AppDatabase.getDatabase(applicationContext).sessionDao()
             val sevenDaysAgo = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7)
-
-            val totalHourTraining = appointmentDao.getTotalHourTrainingWeekly(sevenDaysAgo, System.currentTimeMillis()) ?: 0.0
+            val sessions = sessionDao.getAllSessionsInRange(sevenDaysAgo, System.currentTimeMillis()).first()
+            val totalHourTraining = sessions.sumOf { it.duration.toDouble() }
             msg = "Weekly training: $totalHourTraining hours"
         }
 
         if (type == "event") {
-            val eventTime = inputData.getLong("dtStartSession", 0L)
+            val eventTime = inputData.getLong("eventTimeMillis", 0L)
             if (!ontimeNotifyCheck(eventTime)) {
                 return@withContext Result.success()
             }
         }
-
 
         try {
             showNotification(title, msg)
@@ -88,9 +88,9 @@ class ReminderWorker(private val context: Context, workerParams: WorkerParameter
             .setContentTitle(title)
             .setContentText(content)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setContentIntent(pendingIntent)   // ← tap action
+            .setContentIntent(pendingIntent)
             .setAutoCancel(true)
-            .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_notification)) //error finding dumbell image , quick fix
+            .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_notification))
             .build()
 
         manager.notify(1001, notification)
@@ -99,6 +99,6 @@ class ReminderWorker(private val context: Context, workerParams: WorkerParameter
     private fun ontimeNotifyCheck(eventTime: Long): Boolean {
         val now = System.currentTimeMillis()
         val diff = eventTime - now
-        return diff in 0..(30 * 60 * 1000) // within 30 minutes
+        return diff in 0..(30 * 60 * 1000)
     }
 }
