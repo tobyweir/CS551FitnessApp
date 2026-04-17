@@ -5,7 +5,6 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cs551fitnessapp.repository.WorkoutRepository
-import com.example.cs551fitnessapp.ui.screens.Workout
 import com.example.cs551fitnessapp.ui.viewmodels.states.TodayUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,25 +16,19 @@ import java.time.LocalDate
 import java.time.ZoneId
 
 data class MemberSession(
-    val id: Long,
-    val name: String,
-    val dtSessionStart: String,
-    val dtSessionEnd: String,
-    val status: String
-)
-
-@RequiresApi(Build.VERSION_CODES.O)
-private val workouts = listOf(
-    Workout(id = 0, date = LocalDate.now().minusDays(-1), start = "", duration = "", memberId = 0),
-    Workout(id = 0, date = LocalDate.now().minusDays(1), start = "", duration = "", memberId = 1),
-    Workout(id = 0, date = LocalDate.now(), start = "", duration = "", memberId = 2),
-    Workout(id = 0, date = LocalDate.now(), start = "", duration = "", memberId = 3)
+    val sessionId: Long,
+    val memberId: Long,
+    val memberName: String,
+    val sessionName: String,
+    val startTime: String,
+    val duration: String,
+    val endTime: String
 )
 
 @RequiresApi(Build.VERSION_CODES.O)
 class TodayViewModel(private val repository: WorkoutRepository) : ViewModel() {
 
-    val currentDate = LocalDate.now()
+    private val currentDate = LocalDate.now()
 
     private val _uiState = MutableStateFlow(
         TodayUiState(
@@ -43,19 +36,22 @@ class TodayViewModel(private val repository: WorkoutRepository) : ViewModel() {
             day2 = currentDate.minusDays(2),
             day3 = currentDate.minusDays(1),
             day4 = currentDate,
-            day5 = currentDate.minusDays(-1),
-            day6 = currentDate.minusDays(-2),
-            day7 = currentDate.minusDays(-3),
+            day5 = currentDate.plusDays(1),
+            day6 = currentDate.plusDays(2),
+            day7 = currentDate.plusDays(3),
             selectedDay = currentDate,
-            workouts = workouts,
-            filteredWorkouts = workouts.filter { it.date == currentDate },
-            members = emptyList()
+            sessions = emptyList()
         )
     )
 
     val uiState: StateFlow<TodayUiState> = _uiState.asStateFlow()
 
     init {
+        loadSessionsForSelectedDay()
+    }
+
+    fun updateSelectedDay(newDay: LocalDate) {
+        _uiState.update { it.copy(selectedDay = newDay) }
         loadSessionsForSelectedDay()
     }
 
@@ -66,16 +62,12 @@ class TodayViewModel(private val repository: WorkoutRepository) : ViewModel() {
                 .catch {
                     emit(emptyList())
                 }
-                .collect { memberSessions ->
+                .collect { sessions ->
                     _uiState.update { state ->
-                        state.copy(members = memberSessions)
+                        state.copy(sessions = sessions)
                     }
                 }
         }
-    }
-
-    fun getTodayRange(): Pair<Long, Long> {
-        return getDayRange(LocalDate.now())
     }
 
     private fun getDayRange(day: LocalDate): Pair<Long, Long> {
@@ -88,20 +80,5 @@ class TodayViewModel(private val repository: WorkoutRepository) : ViewModel() {
             .toEpochMilli() - 1
 
         return Pair(startOfDay, endOfDay)
-    }
-
-    fun updateSelectedDay(newDay: LocalDate) {
-        _uiState.update { uiState ->
-            uiState.copy(selectedDay = newDay)
-        }
-        filterWorkouts()
-        loadSessionsForSelectedDay()
-    }
-
-    fun filterWorkouts() {
-        val newWorkouts = _uiState.value.workouts.filter { it.date == _uiState.value.selectedDay }
-        _uiState.update { uiState ->
-            uiState.copy(filteredWorkouts = newWorkouts)
-        }
     }
 }

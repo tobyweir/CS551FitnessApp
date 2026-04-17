@@ -11,7 +11,8 @@ object DatabaseModule {
         return WorkoutRepository(
             sessionDao = db.sessionDao(),
             exerciseDao = db.exerciseDao(),
-            sessionExerciseDao = db.sessionExerciseDao()
+            sessionExerciseDao = db.sessionExerciseDao(),
+            memberDao = db.memberDao()
         )
     }
 

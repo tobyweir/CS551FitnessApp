@@ -43,6 +43,7 @@ import androidx.navigation.NavHostController
 import com.example.cs551fitnessapp.ui.ViewModelFactory
 import com.example.cs551fitnessapp.ui.navigation.AddWorkoutFlow
 import com.example.cs551fitnessapp.ui.viewmodels.MemberViewModel
+import com.example.cs551fitnessapp.ui.viewmodels.states.MemberSessionItem
 import com.example.cs551fitnessapp.ui.viewmodels.states.MemberUiState
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -90,9 +91,8 @@ fun MemberInfoScreen(
                         .verticalScroll(rememberScrollState())
                 ) {
                     MemberHeader(member = uiState)
-                    StatsSection()
-                    UpcomingSection()
-                    PreviousSection()
+                    UpcomingSection(uiState.upcomingSessions)
+                    PreviousSection(uiState.previousSessions)
                     Spacer(modifier = Modifier.height(100.dp))
                 }
             }
@@ -176,7 +176,9 @@ fun MemberHeader(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = member.notes.ifBlank { "No notes yet." },
+                            text = member.notes
+                                .replace(Regex("""\s*\|\s*Sessions:\s*[^|]+"""), "")
+                                .ifBlank { "No notes yet." },
                             color = Color.White,
                             modifier = Modifier.padding(12.dp),
                             fontSize = 13.sp
@@ -234,66 +236,51 @@ private fun formatJoinDate(joinDate: Long?): String {
 }
 
 @Composable
-fun StatsSection() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp, vertical = 10.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column {
-            Text(
-                "Training Hours",
-                color = Color.Gray
-            )
+fun UpcomingSection(
+    sessions: List<MemberSessionItem>
+) {
+    SectionTitle("Upcoming")
 
-            Text(
-                "17.50",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        Column {
-            Text(
-                "Session",
-                color = Color.Gray
-            )
-
-            Text(
-                "18 / 20",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold
+    if (sessions.isEmpty()) {
+        EmptySectionText("No upcoming sessions")
+    } else {
+        sessions.forEach { session ->
+            SessionRow(
+                title = session.sessionName,
+                duration = session.durationText,
+                date = "${session.startText}  •  Ends ${session.endText}"
             )
         }
     }
 }
 
 @Composable
-fun UpcomingSection() {
-    SectionTitle("Upcoming")
+fun PreviousSection(
+    sessions: List<MemberSessionItem>
+) {
+    SectionTitle("Previous Session")
 
-    SessionRow(
-        title = "Cardio Session",
-        duration = "60 mins",
-        date = "5 Jan 2026"
-    )
+    if (sessions.isEmpty()) {
+        EmptySectionText("No previous sessions")
+    } else {
+        sessions.forEach { session ->
+            SessionRow(
+                title = session.sessionName,
+                duration = session.durationText,
+                date = "${session.startText}  •  Ended ${session.endText}"
+            )
+        }
+    }
 }
 
 @Composable
-fun PreviousSection() {
-    SectionTitle("Previous Session")
-
-    SessionRow(
-        title = "Strength Session",
-        duration = "30 mins",
-        date = "30 Dec 2025"
-    )
-
-    SessionRow(
-        title = "Mixed",
-        duration = "90 mins",
-        date = "25 Dec 2025"
+fun EmptySectionText(
+    text: String
+) {
+    Text(
+        text = text,
+        color = Color.Gray,
+        modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
     )
 }
 
@@ -355,11 +342,5 @@ fun SessionRow(
                 fontSize = 13.sp
             )
         }
-
-        Text(
-            ">",
-            fontSize = 18.sp,
-            color = Color.Gray
-        )
     }
 }

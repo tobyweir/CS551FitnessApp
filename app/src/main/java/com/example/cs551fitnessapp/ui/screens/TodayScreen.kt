@@ -5,16 +5,27 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,58 +39,56 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.ui.ViewModelFactory
+import com.example.cs551fitnessapp.ui.navigation.MemberPage
 import com.example.cs551fitnessapp.ui.viewmodels.MemberSession
 import com.example.cs551fitnessapp.ui.viewmodels.TodayViewModel
 import java.time.LocalDate
 
-data class Workout(
-    val id : Int,
-    val date : LocalDate,
-    val start: String,
-    val duration : String,
-    val memberId : Int
-)
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TodayScreen(
-    navController: NavController , modifier: Modifier, viewmodel: TodayViewModel = viewModel(factory = ViewModelFactory.Factory)
+    navController: NavController,
+    modifier: Modifier,
+    viewmodel: TodayViewModel = viewModel(factory = ViewModelFactory.Factory)
 ) {
     val uiState = viewmodel.uiState.collectAsState()
+
     Column(
         modifier = modifier.fillMaxSize()
     ) {
         DateSelector(
             selectedDate = uiState.value.selectedDay,
-            onDateSelected = {viewmodel.updateSelectedDay(it) },
-            dates = listOf(uiState.value.day1,
+            onDateSelected = { viewmodel.updateSelectedDay(it) },
+            dates = listOf(
+                uiState.value.day1,
                 uiState.value.day2,
                 uiState.value.day3,
                 uiState.value.day4,
                 uiState.value.day5,
                 uiState.value.day6,
-                uiState.value.day7,
+                uiState.value.day7
             )
         )
-        if (uiState.value.members.isEmpty()) {
+
+        if (uiState.value.sessions.isEmpty()) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier         = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize()
             ) {
-                Text("No members yet", color = Color.Gray)
+                Text("No sessions yet", color = Color.Gray)
             }
         } else {
-        LazyColumn {
-            items(
-                items = uiState.value.members,
-                key = { it.id }
-            ) { member ->
-                SessionCard(
-                    member = member,
-                    navController = navController
-                )
+            LazyColumn {
+                items(
+                    items = uiState.value.sessions,
+                    key = { it.sessionId }
+                ) { session ->
+                    SessionCard(
+                        session = session,
+                        navController = navController
+                    )
+                }
             }
-        }
         }
     }
 }
@@ -89,7 +98,7 @@ fun TodayScreen(
 fun DateSelector(
     selectedDate: LocalDate,
     onDateSelected: (LocalDate) -> Unit,
-    dates : List<LocalDate>
+    dates: List<LocalDate>
 ) {
     LazyRow(
         modifier = Modifier
@@ -122,13 +131,12 @@ fun DateItem(
             .height(80.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(
-                if (isSelected) Color(0xFF2962FF)
-                else Color.White
+                if (isSelected) Color(0xFF2962FF) else Color.White
             )
             .padding(horizontal = 8.dp, vertical = 8.dp)
             .clickable { onClick() }
     ) {
-        Column (
+        Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -149,12 +157,15 @@ fun DateItem(
 
 @Composable
 fun SessionCard(
-    member: MemberSession,
-    navController: NavController,
+    session: MemberSession,
+    navController: NavController
 ) {
     Card(
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable {
+                navController.navigate(MemberPage(session.memberId.toInt()))
+            },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFFDCE3F3)
@@ -172,24 +183,28 @@ fun SessionCard(
                     .size(70.dp)
                     .clip(CircleShape)
             )
+
             Spacer(modifier = Modifier.width(16.dp))
+
             Column(modifier = Modifier.weight(1f)) {
-                Text(member.name,
+                Text(
+                    text = session.memberName,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF2962FF))
-                Text("Start : ${member.dtSessionStart}")
-                Text("End : ${member.dtSessionEnd}")
-                Row {
-                    Button(
-                        onClick = { /*navController.navigate() */ },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF5C6BC0))
-                    ) { Text("Info") }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    IconButton(onClick = { }) {
-                        Icon(Icons.Default.DateRange, contentDescription = null)
-                    }
-                }
+                    color = Color(0xFF2962FF)
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = session.sessionName,
+                    fontWeight = FontWeight.Medium
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text("Start: ${session.startTime}")
+                Text("Duration: ${session.duration}")
+                Text("End: ${session.endTime}")
             }
         }
     }

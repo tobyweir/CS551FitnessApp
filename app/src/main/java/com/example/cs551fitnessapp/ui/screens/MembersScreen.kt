@@ -272,10 +272,10 @@ private fun formatMemberDate(timestamp: Long?): String {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CS551FitnessAppTheme {
-        //MembersScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview() {
+//    CS551FitnessAppTheme {
+//        //MembersScreen()
+//    }
+//}

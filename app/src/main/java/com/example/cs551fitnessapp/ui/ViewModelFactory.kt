@@ -25,7 +25,8 @@ object ViewModelFactory {
             MembersViewModel(this[APPLICATION_KEY] as Application)
         }
         initializer {
-            MemberViewModel(this[APPLICATION_KEY] as Application)
+            val application = this.fitnessApplication()
+            MemberViewModel(application)
         }
         initializer {
             val application = this.fitnessApplication()
