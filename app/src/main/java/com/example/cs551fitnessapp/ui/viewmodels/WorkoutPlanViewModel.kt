@@ -1,11 +1,7 @@
 package com.example.cs551fitnessapp.ui.viewmodels
 
 import android.app.Application
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.cs551fitnessapp.database.DatabaseModule
 import com.example.cs551fitnessapp.database.WorkoutEntry
@@ -16,25 +12,42 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
-// Save result
 sealed class SavePlanResult {
-    data object Idle    : SavePlanResult()
+    data object Idle : SavePlanResult()
     data object Loading : SavePlanResult()
     data class Success(val sessionId: Long) : SavePlanResult()
-    data class Error(val message: String)   : SavePlanResult()
+    data class Error(val message: String) : SavePlanResult()
 }
 
 class WorkoutPlanViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = DatabaseModule.provideRepository(application)
 
-    // Save result state
     private val _saveResult = MutableStateFlow<SavePlanResult>(SavePlanResult.Idle)
     val saveResult: StateFlow<SavePlanResult> = _saveResult.asStateFlow()
 
-    // Workout entries (selected workout list)
     private val _addedEntries = MutableStateFlow<List<WorkoutEntry>>(emptyList())
     val addedEntries: StateFlow<List<WorkoutEntry>> = _addedEntries.asStateFlow()
+
+    private val _sessionName = MutableStateFlow("Session")
+    private val _selectedDate = MutableStateFlow(todayFormatted())
+    private val _startHour = MutableStateFlow(0)
+    private val _startMin = MutableStateFlow(0)
+    private val _endHour = MutableStateFlow(0)
+    private val _endMin = MutableStateFlow(0)
+    private val _selectedMemberId = MutableStateFlow<Long?>(null)
+
+    val sessionName: StateFlow<String> = _sessionName.asStateFlow()
+    val selectedDate: StateFlow<String> = _selectedDate.asStateFlow()
+    val startHour: StateFlow<Int> = _startHour.asStateFlow()
+    val startMin: StateFlow<Int> = _startMin.asStateFlow()
+    val endHour: StateFlow<Int> = _endHour.asStateFlow()
+    val endMin: StateFlow<Int> = _endMin.asStateFlow()
+    val selectedMemberId: StateFlow<Long?> = _selectedMemberId.asStateFlow()
+
+    fun setSelectedMemberId(memberId: Long) {
+        _selectedMemberId.value = memberId
+    }
 
     fun addEntry(entry: WorkoutEntry) {
         _addedEntries.value = _addedEntries.value + entry
@@ -47,31 +60,30 @@ class WorkoutPlanViewModel(application: Application) : AndroidViewModel(applicat
     fun isAdded(exerciseId: String): Boolean =
         _addedEntries.value.any { it.exercise.id == exerciseId }
 
-    // Form data
-    private val _sessionName  = MutableStateFlow("Session")
-    private val _selectedDate = MutableStateFlow(todayFormatted())
+    fun onSessionNameChange(value: String) {
+        _sessionName.value = value
+    }
 
-    // Spinners store Int — default 0
-    private val _startHour = MutableStateFlow(0)
-    private val _startMin  = MutableStateFlow(0)
-    private val _endHour   = MutableStateFlow(0)
-    private val _endMin    = MutableStateFlow(0)
+    fun onSelectedDateChange(value: String) {
+        _selectedDate.value = value
+    }
 
-    val sessionName  : StateFlow<String> = _sessionName.asStateFlow()
-    val selectedDate : StateFlow<String> = _selectedDate.asStateFlow()
-    val startHour    : StateFlow<Int>    = _startHour.asStateFlow()
-    val startMin     : StateFlow<Int>    = _startMin.asStateFlow()
-    val endHour      : StateFlow<Int>    = _endHour.asStateFlow()
-    val endMin       : StateFlow<Int>    = _endMin.asStateFlow()
+    fun onStartHourChange(value: Int) {
+        _startHour.value = value
+    }
 
-    fun onSessionNameChange(value: String)  { _sessionName.value  = value }
-    fun onSelectedDateChange(value: String) { _selectedDate.value = value }
-    fun onStartHourChange(value: Int)       { _startHour.value    = value }
-    fun onStartMinChange(value: Int)        { _startMin.value     = value }
-    fun onEndHourChange(value: Int)         { _endHour.value      = value }
-    fun onEndMinChange(value: Int)          { _endMin.value       = value }
+    fun onStartMinChange(value: Int) {
+        _startMin.value = value
+    }
 
-    // Calendar helper
+    fun onEndHourChange(value: Int) {
+        _endHour.value = value
+    }
+
+    fun onEndMinChange(value: Int) {
+        _endMin.value = value
+    }
+
     private fun todayFormatted(): String {
         val monthNames = listOf(
             "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -84,33 +96,20 @@ class WorkoutPlanViewModel(application: Application) : AndroidViewModel(applicat
             cal.get(Calendar.YEAR)
         )
     }
-    
-    // Save workout plan to db
+
     fun savePlan(plan: WorkoutPlanData) {
         viewModelScope.launch {
             _saveResult.value = SavePlanResult.Loading
 
+            val memberId = _selectedMemberId.value
+            if (memberId == null) {
+                _saveResult.value = SavePlanResult.Error("No member selected")
+                return@launch
+            }
+
             try {
-//                val sessionId = repository.saveWorkoutPlan(
-//                    userId = 1, // hardcoded for now
-//                    plan   = plan
-//                )
-
-                    val result = repository.saveWorkoutPlan(1, plan)
-                    _saveResult.value = result
-                /*
-                when (val result = repository.saveWorkoutPlan(1, plan)) { // hardcoded for now
-
-                    is SavePlanResult.Success ->
-                        _saveResult.value = SavePlanResult.Success(result.sessionId)
-
-
-                    is SavePlanResult.Error ->
-                        _saveResult.value = SavePlanResult.Error(result.message)
-
-                    else -> {}
-                }*/
-
+                val result = repository.saveWorkoutPlan(memberId, plan)
+                _saveResult.value = result
             } catch (e: Exception) {
                 _saveResult.value = SavePlanResult.Error(
                     e.message ?: "Failed to save workout session"
@@ -125,13 +124,12 @@ class WorkoutPlanViewModel(application: Application) : AndroidViewModel(applicat
 
     fun clearAllValue() {
         _addedEntries.value = emptyList()
-        _sessionName.value  = ""
+        _sessionName.value = ""
         _selectedDate.value = todayFormatted()
-        _startHour.value    = 0
-        _startMin.value     = 0
-        _endHour.value      = 0
-        _endMin.value       = 0
-        _saveResult.value   = SavePlanResult.Idle
+        _startHour.value = 0
+        _startMin.value = 0
+        _endHour.value = 0
+        _endMin.value = 0
+        _saveResult.value = SavePlanResult.Idle
     }
-
 }

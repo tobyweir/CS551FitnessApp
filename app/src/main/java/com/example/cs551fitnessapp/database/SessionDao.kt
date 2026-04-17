@@ -1,65 +1,65 @@
 package com.example.cs551fitnessapp.database
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SessionDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun insertSession(session: SessionEntity): Long
 
-//    @Update
-//    suspend fun updateSession(session: SessionEntity)
-//
     @Delete
     suspend fun deleteSession(session: SessionEntity)
 
-    @Query("SELECT * FROM sessions WHERE sessionId = :id")
-    suspend fun getSessionById(id: Long): SessionEntity?
+    @Query("SELECT * FROM sessions WHERE sessionId = :sessionId")
+    suspend fun getSessionById(sessionId: Long): SessionEntity?
 
-    // All sessions for a specific user, newest first
-    @Query("""
-        SELECT * FROM sessions 
-        WHERE ownerUserId = :userId 
-    """)
-    fun getSessionsByUser(userId: Long): Flow<List<SessionEntity>>
+    @Query("SELECT * FROM sessions WHERE ownerMemberId = :memberId ORDER BY dtStartSession ASC")
+    fun getSessionsByMember(memberId: Long): Flow<List<SessionEntity>>
 
-    // Sessions for a user on a specific date e.g. "12 Apr 2026"
     @Query("""
         SELECT * FROM sessions
-        WHERE ownerUserId = :userId AND dtStartSession = :date
-        ORDER BY dtStartSession DESC
+        WHERE ownerMemberId = :memberId
+        AND dtStartSession >= :startOfDay
+        AND dtStartSession <= :endOfDay
+        ORDER BY dtStartSession ASC
     """)
-    fun getSessionsByDate(userId: Long, date: String): Flow<List<SessionEntity>>
+    fun getSessionsForMemberInRange(
+        memberId: Long,
+        startOfDay: Long,
+        endOfDay: Long
+    ): Flow<List<SessionEntity>>
 
-    // Full session with exercise list
     @Transaction
     @Query("SELECT * FROM sessions WHERE sessionId = :sessionId")
-    fun getSessionWithExercises(sessionId: Long): Flow<SessionWithExercises>
+    fun getSessionWithExercises(sessionId: Long): Flow<SessionWithExercises?>
 
-    // All sessions with exercises for a user
     @Transaction
-    @Query("""
-        SELECT * FROM sessions 
-        WHERE ownerUserId = :userId
-    """)
-    fun getAllSessionsWithExercises(userId: Long): Flow<List<SessionWithExercises>>
-
-    @Query("""
-        SELECT * FROM sessions
-        WHERE dtStartSession BETWEEN :date AND :end 
-        ORDER BY dtStartSession DESC
-    """)
-    fun getSessionsbyDate(date: Long, end: Long): Flow<List<SessionEntity>>
+    @Query("SELECT * FROM sessions WHERE ownerMemberId = :memberId ORDER BY dtStartSession DESC")
+    fun getAllSessionsWithExercises(memberId: Long): Flow<List<SessionWithExercises>>
 
     @Query("""
         SELECT COUNT(*) FROM sessions
-        WHERE :startAt < dtStartSession
-          AND :endAt > dtEndSession
+        WHERE ownerMemberId = :memberId
+        AND :startAt < dtEndSession
+        AND :endAt > dtStartSession
     """)
-    suspend fun countDuplicateSessions(
-        startAt           : Long,
-        endAt             : Long
+    suspend fun countOverlappingSessions(
+        memberId: Long,
+        startAt: Long,
+        endAt: Long
     ): Int
+
+    @Query("""
+        SELECT * FROM sessions
+        WHERE dtStartSession >= :startAt
+        AND dtStartSession <= :endAt
+        ORDER BY dtStartSession ASC
+    """)
+    fun getAllSessionsInRange(startAt: Long, endAt: Long): Flow<List<SessionEntity>>
 }
