@@ -4,7 +4,9 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import com.example.cs551fitnessapp.ui.utils.WindowStateUtils
 
 private val DarkColorScheme = darkColorScheme(
 
@@ -37,7 +39,6 @@ fun CS551FitnessAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-
     val colorScheme =
         if (darkTheme) DarkColorScheme
         else LightColorScheme

@@ -139,17 +139,17 @@ fun AddMemberNameScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun AddMemberNamePreview() {
-    CS551FitnessAppTheme {
-        AddMemberNameScreen(
-            name = "",
-            sessions = "20",
-            onNameChange = {},
-            onSessionsChange = {},
-            onBackClick = {},
-            onSaveClick = {}
-        )
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun AddMemberNamePreview() {
+//    CS551FitnessAppTheme {
+//        AddMemberNameScreen(
+//            name = "",
+//            sessions = "20",
+//            onNameChange = {},
+//            onSessionsChange = {},
+//            onBackClick = {},
+//            onSaveClick = {}
+//        )
+//    }
+//}

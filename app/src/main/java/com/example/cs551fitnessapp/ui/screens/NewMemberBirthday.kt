@@ -72,15 +72,15 @@ fun BirthdayScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun BirthdayPreview() {
-    CS551FitnessAppTheme {
-        BirthdayScreen(
-            birthday = "",
-            onBirthdayChange = {},
-            onBackClick = {},
-            onNextClick = {}
-        )
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun BirthdayPreview() {
+//    CS551FitnessAppTheme {
+//        BirthdayScreen(
+//            birthday = "",
+//            onBirthdayChange = {},
+//            onBackClick = {},
+//            onNextClick = {}
+//        )
+//    }
+//}

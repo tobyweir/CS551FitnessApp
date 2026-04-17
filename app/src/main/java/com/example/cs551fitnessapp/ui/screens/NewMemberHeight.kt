@@ -96,17 +96,17 @@ fun HeightScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun HeightPreview() {
-    CS551FitnessAppTheme {
-        HeightScreen(
-            height = "",
-            heightUnit = "cm",
-            onHeightChange = {},
-            onHeightUnitChange = {},
-            onBackClick = {},
-            onNextClick = {}
-        )
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun HeightPreview() {
+//    CS551FitnessAppTheme {
+//        HeightScreen(
+//            height = "",
+//            heightUnit = "cm",
+ //           onHeightChange = {},
+//            onHeightUnitChange = {},
+//            onBackClick = {},
+//            onNextClick = {}
+//        )
+//    }
+//}
