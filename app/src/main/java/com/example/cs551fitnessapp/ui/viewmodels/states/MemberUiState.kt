@@ -9,5 +9,6 @@ data class MemberUiState(
     val goal: String = "",
     val notes: String = "",
     val imageUri: String? = null,
-    val status: String = ""
+    val status: String = "",
+    val isLoading: Boolean = true
 )
