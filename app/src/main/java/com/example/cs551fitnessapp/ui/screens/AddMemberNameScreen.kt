@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
@@ -30,11 +32,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,6 +61,7 @@ fun AddMemberNameScreen(
     isSessionError : Boolean,
     isNameError : Boolean,
 ) {
+    val focusManager = LocalFocusManager.current
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -103,6 +111,8 @@ fun AddMemberNameScreen(
                 placeholder = {
                     Text("Full name")
                 },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(onNext = {focusManager.moveFocus(focusDirection = FocusDirection.Down)}),
                 isError = isNameError,
                 supportingText = {if (isNameError) {
                     Text("Please enter a name" , color = MaterialTheme.colorScheme.error)
@@ -128,6 +138,10 @@ fun AddMemberNameScreen(
                     onValueChange = { onSessionsChange(it) },
                     singleLine = true,
                     isError = isSessionError,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number , imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = {if (enableSaveButton) {
+                        onSaveClick()
+                    } }),
                     supportingText = {if (isSessionError) {
                         Text("Please enter a session count" , color = MaterialTheme.colorScheme.error)
                     } },

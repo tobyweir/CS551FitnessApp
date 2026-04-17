@@ -6,12 +6,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cs551fitnessapp.R
@@ -55,6 +59,10 @@ fun BirthdayScreen(
                 placeholder = {
                     Text("e.g. 21/05/1998" , color = Color.LightGray)
                 },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text , imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {if (enableNextButton) {
+                    onNextClick()
+                }}),
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )

@@ -90,10 +90,16 @@ class AddMemberViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun updateBirthday(value: String) {
         birthday = value
-        if (birthday.isNotBlank()) {
+        if (birthday != "") {
             _uiState.update { uiState ->
                 uiState.copy(
                     enableBirthdayNext = true
+                )
+            }
+        } else {
+            _uiState.update { uiState ->
+                uiState.copy(
+                    enableBirthdayNext = false
                 )
             }
         }
@@ -101,21 +107,22 @@ class AddMemberViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun updateWeight(value: String) {
         weight = value
-        if (weight.toFloatOrNull() != null) {
-            _uiState.update { uiState ->
-                uiState.copy(
-                    enableWeightNext = true,
-                    isWeightError = false
-                )
+            if (weight.toFloatOrNull() != null && weight.toFloatOrNull()!! > 0.0 ) {
+                _uiState.update { uiState ->
+                    uiState.copy(
+                        enableWeightNext = true,
+                        isWeightError = false
+                    )
+                }
+            } else {
+                _uiState.update { uiState ->
+                    uiState.copy(
+                        enableWeightNext = false,
+                        isWeightError = true
+                    )
+                }
             }
-        } else {
-            _uiState.update { uiState ->
-                uiState.copy(
-                    enableWeightNext = false,
-                    isWeightError = true
-                )
-            }
-        }
+
     }
 
         fun updateWeightUnit(value: String) {
@@ -124,7 +131,7 @@ class AddMemberViewModel(application: Application) : AndroidViewModel(applicatio
 
         fun updateHeight(value: String) {
             height = value
-            if (height.toFloatOrNull() != null) {
+            if (height.toFloatOrNull() != null && height.toFloatOrNull()!! > 0.0) {
                 _uiState.update { uiState ->
                     uiState.copy(
                         enableHeightNext = true,
