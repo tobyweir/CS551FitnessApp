@@ -11,6 +11,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -292,21 +293,23 @@ fun AppNavGraph(
         }
 
         Screen.MEMBER_NAME -> {
-            AddMemberNameScreen(
-                name = addMemberViewModel.name,
-                sessions = addMemberViewModel.sessionsInput,
-                onNameChange = { addMemberViewModel.updateName(it) },
-                onSessionsChange = { addMemberViewModel.updateSessionsInput(it) },
-                onBackClick = {
-                    currentScreen = Screen.MEMBER_MEDICAL
-                },
-                onSaveClick = {
-                    addMemberViewModel.saveMember {
-                        currentScreen = Screen.MEMBER_SUCCESS
-                    }
-                },
-                modifier = modifier
-            )
+            Scaffold(topBar = {GenericTopBar{currentScreen= Screen.MEMBER_MEDICAL}}) { innerPadding ->
+                AddMemberNameScreen(
+                    name = addMemberViewModel.name,
+                    sessions = addMemberViewModel.sessionsInput,
+                    onNameChange = { addMemberViewModel.updateName(it) },
+                    onSessionsChange = { addMemberViewModel.updateSessionsInput(it) },
+                    onBackClick = {
+                        currentScreen = Screen.MEMBER_MEDICAL
+                    },
+                    onSaveClick = {
+                        addMemberViewModel.saveMember {
+                            currentScreen = Screen.MEMBER_SUCCESS
+                        }
+                    },
+                    modifier = modifier.padding(innerPadding)
+                )
+            }
         }
 
         Screen.MEMBER_SUCCESS -> {
@@ -331,8 +334,8 @@ private fun GenericTopBar(
             Text(
                 text = "Add Member",
                 fontWeight = FontWeight.Bold,
-                color = PrimaryBlue,
-                fontSize = 18.sp
+                color      = MaterialTheme.colorScheme.primary,
+                fontSize   = 18.sp
             )
         },
         navigationIcon = {
@@ -340,13 +343,13 @@ private fun GenericTopBar(
                 Icon(
                     Icons.Default.ArrowBack,
                     contentDescription = "Back",
-                    tint = PrimaryBlue
+                    tint               = MaterialTheme.colorScheme.primary
                 )
             }
         },
         actions = {
             Spacer(modifier = Modifier.width(48.dp))
         },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
     )
 }

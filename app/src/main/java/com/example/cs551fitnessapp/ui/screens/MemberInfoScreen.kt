@@ -1,5 +1,7 @@
 package com.example.cs551fitnessapp.ui.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,6 +28,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -49,6 +52,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MemberInfoScreen(
     id: Int,
@@ -125,7 +129,7 @@ fun MemberHeader(
     Card(
         shape = RoundedCornerShape(30.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFDDE3F5)
+            containerColor = MaterialTheme.colorScheme.secondary
         ),
         modifier = Modifier
             .padding(
@@ -143,14 +147,14 @@ fun MemberHeader(
                 Box(
                     modifier = Modifier
                         .size(95.dp)
-                        .background(Color(0xFFE8EBF5), CircleShape),
+                        .background(color = MaterialTheme.colorScheme.primary, CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = member.name.firstOrNull()?.uppercase() ?: "",
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF2E5BFF)
+                        color = Color.White
                     )
                 }
 

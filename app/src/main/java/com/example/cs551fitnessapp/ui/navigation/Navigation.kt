@@ -14,6 +14,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationRail
@@ -261,18 +262,15 @@ fun TopBar(
     title: String = "Fitness App"
 ) {
     CenterAlignedTopAppBar(
-        title = { Text(text = title) },
-        navigationIcon = {
-            BackNavigateIcon(
-                navController = navController,
-                showBackIcon = showBackIcon
-            )
-        },
+        title = {Text(text = title , color = MaterialTheme.colorScheme.primary)},
+
+        navigationIcon = {BackNavigateIcon(navController = navController , showBackIcon = showBackIcon)},
         actions = {
             IconButton(onClick = { navController.navigate(PreferencesPage) }) {
                 Icon(
                     imageVector = Icons.Default.Settings,
-                    contentDescription = "Settings Icon"
+                    contentDescription = "Settings Icon",
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -289,7 +287,8 @@ fun BackNavigateIcon(
         IconButton(onClick = { navController.popBackStack() }) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Arrow Back Icon"
+                contentDescription = "Arrow Back Icon",
+                tint = MaterialTheme.colorScheme.primary
             )
         }
     }

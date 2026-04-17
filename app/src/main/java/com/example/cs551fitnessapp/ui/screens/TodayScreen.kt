@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -103,7 +104,7 @@ fun DateSelector(
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFFE3E8FF))
+            .background(MaterialTheme.colorScheme.secondary)
             .padding(vertical = 10.dp, horizontal = 0.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -131,7 +132,8 @@ fun DateItem(
             .height(80.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(
-                if (isSelected) Color(0xFF2962FF) else Color.White
+                if (isSelected) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.background
             )
             .padding(horizontal = 8.dp, vertical = 8.dp)
             .clickable { onClick() }
@@ -142,14 +144,14 @@ fun DateItem(
         ) {
             Text(
                 day,
-                color = if (isSelected) Color.White else Color.Black,
+                color = if (isSelected) Color.White else MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 date,
                 fontSize = 12.sp,
-                color = if (isSelected) Color.White else Color.Black
+                color = if (isSelected) Color.White else MaterialTheme.colorScheme.primary
             )
         }
     }
@@ -168,7 +170,7 @@ fun SessionCard(
             },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFDCE3F3)
+            containerColor = MaterialTheme.colorScheme.secondary
         )
     ) {
         Row(
@@ -190,21 +192,25 @@ fun SessionCard(
                 Text(
                     text = session.memberName,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF2962FF)
+                    color = MaterialTheme.colorScheme.primary
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
                     text = session.sessionName,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                Text("Start: ${session.startTime}")
-                Text("Duration: ${session.duration}")
-                Text("End: ${session.endTime}")
+                Text("Start: ${session.startTime}" ,
+                    color = MaterialTheme.colorScheme.onBackground)
+                Text("Duration: ${session.duration}" ,
+                    color = MaterialTheme.colorScheme.onBackground)
+                Text("End: ${session.endTime}" ,
+                    color = MaterialTheme.colorScheme.onBackground)
             }
         }
     }

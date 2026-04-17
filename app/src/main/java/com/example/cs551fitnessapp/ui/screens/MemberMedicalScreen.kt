@@ -30,6 +30,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -82,7 +83,7 @@ fun MedicalConcernScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.background)
                     .padding(horizontal = 24.dp, vertical = 16.dp)
                     .navigationBarsPadding()
             ) {
@@ -103,7 +104,7 @@ fun MedicalConcernScreen(
                 }
             }
         },
-        containerColor = Color.White
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
 
         Column(
@@ -118,13 +119,13 @@ fun MedicalConcernScreen(
                 text = "Medical concern",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.ExtraBold,
-                color = Color(0xFF111111)
+                color = MaterialTheme.colorScheme.onBackground
             )
 
             Text(
                 text = "Select any medical concern that may affect training, and add a short note if needed.",
                 fontSize = 13.sp,
-                color = Color(0xFF757575),
+                color = MaterialTheme.colorScheme.onBackground,
                 lineHeight = 20.sp
             )
 
@@ -169,7 +170,7 @@ private fun MedicalTopBar(
             Text(
                 text = "Add Member",
                 fontWeight = FontWeight.Bold,
-                color = PrimaryBlue,
+                color = MaterialTheme.colorScheme.primary,
                 fontSize = 18.sp
             )
         },
@@ -178,14 +179,14 @@ private fun MedicalTopBar(
                 Icon(
                     Icons.Default.ArrowBack,
                     contentDescription = "Back",
-                    tint = PrimaryBlue
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         },
         actions = {
             Spacer(modifier = Modifier.width(48.dp))
         },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
     )
 }
 
@@ -198,7 +199,7 @@ private fun MedicalOptionCard(
     Card(
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        colors = CardDefaults.cardColors(containerColor = LightGrayBg),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
@@ -230,12 +231,12 @@ private fun MedicalOptionCard(
                     text = option.title,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF212121)
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
                     text = option.description,
                     fontSize = 12.sp,
-                    color = Color(0xFF9E9E9E)
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
 

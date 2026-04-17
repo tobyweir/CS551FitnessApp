@@ -16,6 +16,7 @@ ksp = "2.0.21-1.0.28"
 room = "2.7.0-alpha11"
 workRuntimeKtx = "2.11.2"
 foundationLayout = "1.10.6"
+material3 = "1.4.0"
 
 
 [libraries]
@@ -42,6 +43,7 @@ androidx-room-ktx      = { group = "androidx.room", name = "room-ktx",      vers
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

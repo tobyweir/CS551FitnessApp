@@ -60,14 +60,14 @@ fun MemberGoalScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.background)
                     .padding(horizontal = 24.dp, vertical = 16.dp)
                     .navigationBarsPadding()
             ) {
                 Button(
                     onClick = onNextClick,
                     shape = RoundedCornerShape(50),
-                    colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(54.dp)
@@ -81,7 +81,7 @@ fun MemberGoalScreen(
                 }
             }
         },
-        containerColor = Color.White
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
 
         Column(
@@ -96,13 +96,13 @@ fun MemberGoalScreen(
                 text = "Your goal",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.ExtraBold,
-                color = Color(0xFF111111)
+                color = MaterialTheme.colorScheme.onBackground
             )
 
             Text(
                 text = "Select the option that best fits your needs such as building strength, losing weight or general fitness, so your personal trainer can create a plan tailored to you.",
                 fontSize = 13.sp,
-                color = Color(0xFF757575),
+                color = MaterialTheme.colorScheme.onBackground,
                 lineHeight = 20.sp
             )
 
@@ -131,7 +131,7 @@ private fun GoalTopBar(
             Text(
                 text = "Add Member",
                 fontWeight = FontWeight.Bold,
-                color = PrimaryBlue,
+                color = MaterialTheme.colorScheme.primary,
                 fontSize = 18.sp
             )
         },
@@ -140,14 +140,14 @@ private fun GoalTopBar(
                 Icon(
                     Icons.Default.ArrowBack,
                     contentDescription = "Back",
-                    tint = PrimaryBlue
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         },
         actions = {
             Spacer(modifier = Modifier.width(48.dp))
         },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
     )
 }
 
@@ -160,7 +160,7 @@ private fun GoalOptionCard(
     Card(
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        colors = CardDefaults.cardColors(containerColor = LightGrayBg),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
@@ -192,12 +192,12 @@ private fun GoalOptionCard(
                     text = option.title,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF212121)
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
                     text = option.description,
                     fontSize = 12.sp,
-                    color = Color(0xFF9E9E9E)
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
 
