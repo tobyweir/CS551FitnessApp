@@ -295,7 +295,6 @@ fun AppNavGraph(
             )
         }
 
-
         Screen.MEMBER_SUCCESS -> {
             MemberSuccessScreen(
                 onFinished = {

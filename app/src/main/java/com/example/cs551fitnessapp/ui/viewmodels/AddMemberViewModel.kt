@@ -133,38 +133,33 @@ class AddMemberViewModel(application: Application) : AndroidViewModel(applicatio
                     append(medicalConcern)
                 }
                 if (medicalNote.isNotBlank()) {
-                    if (isNotBlank()) append(" | ")
+                    if (isNotBlank()) append(", ")
                     append("Note: ")
                     append(medicalNote)
                 }
                 if (birthday.isNotBlank()) {
-                    if (isNotBlank()) append(" | ")
+                    if (isNotBlank()) append(", ")
                     append("Birthday: ")
                     append(birthday)
                 }
                 if (sex.isNotBlank()) {
-                    if (isNotBlank()) append(" | ")
+                    if (isNotBlank()) append(", ")
                     append("Sex: ")
                     append(sex)
                 }
                 if (weight.isNotBlank()) {
-                    if (isNotBlank()) append(" | ")
+                    if (isNotBlank()) append(", ")
                     append("Weight: ")
                     append(weight)
                     append(" ")
                     append(weightUnit)
                 }
                 if (height.isNotBlank()) {
-                    if (isNotBlank()) append(" | ")
+                    if (isNotBlank()) append(", ")
                     append("Height: ")
                     append(height)
                     append(" ")
                     append(heightUnit)
-                }
-                if (sessionsInput.isNotBlank()) {
-                    if (isNotBlank()) append(" | ")
-                    append("Sessions: ")
-                    append(sessionsInput)
                 }
             }
 

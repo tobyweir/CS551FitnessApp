@@ -60,7 +60,9 @@ import com.example.cs551fitnessapp.ui.navigation.AddMemberFlow
 import com.example.cs551fitnessapp.ui.navigation.MemberPage
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 import com.example.cs551fitnessapp.ui.viewmodels.MembersViewModel
-
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -235,25 +237,18 @@ fun MemberCardInfo(
 ) {
     Column(verticalArrangement = Arrangement.SpaceAround , modifier = modifier.fillMaxHeight().padding (top = 10.dp , start = 10.dp , end = 10.dp , bottom = 10.dp)) {
         Text(text = name , Modifier.padding(bottom = 3.dp) , color = Color.Blue , fontWeight = FontWeight.Bold, style = TextStyle(fontSize = 18.sp))
+
         Text(
-            text = "Join : $joinDate",
+            text = "Start Date : ${formatMemberDate(joinDate)}",
             modifier = Modifier.padding(bottom = 3.dp),
             style = TextStyle(fontSize = 14.sp)
         )
 
-        if (endDate != null) {
-            Text(
-                text = "End Session : $endDate",
-                modifier = Modifier.padding(bottom = 3.dp),
-                style = TextStyle(fontSize = 14.sp)
-            )
-        } else {
-            Text(
-                text = "End Session : -",
-                modifier = Modifier.padding(bottom = 3.dp),
-                style = TextStyle(fontSize = 14.sp)
-            )
-        }
+        Text(
+            text = "End Date : ${formatMemberDate(endDate)}",
+            modifier = Modifier.padding(bottom = 3.dp),
+            style = TextStyle(fontSize = 14.sp)
+        )
 
         StatusBadge(status)
     }
@@ -268,6 +263,12 @@ fun StatusBadge(status: String) {
         "Nearly Finished" -> Color(0xFFFFF4CC)
         else -> Color.LightGray
     }
+}
+
+private fun formatMemberDate(timestamp: Long?): String {
+    if (timestamp == null) return "No date set"
+    val formatter = SimpleDateFormat("d MMM yyyy", Locale.getDefault())
+    return formatter.format(Date(timestamp))
 }
 
 
