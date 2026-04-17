@@ -209,7 +209,9 @@ fun AppNavGraph(
                     onNextClick = {
                         currentScreen = Screen.MEMBER_WEIGHT
                     },
-                    modifier = Modifier.padding(padding)
+                    modifier = Modifier.padding(padding),
+                    enableNextButton = uiState.value.enableBirthdayNext,
+                    isError = uiState.value.isBirthdayError
                 )
             }
         }
@@ -233,7 +235,9 @@ fun AppNavGraph(
                     onNextClick = {
                         currentScreen = Screen.MEMBER_HEIGHT
                     },
-                    modifier = Modifier.padding(padding)
+                    modifier = Modifier.padding(padding),
+                    isError = uiState.value.isWeightError,
+                    enableNextButton = uiState.value.enableWeightNext
                 )
             }
         }
@@ -257,7 +261,9 @@ fun AppNavGraph(
                     onNextClick = {
                         currentScreen = Screen.MEMBER_GOAL
                     },
-                    modifier = Modifier.padding(padding)
+                    modifier = Modifier.padding(padding),
+                    isError = uiState.value.isHeightError,
+                    enableNextButton = uiState.value.enableHeightNext
                 )
             }
         }
@@ -311,7 +317,10 @@ fun AppNavGraph(
                             currentScreen = Screen.MEMBER_SUCCESS
                         }
                     },
-                    modifier = modifier.padding(innerPadding)
+                    modifier = modifier.padding(innerPadding),
+                    isNameError = uiState.value.isNameError,
+                    isSessionError = uiState.value.isSessionError,
+                    enableSaveButton = uiState.value.enableSave
                 )
             }
         }

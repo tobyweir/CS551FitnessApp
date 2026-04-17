@@ -51,7 +51,9 @@ fun NewMemberSexScreen(
             .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Description(R.string.tell_us_about_yourself, R.string.Sample_Text)
+        Description(R.string.tell_us_about_yourself,
+            R.string.Gender,
+            modifier = Modifier.padding(10.dp))
 
         SexSelector(
             selectedSex = selectedSex,

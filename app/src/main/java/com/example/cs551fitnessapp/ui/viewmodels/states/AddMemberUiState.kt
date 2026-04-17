@@ -14,5 +14,6 @@ data class AddMemberUiState(
     val isMedicalConcernError : Boolean,
     val enableMedicalNext : Boolean,
     val isNameError : Boolean,
+    val isSessionError : Boolean,
     val enableSave : Boolean,
 )
