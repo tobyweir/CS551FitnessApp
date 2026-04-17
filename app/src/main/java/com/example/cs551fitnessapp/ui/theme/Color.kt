@@ -39,7 +39,7 @@ val HighLight = Color(0xFFe0fe10)
 
 // DARK MODE
 val PrimaryDark = Color(0xFF2260ff)
-val SecondaryDark = Color(0xFFcad6ff)
+val SecondaryDark = Color(0xFF1f1f1f)
 val BackgroundDark = Color(0xFF000000)
 val SurfaceDark = Color(0xFF1E1E1E)
 val TextDark = Color(0xFFFFFFFF)

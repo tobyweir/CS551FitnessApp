@@ -96,7 +96,7 @@ fun DateSelector(
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFFE3E8FF))
+            .background(MaterialTheme.colorScheme.secondary)
             .padding(vertical = 10.dp, horizontal = 0.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -124,8 +124,8 @@ fun DateItem(
             .height(80.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(
-                if (isSelected) Color(0xFF2962FF)
-                else Color.White
+                if (isSelected) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.background
             )
             .padding(horizontal = 8.dp, vertical = 8.dp)
             .clickable { onClick() }
@@ -136,14 +136,14 @@ fun DateItem(
         ) {
             Text(
                 day,
-                color = if (isSelected) Color.White else Color.Black,
+                color = if (isSelected) Color.White else MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 date,
                 fontSize = 12.sp,
-                color = if (isSelected) Color.White else Color.Black
+                color = if (isSelected) Color.White else MaterialTheme.colorScheme.primary
             )
         }
     }
@@ -159,7 +159,7 @@ fun SessionCard(
             .padding(horizontal = 16.dp, vertical = 8.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFDCE3F3)
+            containerColor = MaterialTheme.colorScheme.background
         )
     ) {
         Row(
@@ -185,7 +185,7 @@ fun SessionCard(
                     Button(
                         onClick = { /*navController.navigate() */ },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF5C6BC0))
+                            containerColor = MaterialTheme.colorScheme.primary)
                     ) { Text("Info") }
                     Spacer(modifier = Modifier.width(8.dp))
                     IconButton(onClick = { }) {
