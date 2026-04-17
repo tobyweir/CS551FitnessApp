@@ -289,14 +289,15 @@ fun AppNavHost (navController : NavHostController ,
 @Composable
 fun TopBar(navController : NavHostController , showBackIcon : Boolean ,  modifier: Modifier = Modifier , title : String = "Fitness App") {
     CenterAlignedTopAppBar(
-        title = {Text(text = title)},
+        title = {Text(text = title , color = MaterialTheme.colorScheme.primary)},
 
         navigationIcon = {BackNavigateIcon(navController = navController , showBackIcon = showBackIcon)},
         actions = {
             IconButton(onClick = {navController.navigate(PreferencesPage)}) {
                 Icon (
                     imageVector = Icons.Default.Settings,
-                    contentDescription = "Settings Icon"
+                    contentDescription = "Settings Icon",
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -309,7 +310,8 @@ fun BackNavigateIcon (navController: NavHostController , showBackIcon : Boolean 
         IconButton(onClick = { navController.popBackStack() }) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Arrow Back Icon"
+                contentDescription = "Arrow Back Icon",
+                tint = MaterialTheme.colorScheme.primary
             )
         }
     }
