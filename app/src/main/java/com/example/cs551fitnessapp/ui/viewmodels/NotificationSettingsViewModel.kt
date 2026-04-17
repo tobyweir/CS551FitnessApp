@@ -16,6 +16,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.room.Room
 import com.example.cs551fitnessapp.repository.EventRepository
 import com.example.cs551fitnessapp.database.Database
+import com.example.cs551fitnessapp.database.SessionDao
 import com.example.cs551fitnessapp.database.UserAppointmentDao
 import com.example.cs551fitnessapp.database.UserAppointmentEntity
 import com.example.cs551fitnessapp.database.SessionEntity
@@ -31,12 +32,12 @@ class NotificationSettingsViewModel(
     application: Application,
     private val repository: NotificationSettingsRepository,
     private val scheduler: NotificationScheduler,
-    private val appointmentDao: UserAppointmentDao
+    private val sessionDao: SessionDao
 ) : AndroidViewModel(application) {
 
     private val context = getApplication<Application>()
 
-    private val eventsFlow = appointmentDao.getAllEvents()
+    private val eventsFlow = sessionDao.getAllSessionsInRange(0L, Long.MAX_VALUE)
 
     val uiState: StateFlow<NotificationSettingsUiState> =
         repository.notificationSettings
@@ -122,12 +123,12 @@ class NotificationSettingsViewModel(
             application: Application,
             repository: NotificationSettingsRepository,
             scheduler: NotificationScheduler,
-            appointmentDao: UserAppointmentDao
+            sessionDao: SessionDao
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 if (modelClass.isAssignableFrom(NotificationSettingsViewModel::class.java)) {
-                    return NotificationSettingsViewModel(application, repository, scheduler, appointmentDao) as T
+                    return NotificationSettingsViewModel(application, repository, scheduler, sessionDao) as T
                 }
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }

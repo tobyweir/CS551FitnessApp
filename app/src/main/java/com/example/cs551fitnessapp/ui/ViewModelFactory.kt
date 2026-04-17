@@ -15,6 +15,7 @@ import com.example.cs551fitnessapp.ui.viewmodels.MemberViewModel
 import com.example.cs551fitnessapp.ui.viewmodels.MembersViewModel
 import com.example.cs551fitnessapp.ui.viewmodels.TodayViewModel
 import com.example.cs551fitnessapp.ui.viewmodels.AddMemberViewModel
+import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
 
 object ViewModelFactory {
 
@@ -36,6 +37,11 @@ object ViewModelFactory {
         }
         initializer {
             AddMemberViewModel(this[APPLICATION_KEY] as Application)
+        }
+
+        initializer {
+            val application = this.fitnessApplication()
+            WorkoutPlanViewModel(application)
         }
     }
 }
