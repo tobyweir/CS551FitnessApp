@@ -269,17 +269,17 @@ private fun MedicalOptionCard(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun MedicalConcernScreenPreview() {
-    CS551FitnessAppTheme {
-        MedicalConcernScreen(
-            selectedConcernId = 0,
-            note = "",
-            onConcernSelected = {},
-            onNoteChange = {},
-            onBackClick = {},
-            onNextClick = {}
-        )
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun MedicalConcernScreenPreview() {
+//    CS551FitnessAppTheme {
+//        MedicalConcernScreen(
+//            selectedConcernId = 0,
+//            note = "",
+//            onConcernSelected = {},
+//            onNoteChange = {},
+//            onBackClick = {},
+//            onNextClick = {}
+//        )
+//    }
+//}

@@ -230,15 +230,15 @@ private fun GoalOptionCard(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun MemberGoalScreenPreview() {
-    CS551FitnessAppTheme {
-        MemberGoalScreen(
-            selectedGoalId = 0,
-            onGoalSelected = {},
-            onBackClick = {},
-            onNextClick = {}
-        )
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun MemberGoalScreenPreview() {
+//    CS551FitnessAppTheme {
+//        MemberGoalScreen(
+//            selectedGoalId = 0,
+//            onGoalSelected = {},
+//            onBackClick = {},
+//            onNextClick = {}
+//        )
+//    }
+//}

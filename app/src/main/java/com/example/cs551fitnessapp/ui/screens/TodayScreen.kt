@@ -28,6 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.ui.ViewModelFactory
+import com.example.cs551fitnessapp.ui.utils.WindowStateUtils
 import com.example.cs551fitnessapp.ui.viewmodels.MemberSession
 import com.example.cs551fitnessapp.ui.viewmodels.TodayViewModel
 import java.time.LocalDate
@@ -43,6 +44,7 @@ data class Workout(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TodayScreen(
+
     navController: NavController , modifier: Modifier, viewmodel: TodayViewModel = viewModel(factory = ViewModelFactory.Factory)
 ) {
     val uiState = viewmodel.uiState.collectAsState()

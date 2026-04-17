@@ -271,10 +271,10 @@ fun StatusBadge(status: String) {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CS551FitnessAppTheme {
-        //MembersScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview() {
+//    CS551FitnessAppTheme {
+//        //MembersScreen()
+//    }
+//}
