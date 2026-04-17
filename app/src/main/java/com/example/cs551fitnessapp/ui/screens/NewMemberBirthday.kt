@@ -11,6 +11,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cs551fitnessapp.R
@@ -25,7 +26,9 @@ fun BirthdayScreen(
     onBirthdayChange: (String) -> Unit,
     onBackClick: () -> Unit,
     onNextClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enableNextButton : Boolean,
+    isError : Boolean
 ) {
     Column(
         modifier = modifier
@@ -40,7 +43,7 @@ fun BirthdayScreen(
         ) {
             Description(
                 R.string.Birthday,
-                R.string.Sample_Text
+                R.string.Birthday2
             )
 
             OutlinedTextField(
@@ -50,7 +53,7 @@ fun BirthdayScreen(
                     Text("Enter Date of Birth (DD/MM/YYYY)")
                 },
                 placeholder = {
-                    Text("e.g. 21/05/1998")
+                    Text("e.g. 21/05/1998" , color = Color.LightGray)
                 },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
@@ -65,6 +68,7 @@ fun BirthdayScreen(
 
         NextScreenButton(
             onNextClick,
+            enabled = enableNextButton,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 20.dp)

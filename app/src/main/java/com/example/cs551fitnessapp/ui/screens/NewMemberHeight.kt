@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -29,7 +30,9 @@ fun HeightScreen(
     onHeightUnitChange: (String) -> Unit,
     onBackClick: () -> Unit,
     onNextClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isError : Boolean,
+    enableNextButton : Boolean,
 ) {
     Column(
         modifier = modifier
@@ -43,7 +46,7 @@ fun HeightScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Description(R.string.Height, R.string.Sample_Text)
+            Description(R.string.Height, R.string.Height2)
 
             SingleChoiceSegmentedButtonRow(
                 modifier = Modifier.fillMaxWidth()
@@ -82,6 +85,10 @@ fun HeightScreen(
                 placeholder = {
                     Text("Enter height")
                 },
+                isError = isError,
+                supportingText = {if(isError) {
+                    Text("Please enter a valid number" , color = MaterialTheme.colorScheme.error)
+                } },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -89,6 +96,7 @@ fun HeightScreen(
 
         NextScreenButton(
             onNextClick,
+            enabled = enableNextButton,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 20.dp)

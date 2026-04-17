@@ -9,11 +9,12 @@ import androidx.compose.ui.graphics.Color
 
 
 @Composable
-    fun NextScreenButton (onClick: () -> Unit, modifier: Modifier = Modifier){
+    fun NextScreenButton (onClick: () -> Unit, modifier: Modifier = Modifier, enabled : Boolean = true){
         Button(
             onClick = onClick,
             modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            enabled = enabled,
         ) {
             Text(text = "Next" , color = Color.White)
         }

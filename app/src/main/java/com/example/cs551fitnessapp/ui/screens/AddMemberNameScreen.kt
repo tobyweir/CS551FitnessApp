@@ -49,7 +49,10 @@ fun AddMemberNameScreen(
     onSessionsChange: (String) -> Unit,
     onBackClick: () -> Unit,
     onSaveClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enableSaveButton : Boolean,
+    isSessionError : Boolean,
+    isNameError : Boolean,
 ) {
     Column(
         modifier = modifier
@@ -100,6 +103,10 @@ fun AddMemberNameScreen(
                 placeholder = {
                     Text("Full name")
                 },
+                isError = isNameError,
+                supportingText = {if (isNameError) {
+                    Text("Please enter a name" , color = MaterialTheme.colorScheme.error)
+                } },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -120,6 +127,10 @@ fun AddMemberNameScreen(
                     value = sessions,
                     onValueChange = { onSessionsChange(it) },
                     singleLine = true,
+                    isError = isSessionError,
+                    supportingText = {if (isSessionError) {
+                        Text("Please enter a session count" , color = MaterialTheme.colorScheme.error)
+                    } },
                     shape = RoundedCornerShape(50),
                     modifier = Modifier.width(100.dp)
                 )
@@ -128,6 +139,7 @@ fun AddMemberNameScreen(
 
         Button(
             onClick = onSaveClick,
+            enabled = enableSaveButton,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary
             ),
