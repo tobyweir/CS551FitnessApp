@@ -45,12 +45,10 @@ interface SessionDao {
 
     @Query("""
         SELECT COUNT(*) FROM sessions
-        WHERE ownerMemberId = :memberId
-        AND :startAt < dtEndSession
+        WHERE :startAt < dtEndSession
         AND :endAt > dtStartSession
     """)
     suspend fun countOverlappingSessions(
-        memberId: Long,
         startAt: Long,
         endAt: Long
     ): Int

@@ -30,8 +30,9 @@ class ReminderWorker(private val context: Context, workerParams: WorkerParameter
             val sessionDao = AppDatabase.getDatabase(applicationContext).sessionDao()
             val sevenDaysAgo = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7)
             val sessions = sessionDao.getAllSessionsInRange(sevenDaysAgo, System.currentTimeMillis()).first()
-            val totalHourTraining = sessions.sumOf { it.duration.toDouble() }
-            msg = "Weekly training: $totalHourTraining hours"
+            val totalHourTraining = (sessions.sumOf { it.duration.toDouble() })/60 //convert minute to hr
+            msg = "Weekly training: %.2f hours".format(totalHourTraining)
+
         }
 
         if (type == "event") {
@@ -42,7 +43,7 @@ class ReminderWorker(private val context: Context, workerParams: WorkerParameter
         }
 
         try {
-            showNotification(title, msg)
+            showNotification(title, msg, type)
         } catch (e: Exception) {
             e.printStackTrace()
             return@withContext Result.retry()
@@ -56,7 +57,7 @@ class ReminderWorker(private val context: Context, workerParams: WorkerParameter
         const val WORK_TAG_DYNAMIC = "dynamic_reminder_work"
     }
 
-    private fun showNotification(title: String, content: String) {
+    private fun showNotification(title: String, content: String, type: String) {
         val channelId = "periodic_channel"
         val manager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -90,7 +91,7 @@ class ReminderWorker(private val context: Context, workerParams: WorkerParameter
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
-            .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_notification))
+            .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources, if(type == "event") R.drawable.dumbbell_blue else R.drawable.hourglass))
             .build()
 
         manager.notify(1001, notification)

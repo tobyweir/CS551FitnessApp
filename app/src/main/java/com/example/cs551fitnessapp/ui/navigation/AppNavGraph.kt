@@ -77,7 +77,7 @@ fun AppNavGraph(
     val planViewModel: WorkoutPlanViewModel = viewModel(factory = ViewModelFactory.Factory)
     val addMemberViewModel: AddMemberViewModel = viewModel(factory = ViewModelFactory.Factory)
     val uiState = addMemberViewModel.uiState.collectAsState()
-    val searchViewModel: SearchWorkoutViewModel = viewModel()
+    val searchViewModel: SearchWorkoutViewModel = viewModel(factory = ViewModelFactory.Factory)
 
     LaunchedEffect(memberId) {
         if (memberId != null) {
@@ -142,7 +142,8 @@ fun AppNavGraph(
                     onFlowCancel()
                     navController.popBackStack()
                 },
-                modifier = modifier
+                onNoInternet  = { navController.popBackStack() },
+                        modifier = modifier
             )
         }
 

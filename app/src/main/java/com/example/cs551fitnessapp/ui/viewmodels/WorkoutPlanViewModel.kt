@@ -110,6 +110,7 @@ class WorkoutPlanViewModel(application: Application) : AndroidViewModel(applicat
             try {
                 val result = repository.saveWorkoutPlan(memberId, plan)
                 _saveResult.value = result
+
             } catch (e: Exception) {
                 _saveResult.value = SavePlanResult.Error(
                     e.message ?: "Failed to save workout session"
