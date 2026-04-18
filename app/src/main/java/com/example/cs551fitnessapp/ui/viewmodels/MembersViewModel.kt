@@ -9,19 +9,19 @@ import androidx.lifecycle.viewModelScope
 import com.example.cs551fitnessapp.database.DatabaseModule
 import com.example.cs551fitnessapp.database.member.MemberEntity
 import com.example.cs551fitnessapp.ui.viewmodels.states.MembersUiState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class MembersViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = DatabaseModule.provideMemberRepository(application)
+    private val repository =
+        DatabaseModule.provideMemberRepository(application)
 
-    private val _uiState = MutableStateFlow(MembersUiState())
-    val uiState: StateFlow<MembersUiState> = _uiState.asStateFlow()
+    private val _uiState =
+        MutableStateFlow(MembersUiState())
+
+    val uiState: StateFlow<MembersUiState> =
+        _uiState.asStateFlow()
 
     var searchEntry by mutableStateOf("")
 
@@ -30,80 +30,191 @@ class MembersViewModel(application: Application) : AndroidViewModel(application)
     }
 
     private fun observeMembers() {
+
         viewModelScope.launch {
-            repository.getAllMembers().collectLatest { members ->
-                _uiState.update { uiState ->
-                    uiState.copy(
-                        members = members,
-                        sortedMembers = filterAndSearchMembers(
+
+            repository.getAllMembers()
+
+                .collectLatest { members ->
+
+                    _uiState.update {
+
+                        it.copy(
+
                             members = members,
-                            query = searchEntry,
-                            includeActive = uiState.includeActive,
-                            includeInactive = uiState.includeInactive,
-                            includeNearlyFinished = uiState.includeNearlyFinished
+
+                            sortedMembers = filterAndSearchMembers(
+
+                                members,
+
+                                searchEntry,
+
+                                it.includeActive,
+
+                                it.includeInactive,
+
+                                it.includeNearlyFinished
+                            )
                         )
-                    )
+                    }
                 }
-            }
         }
     }
 
-    fun pressActiveButton() {
-        _uiState.update { uiState ->
-            uiState.copy(includeActive = !uiState.includeActive)
-        }
-        doSearch()
-    }
+    // SAVE MEMBER WITH IMAGE
+    fun addMember(
 
-    fun pressNearlyFinishedButton() {
-        _uiState.update { uiState ->
-            uiState.copy(includeNearlyFinished = !uiState.includeNearlyFinished)
-        }
-        doSearch()
-    }
+        name: String,
 
-    fun pressInactiveButton() {
-        _uiState.update { uiState ->
-            uiState.copy(includeInactive = !uiState.includeInactive)
-        }
-        doSearch()
-    }
+        sessions: Int,
 
-    fun doSearch() {
-        val ui = _uiState.value
-        val sortedMembers = filterAndSearchMembers(
-            members = ui.members,
-            query = searchEntry,
-            includeActive = ui.includeActive,
-            includeInactive = ui.includeInactive,
-            includeNearlyFinished = ui.includeNearlyFinished
+        imageUri: String?
+
+    ) {
+
+        val endDate =
+
+            System.currentTimeMillis()
+
+        + sessions * 86400000L
+
+        val member = MemberEntity(
+
+            name = name,
+
+            joinDate = System.currentTimeMillis(),
+
+            endDate = endDate,
+
+            imageUri = imageUri,
+
+            status = "Active"
         )
-        _uiState.update { it.copy(sortedMembers = sortedMembers) }
+
+        viewModelScope.launch {
+
+            repository.addMember(member)
+        }
     }
 
     fun deleteMember(member: MemberEntity) {
+
         viewModelScope.launch {
+
             repository.deleteMember(member)
         }
     }
 
-    private fun filterAndSearchMembers(
-        members: List<MemberEntity>,
-        query: String,
-        includeActive: Boolean,
-        includeInactive: Boolean,
-        includeNearlyFinished: Boolean
-    ): List<MemberEntity> {
-        val searched = if (query.isBlank()) {
-            members
-        } else {
-            members.filter { it.name.contains(query, ignoreCase = true) }
+    fun pressActiveButton() {
+
+        _uiState.update {
+
+            it.copy(
+
+                includeActive = !it.includeActive
+            )
         }
 
+        doSearch()
+    }
+
+    fun pressNearlyFinishedButton() {
+
+        _uiState.update {
+
+            it.copy(
+
+                includeNearlyFinished = !it.includeNearlyFinished
+            )
+        }
+
+        doSearch()
+    }
+
+    fun pressInactiveButton() {
+
+        _uiState.update {
+
+            it.copy(
+
+                includeInactive = !it.includeInactive
+            )
+        }
+
+        doSearch()
+    }
+
+    fun doSearch() {
+
+        val ui = _uiState.value
+
+        val sortedMembers = filterAndSearchMembers(
+
+            ui.members,
+
+            searchEntry,
+
+            ui.includeActive,
+
+            ui.includeInactive,
+
+            ui.includeNearlyFinished
+        )
+
+        _uiState.update {
+
+            it.copy(
+
+                sortedMembers = sortedMembers
+            )
+        }
+    }
+
+    private fun filterAndSearchMembers(
+
+        members: List<MemberEntity>,
+
+        query: String,
+
+        includeActive: Boolean,
+
+        includeInactive: Boolean,
+
+        includeNearlyFinished: Boolean
+
+    ): List<MemberEntity> {
+
+        val searched =
+
+            if (query.isBlank())
+
+                members
+
+            else
+
+                members.filter {
+
+                    it.name.contains(
+
+                        query,
+
+                        ignoreCase = true
+                    )
+                }
+
         return searched.filter {
-            (it.status == "Active" && includeActive) ||
-                    (it.status == "Inactive" && includeInactive) ||
-                    (it.status == "Nearly Finished" && includeNearlyFinished)
+
+            (it.status == "Active" && includeActive)
+
+                    ||
+
+                    (it.status == "Inactive" && includeInactive)
+
+                    ||
+
+                    (it.status == "Nearly Finished"
+
+                            && includeNearlyFinished)
         }
     }
 }

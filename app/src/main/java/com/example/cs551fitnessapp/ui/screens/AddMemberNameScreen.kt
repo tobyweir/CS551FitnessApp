@@ -38,7 +38,10 @@ fun AddMemberNameScreen(
     onNameChange: (String) -> Unit,
     onSessionsChange: (String) -> Unit,
     onBackClick: () -> Unit,
-    onSaveClick: () -> Unit,
+
+    // updated
+    onSaveClick: (String?) -> Unit,
+
     modifier: Modifier = Modifier,
     enableSaveButton: Boolean,
     isSessionError: Boolean,
@@ -47,7 +50,9 @@ fun AddMemberNameScreen(
 
     val focusManager = androidx.compose.ui.platform.LocalFocusManager.current
 
-    var selectedImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+    var selectedImageUri by rememberSaveable {
+        mutableStateOf<Uri?>(null)
+    }
 
     val imagePickerLauncher =
         rememberLauncherForActivityResult(
@@ -62,7 +67,6 @@ fun AddMemberNameScreen(
             .padding(20.dp)
     ) {
 
-        // TOP CONTENT
         Column(
             modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -122,7 +126,9 @@ fun AddMemberNameScreen(
                 value = name,
                 onValueChange = onNameChange,
                 placeholder = { Text("Full name") },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next
+                ),
                 keyboardActions = KeyboardActions(
                     onNext = {
                         focusManager.moveFocus(
@@ -132,11 +138,12 @@ fun AddMemberNameScreen(
                 ),
                 isError = isNameError,
                 supportingText = {
-                    if (isNameError)
+                    if (isNameError) {
                         Text(
                             "Please enter a name",
                             color = MaterialTheme.colorScheme.error
                         )
+                    }
                 },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
@@ -144,7 +151,9 @@ fun AddMemberNameScreen(
 
             Spacer(Modifier.height(20.dp))
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
 
                 Text("Num Of Session :")
 
@@ -161,15 +170,18 @@ fun AddMemberNameScreen(
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            if (enableSaveButton) onSaveClick()
+                            if (enableSaveButton) {
+                                onSaveClick(selectedImageUri?.toString())
+                            }
                         }
                     ),
                     supportingText = {
-                        if (isSessionError)
+                        if (isSessionError) {
                             Text(
                                 "Enter session count",
                                 color = MaterialTheme.colorScheme.error
                             )
+                        }
                     },
                     shape = RoundedCornerShape(50),
                     modifier = Modifier.width(100.dp)
@@ -177,9 +189,10 @@ fun AddMemberNameScreen(
             }
         }
 
-        // SAVE BUTTON ALWAYS VISIBLE
         Button(
-            onClick = onSaveClick,
+            onClick = {
+                onSaveClick(selectedImageUri?.toString())
+            },
             enabled = enableSaveButton,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary
@@ -189,7 +202,10 @@ fun AddMemberNameScreen(
                 .fillMaxWidth()
                 .height(55.dp)
         ) {
-            Text("Save", color = Color.White)
+            Text(
+                "Save",
+                color = Color.White
+            )
         }
     }
 }
