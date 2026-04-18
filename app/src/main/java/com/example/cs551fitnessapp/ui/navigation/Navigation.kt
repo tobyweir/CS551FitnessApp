@@ -161,7 +161,8 @@ fun AppNavHost(
                                 )
                                 TodayScreen(
                                     navController = navController,
-                                    modifier = modifier.padding(innerPadding)
+                                    modifier = modifier.padding(innerPadding),
+                                    isWide = true
                                 )
                             }
                         }
