@@ -107,22 +107,21 @@ class AddMemberViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun updateWeight(value: String) {
         weight = value
-            if (weight.toFloatOrNull() != null && weight.toFloatOrNull()!! > 0.0 ) {
-                _uiState.update { uiState ->
-                    uiState.copy(
-                        enableWeightNext = true,
-                        isWeightError = false
-                    )
-                }
-            } else {
-                _uiState.update { uiState ->
-                    uiState.copy(
-                        enableWeightNext = false,
-                        isWeightError = true
-                    )
-                }
+        if (weight.toFloatOrNull() != null && weight.toFloatOrNull()!! > 0.0 ) {
+            _uiState.update { uiState ->
+                uiState.copy(
+                    enableWeightNext = true,
+                    isWeightError = false
+                )
             }
-
+        } else {
+            _uiState.update { uiState ->
+                uiState.copy(
+                    enableWeightNext = false,
+                    isWeightError = true
+                )
+            }
+        }
     }
 
         fun updateWeightUnit(value: String) {

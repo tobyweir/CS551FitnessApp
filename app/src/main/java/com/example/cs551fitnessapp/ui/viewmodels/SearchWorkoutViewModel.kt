@@ -1,6 +1,8 @@
 package com.example.cs551fitnessapp.ui.viewmodels
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import android.content.Context
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cs551fitnessapp.ui.viewmodels.states.ExerciseUiState
 import com.example.cs551fitnessapp.database.Exercise
@@ -8,10 +10,12 @@ import com.example.cs551fitnessapp.database.RetrofitInstance
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 
 
 @OptIn(FlowPreview::class)
-class SearchWorkoutViewModel : ViewModel() {
+class SearchWorkoutViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _searchQuery  = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
@@ -60,6 +64,12 @@ class SearchWorkoutViewModel : ViewModel() {
     }
 
     private suspend fun fetchExercises(query: String, reset: Boolean) {
+
+        if (!isInternet(getApplication())) {
+            _uiState.value = ExerciseUiState.NoInternet
+            return
+        }
+
         if (reset) _uiState.value = ExerciseUiState.Loading
         isLoadingMore = !reset
 
@@ -83,5 +93,11 @@ class SearchWorkoutViewModel : ViewModel() {
         } finally {
             isLoadingMore = false
         }
+    }
+
+    fun isInternet(context: Context): Boolean { //check internet connection
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities = cm.getNetworkCapabilities(cm.activeNetwork) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 }

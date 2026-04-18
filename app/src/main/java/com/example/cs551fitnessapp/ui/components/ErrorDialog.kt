@@ -16,12 +16,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 
-private val WarningOrange = Color(0xFFF57C00)
+private val WarningRed = Color(0xFFEF9A9A)
 
 @Composable
-fun DuplicateTimeDialog(
+fun ErrorDialog(
     errormsg : String,
-    onDismiss     : () -> Unit
+    onDismiss     : () -> Unit,
+    onBtnOk : () -> Unit
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -35,35 +36,25 @@ fun DuplicateTimeDialog(
                 Icon(
                     imageVector        = Icons.Default.Warning,
                     contentDescription = null,
-                    tint               = WarningOrange,
+                    tint               = WarningRed,
                     modifier           = Modifier.size(56.dp)
                 )
 
                 Spacer(Modifier.height(16.dp))
 
                 Text(
-                    text       = "There was an error",
+                    text       = "Error!",
                     fontSize   = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color      = Color(0xFF212121)
                 )
 
-                Spacer(Modifier.height(8.dp))
-
-                Text(
-                    text      = "Error message:",
-                    fontSize  = 14.sp,
-                    color     = Color(0xFF757575),
-                    textAlign = TextAlign.Center
-                )
-
                 Spacer(Modifier.height(12.dp))
-
 
                 Card(
                     shape  = RoundedCornerShape(10.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFFFFF3E0)
+                        containerColor = Color(0xFFFFFFFF)
                     )
                 ) {
                     Column(
@@ -75,7 +66,7 @@ fun DuplicateTimeDialog(
                         Text(
                             text     = errormsg,
                             fontSize = 13.sp,
-                            color    = WarningOrange,
+                            color    = WarningRed,
                             fontWeight = FontWeight.Medium
                         )
                     }
@@ -84,10 +75,10 @@ fun DuplicateTimeDialog(
                 Spacer(Modifier.height(24.dp))
 
                 Button(
-                    onClick  = onDismiss,
+                    onClick  = onBtnOk,
                     shape    = RoundedCornerShape(50),
                     colors   = ButtonDefaults.buttonColors(
-                        containerColor = WarningOrange
+                        containerColor = WarningRed
                     ),
                     modifier = Modifier
                         .fillMaxWidth()

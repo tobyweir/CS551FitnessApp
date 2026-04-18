@@ -21,7 +21,7 @@ class NotificationScheduler(context: Context) {
     fun schedule(intervalHours: Long, inputData: Data? = null) {
 
         val request =
-            PeriodicWorkRequestBuilder<ReminderWorker>(intervalHours, TimeUnit.HOURS) //For debugging
+            PeriodicWorkRequestBuilder<ReminderWorker>(intervalHours, TimeUnit.DAYS) //Reminder every 7 dayss
                 .setConstraints(
                     Constraints.Builder()
                         .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
@@ -44,7 +44,6 @@ class NotificationScheduler(context: Context) {
         val triggerTime = event.dtStartSession - (30 * 60 * 1000) //remind earier 30 mins before session start
         val delay = triggerTime - System.currentTimeMillis()
 
-
         if (delay <= 0) return
 
         val request = OneTimeWorkRequestBuilder<ReminderWorker>()
@@ -53,7 +52,7 @@ class NotificationScheduler(context: Context) {
                 workDataOf(
                     "type" to "event",
                     "title" to "Upcoming Session",
-                    "msg" to "Member ${event.ownerMemberId} session is about to start in 30 mins",
+                    "msg" to "${event.sessionName} is about to start in 30 mins",
                     "eventTimeMillis" to event.dtStartSession
                 )
             )
@@ -67,13 +66,13 @@ class NotificationScheduler(context: Context) {
         )
     }
 
-    /** Cancel all pending periodic reminders. */
+    // Cancel all pending periodic reminders
     fun cancelPeriodicNoti() = wm.cancelUniqueWork(ReminderWorker.WORK_TAG_PERIODIC)
 
-    /** Cancel all pending upcoming session reminders. */
+    // Cancel all pending upcoming session reminders
     fun cancelDynamicNoti() = wm.cancelAllWorkByTag(ReminderWorker.WORK_TAG_DYNAMIC)
 
-    /** Fire a one-shot notification immediately. */
+    // debugging notification immediately
     fun fireNow(inputData: Data? = null) {
         val request = OneTimeWorkRequestBuilder<ReminderWorker>()
             .setInputData(inputData ?: Data.EMPTY)

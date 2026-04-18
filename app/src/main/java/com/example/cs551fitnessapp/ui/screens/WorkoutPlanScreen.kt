@@ -1,6 +1,7 @@
 package com.example.cs551fitnessapp.ui.screens
 
 import android.app.DatePickerDialog
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,6 +34,7 @@ import com.example.cs551fitnessapp.ui.components.TimePickerDialog
 import androidx.compose.ui.res.painterResource
 import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.database.WorkoutPlanData
+import com.example.cs551fitnessapp.ui.components.ErrorDialog
 import com.example.cs551fitnessapp.ui.viewmodels.SavePlanResult
 import com.example.cs551fitnessapp.ui.components.SuccessDialog
 import java.util.*
@@ -45,6 +47,7 @@ private val LightGray   = Color(0xFFBDBDBD)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WorkoutPlanScreen(
+    //userId : Int?,
     planViewModel: WorkoutPlanViewModel,
     onBackClick: () -> Unit,
     onAddWorkout: () -> Unit,
@@ -62,11 +65,13 @@ fun WorkoutPlanScreen(
     val endMin       by planViewModel.endMin.collectAsState()
     val saveResult   by planViewModel.saveResult.collectAsState()
 
+    //Toast.makeText(LocalContext.current, userId.toString(), Toast.LENGTH_SHORT).show()
+
     // Timepicker
     var showStartPicker by remember { mutableStateOf(false) }
     var showEndPicker   by remember { mutableStateOf(false) }
 
-
+ 
     val isDoneEnabled = sessionName.isNotBlank()  &&
             selectedDate.isNotBlank() &&
             addedEntries.isNotEmpty()
@@ -130,16 +135,7 @@ fun WorkoutPlanScreen(
 
     // Error Dialog
     if (saveResult is SavePlanResult.Error) {
-        AlertDialog(
-            onDismissRequest = { planViewModel.resetSaveResult() },
-            title = { Text("Error") },
-            text = { Text((saveResult as SavePlanResult.Error).message) },
-            confirmButton = {
-                Button(onClick = { planViewModel.resetSaveResult() }) {
-                    Text("Retry")
-                }
-            }
-        )
+        ErrorDialog( errormsg = (saveResult as SavePlanResult.Error).message, onDismiss = {planViewModel.resetSaveResult()}, onBtnOk = {planViewModel.resetSaveResult()})
     }
 
     Scaffold(
@@ -187,7 +183,7 @@ fun WorkoutPlanScreen(
                 color      = PrimaryBlue
             )
 
-            // -- Session Name ----------------------------------------------
+            // Session Name
             PlanField(label = "Session Name") {
                 PlanTextField(
                     value       = sessionName,
@@ -197,7 +193,7 @@ fun WorkoutPlanScreen(
                 )
             }
 
-            // -- Date -----------------------------------------------------
+            // Date
             PlanField(label = "Date") {
                 Box(
                     modifier = Modifier
@@ -239,7 +235,7 @@ fun WorkoutPlanScreen(
                 }
             }
 
-            // -- Start & End timepicker buttons -----------------------------------------------------
+            // Start & End timepicker buttons
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 modifier              = Modifier.fillMaxWidth()
@@ -271,7 +267,7 @@ fun WorkoutPlanScreen(
                 }
             }
 
-            // -- Workout List header -----------------------------------------------------
+            // Workout List header
             Row(
                 verticalAlignment     = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -299,7 +295,7 @@ fun WorkoutPlanScreen(
                 }
             }
 
-            // -- Workout List body -----------------------------------------------------
+            // Workout List body
             if (addedEntries.isEmpty()) {
                 Box(
                     contentAlignment = Alignment.Center,
@@ -342,10 +338,7 @@ fun WorkoutPlanScreen(
     }
 }
 
-// -----------------------------------------------------------------------------
 // Time picker button
-// -----------------------------------------------------------------------------
-
 @Composable
 private fun TimePickerButton(
     hour    : Int,
@@ -384,10 +377,7 @@ private fun TimePickerButton(
     }
 }
 
-// -----------------------------------------------------------------------------
 // Content layout
-// -----------------------------------------------------------------------------
-
 @Composable
 private fun PlanField(
     label   : String,
@@ -436,9 +426,7 @@ private fun PlanTextField(
     }
 }
 
-// -----------------------------------------------------------------------------
 // Workout List row
-// -----------------------------------------------------------------------------
 @Composable
 private fun PlanWorkoutRow(
     entry    : WorkoutEntry,

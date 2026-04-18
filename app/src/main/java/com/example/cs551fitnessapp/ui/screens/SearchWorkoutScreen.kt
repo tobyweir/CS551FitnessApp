@@ -1,7 +1,5 @@
 package com.example.cs551fitnessapp.ui.screens
 
-//-- Search Workout Screen ----------------------------------------------------------
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -36,6 +34,7 @@ import coil.request.ImageRequest
 import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.database.Exercise
 import com.example.cs551fitnessapp.database.WorkoutEntry
+import com.example.cs551fitnessapp.ui.components.ErrorDialog
 import com.example.cs551fitnessapp.ui.viewmodels.SearchWorkoutViewModel
 import com.example.cs551fitnessapp.ui.viewmodels.states.ExerciseUiState
 import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
@@ -55,6 +54,7 @@ fun SearchWorkoutScreen(
     onAddExercise  : (Exercise) -> Unit,
     searchViewModel: SearchWorkoutViewModel =
         androidx.lifecycle.viewmodel.compose.viewModel(),
+    onNoInternet  : () -> Unit,
     modifier: Modifier
 ) {
     val searchQuery  by searchViewModel.searchQuery.collectAsState()
@@ -63,6 +63,14 @@ fun SearchWorkoutScreen(
 
     LaunchedEffect(Unit) {
         searchViewModel.reloadIfIdle()
+    }
+
+    if (uiState is ExerciseUiState.NoInternet) {
+        ErrorDialog(
+            errormsg = "No internet connection",
+            onDismiss ={ },
+            onBtnOk = onNoInternet
+        )
     }
 
     Scaffold(modifier = modifier,
@@ -81,14 +89,14 @@ fun SearchWorkoutScreen(
                 .padding(innerPadding)
         ) {
 
-            // -- Search field ----------------------------------------------------------------------
+            // Search field
             TopSearchHeader(
                 query         = searchQuery,
                 onQueryChange = searchViewModel::onSearchQueryChange,
                 onBackClick   = onBackClick
             )
 
-            // -- Search results --------------------------------------------------------------------
+            // Search results
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -132,7 +140,7 @@ fun SearchWorkoutScreen(
                 }
             }
 
-            // -- Workout List ----------------------------------------------------------------------
+            // Workout List
             if (addedEntries.isNotEmpty()) {
                 WorkoutListSection(
                     entries  = addedEntries,
@@ -143,10 +151,7 @@ fun SearchWorkoutScreen(
     }
 }
 
-// ----------------------------------------------------------------------
 // Search results — LazyColumn
-// ----------------------------------------------------------------------
-
 @Composable
 private fun SearchResultList(
     exercises     : List<Exercise>,
@@ -163,7 +168,7 @@ private fun SearchResultList(
             lastVisible >= exercises.size - 5
         }
     }
-    //    snapshotFlow across rotation
+    // snapshotFlow across rotation
     LaunchedEffect(listState) {
         snapshotFlow {
             val layoutInfo  = listState.layoutInfo
@@ -213,10 +218,7 @@ private fun SearchResultList(
     }
 }
 
-// ----------------------------------------------------------------------
 // Workout List
-// ----------------------------------------------------------------------
-
 @Composable
 private fun WorkoutListSection(
     entries  : List<WorkoutEntry>,
@@ -241,23 +243,6 @@ private fun WorkoutListSection(
             )
         )
 
-        // Scrollable list of workout
-//        LazyColumn(
-//            contentPadding      = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
-//            verticalArrangement = Arrangement.spacedBy(8.dp),
-//            modifier            = Modifier.fillMaxWidth()
-//        ) {
-//            itemsIndexed(
-//                entries,
-//                key = { idx, entry -> "${entry.exercise.id}_$idx" }
-//            ) { _, entry ->
-//                WorkoutListRow(
-//                    entry    = entry,
-//                    onRemove = { onRemove(entry.exercise.id) }
-//                )
-//            }
-//            item { Spacer(Modifier.height(4.dp)) }
-//        }
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
@@ -276,10 +261,7 @@ private fun WorkoutListSection(
     }
 }
 
-// ----------------------------------------------------------------------
 // Top bar + Search field
-// ----------------------------------------------------------------------
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TopSearchHeader(
@@ -345,10 +327,7 @@ private fun TopSearchHeader(
     }
 }
 
-// ----------------------------------------------------------------------
 // Exercise search result content
-// ----------------------------------------------------------------------
-
 @Composable
 private fun ExerciseSearchRow(
     exercise   : Exercise,
@@ -409,10 +388,7 @@ private fun ExerciseSearchRow(
     }
 }
 
-// ----------------------------------------------------------------------
 // Added workout row
-// ----------------------------------------------------------------------
-
 @Composable
 private fun WorkoutListRow(
     entry    : WorkoutEntry,
@@ -472,10 +448,7 @@ private fun WorkoutListRow(
     }
 }
 
-// ----------------------------------------------------------------------
 // Bottom bar
-// ----------------------------------------------------------------------
-
 @Composable
 private fun BottomBar(
     onCancelClick : () -> Unit,

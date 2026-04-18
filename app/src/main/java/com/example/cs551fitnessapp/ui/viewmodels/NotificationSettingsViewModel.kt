@@ -58,9 +58,9 @@ class NotificationSettingsViewModel(
                     "title" to "Weekly Report"
                 )
                 // Schedule periodic work
-                scheduler.schedule(24, data) // Schedule every 24 hours
+                scheduler.schedule(7, data) // Schedule every 7 days
                 // Trigger an immediate notification for debugging
-                //scheduler.fireNow(data)
+                scheduler.fireNow(data)
             } else {
                 scheduler.cancelPeriodicNoti()
             }
@@ -105,18 +105,6 @@ class NotificationSettingsViewModel(
                 isDynamicEnabled = settings.isDynamicEnabled
             )
         }
-
-//    fun testinsertSession(){
-//        viewModelScope.launch {
-//
-//            val now2 = System.currentTimeMillis() + (35L * 60 * 1000)
-//            val now3 =  System.currentTimeMillis() - TimeUnit.DAYS.toMillis(8)
-//            appointmentDao.updateDtStartOnly(5,now)
-//            appointmentDao.insert(UserAppointmentEntity(id = 4, userFirstname = "AA", dtStartSession = now, dtEndSession = now, duration = 1.0))
-//            appointmentDao.insert(UserAppointmentEntity(id = 5, userFirstname = "BB", dtStartSession = now, dtEndSession = now, duration = 2.0))
-//
-//        }
-//    }
 
     companion object {
         fun provideFactory(

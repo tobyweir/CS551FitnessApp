@@ -83,7 +83,7 @@ class WorkoutRepository(
             )
 
             val overlappingCount = sessionDao.countOverlappingSessions(
-                memberId = memberId,
+                //memberId = memberId,
                 startAt = startAt,
                 endAt = endAt
             )
