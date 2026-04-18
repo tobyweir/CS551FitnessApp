@@ -160,12 +160,13 @@ fun WorkoutPlanScreen(
             )
         },
         containerColor = Color.White,
-        modifier = modifier
+        modifier = modifier.background(color = MaterialTheme.colorScheme.background)
     ) { innerPadding ->
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(color = MaterialTheme.colorScheme.background)
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp, vertical = 16.dp),
@@ -245,7 +246,7 @@ fun WorkoutPlanScreen(
                     modifier            = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text("Start", fontSize = 14.sp, color = Color(0xFF424242))
+                    Text("Start", fontSize = 14.sp, color = MaterialTheme.colorScheme.onBackground)
                     TimePickerButton(
                         hour    = startHour,
                         minute  = startMin,
@@ -258,7 +259,7 @@ fun WorkoutPlanScreen(
                     modifier            = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text("End", fontSize = 14.sp, color = Color(0xFF424242))
+                    Text("End", fontSize = 14.sp, color = MaterialTheme.colorScheme.onBackground)
                     TimePickerButton(
                         hour    = endHour,
                         minute  = endMin,
@@ -384,7 +385,7 @@ private fun PlanField(
     content : @Composable ColumnScope.() -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        Text(label, fontSize = 14.sp, color = Color(0xFF424242))
+        Text(label, fontSize = 14.sp, color = MaterialTheme.colorScheme.onBackground)
         content()
     }
 }
@@ -498,7 +499,7 @@ private fun WorkoutPlanTopBar(onBackClick: () -> Unit) {
         actions = { /* Set title in centre of screen */
             Spacer(modifier = Modifier.width(48.dp))
         },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
     )
 }
 
@@ -512,7 +513,7 @@ private fun WorkoutPlanBottomBar(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 20.dp, vertical = 12.dp)
             .navigationBarsPadding()
     ) {
