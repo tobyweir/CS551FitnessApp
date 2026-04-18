@@ -1,6 +1,8 @@
 package com.example.cs551fitnessapp.ui.screens
 
-import androidx.compose.foundation.Image
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,28 +27,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.cs551fitnessapp.R
-import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
+import coil.compose.AsyncImage
 
 @Composable
 fun AddMemberNameScreen(
@@ -57,11 +52,24 @@ fun AddMemberNameScreen(
     onBackClick: () -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enableSaveButton : Boolean,
-    isSessionError : Boolean,
-    isNameError : Boolean,
+    enableSaveButton: Boolean,
+    isSessionError: Boolean,
+    isNameError: Boolean,
 ) {
-    val focusManager = LocalFocusManager.current
+
+    val focusManager = androidx.compose.ui.platform.LocalFocusManager.current
+
+    // stores selected image
+    var selectedImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+
+    // gallery launcher
+    val imagePickerLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent()
+        ) { uri ->
+            selectedImageUri = uri
+        }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -69,12 +77,8 @@ fun AddMemberNameScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
 
-
-//            Spacer(Modifier.height(10.dp))
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
             Text(
                 "What's your name?",
@@ -84,48 +88,84 @@ fun AddMemberNameScreen(
 
             Spacer(Modifier.height(20.dp))
 
-            Image(
-                painter = painterResource(R.drawable.ic_launcher_background),
-                contentDescription = "profile",
-                contentScale = ContentScale.Crop,
-                colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.primary),
-                modifier = Modifier
-                    .size(120.dp)
-                    .clip(CircleShape)
-                    .clickable { }
-            )
+            // PROFILE IMAGE
+            if (selectedImageUri != null) {
+
+                AsyncImage(
+                    model = selectedImageUri,
+                    contentDescription = "profile image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape)
+                        .clickable {
+                            imagePickerLauncher.launch("image/*")
+                        }
+                )
+
+            } else {
+
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "profile placeholder",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape)
+                        .clickable {
+                            imagePickerLauncher.launch("image/*")
+                        }
+                )
+            }
 
             Spacer(Modifier.height(8.dp))
 
             Text(
                 "Edit",
                 fontSize = 12.sp,
-                color = Color.Gray
+                color = Color.Gray,
+                modifier = Modifier.clickable {
+                    imagePickerLauncher.launch("image/*")
+                }
             )
 
             Spacer(Modifier.height(20.dp))
 
+            // NAME FIELD
             OutlinedTextField(
                 value = name,
-                onValueChange = { onNameChange(it) },
+                onValueChange = onNameChange,
                 placeholder = {
                     Text("Full name")
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                keyboardActions = KeyboardActions(onNext = {focusManager.moveFocus(focusDirection = FocusDirection.Down)}),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        focusManager.moveFocus(
+                            androidx.compose.ui.focus.FocusDirection.Down
+                        )
+                    }
+                ),
                 isError = isNameError,
-                supportingText = {if (isNameError) {
-                    Text("Please enter a name" , color = MaterialTheme.colorScheme.error)
-                } },
+                supportingText = {
+                    if (isNameError) {
+                        Text(
+                            "Please enter a name",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(Modifier.height(20.dp))
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            // SESSION FIELD
+            Row(verticalAlignment = Alignment.CenterVertically) {
+
                 Text(
                     "Num Of Session :",
                     color = MaterialTheme.colorScheme.onBackground
@@ -135,16 +175,28 @@ fun AddMemberNameScreen(
 
                 OutlinedTextField(
                     value = sessions,
-                    onValueChange = { onSessionsChange(it) },
+                    onValueChange = onSessionsChange,
                     singleLine = true,
                     isError = isSessionError,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number , imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = {if (enableSaveButton) {
-                        onSaveClick()
-                    } }),
-                    supportingText = {if (isSessionError) {
-                        Text("Please enter a session count" , color = MaterialTheme.colorScheme.error)
-                    } },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            if (enableSaveButton) {
+                                onSaveClick()
+                            }
+                        }
+                    ),
+                    supportingText = {
+                        if (isSessionError) {
+                            Text(
+                                "Enter session count",
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    },
                     shape = RoundedCornerShape(50),
                     modifier = Modifier.width(100.dp)
                 )
@@ -162,23 +214,7 @@ fun AddMemberNameScreen(
                 .fillMaxWidth()
                 .height(55.dp)
         ) {
-            Text("Save" , color = Color.White)
-
+            Text("Save", color = Color.White)
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun AddMemberNamePreview() {
-//    CS551FitnessAppTheme {
-//        AddMemberNameScreen(
-//            name = "",
-//            sessions = "20",
-//            onNameChange = {},
-//            onSessionsChange = {},
-//            onBackClick = {},
-//            onSaveClick = {}
-//        )
-//    }
-//}
