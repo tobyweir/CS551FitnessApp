@@ -17,6 +17,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -73,7 +76,8 @@ import java.util.Locale
 fun MembersScreen(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    viewmodel: MembersViewModel = viewModel(factory = ViewModelFactory.Factory)
+    viewmodel: MembersViewModel = viewModel(factory = ViewModelFactory.Factory),
+    isWide : Boolean = false
 ) {
     val uiState = viewmodel.uiState.collectAsState()
     Scaffold(
@@ -99,10 +103,17 @@ fun MembersScreen(
                 { viewmodel.pressNearlyFinishedButton() },
                 { viewmodel.pressInactiveButton() }
             )
-            MembersList(
-                members = uiState.value.sortedMembers,
-                navController = navController
-            )
+            if (!isWide) {
+                MembersList(
+                    members = uiState.value.sortedMembers,
+                    navController = navController
+                )
+            } else {
+                WideMembersList(
+                    members = uiState.value.sortedMembers,
+                    navController = navController
+                )
+            }
         }
     }
 }
@@ -198,6 +209,27 @@ fun MembersList(navController: NavHostController, members: List<MemberEntity>, m
                             )
                         }
                         .clickable(onClick = { navController.navigate(MemberPage(item.memberId.toInt())) }))
+        }
+    }
+}
+
+@Composable
+fun WideMembersList(navController: NavHostController, members: List<MemberEntity>, modifier: Modifier = Modifier) {
+    LazyVerticalGrid(columns = GridCells.Fixed(count = 3)) {
+        items(items = members, key = { it.memberId }) { item ->
+            MemberCard(
+                member = item, modifier = Modifier.fillMaxSize()
+                    .drawBehind {
+                        val strokeWidth = 1 * density
+                        val y = size.height - strokeWidth / 2
+                        drawLine(
+                            Color.LightGray,
+                            Offset(1f, y),
+                            Offset(size.width, y),
+                            strokeWidth
+                        )
+                    }
+                    .clickable(onClick = { navController.navigate(MemberPage(item.memberId.toInt())) }))
         }
     }
 }

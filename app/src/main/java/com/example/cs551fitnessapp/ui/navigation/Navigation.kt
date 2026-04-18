@@ -82,7 +82,7 @@ fun AppNavHost(
                         MembersScreen(
                             modifier = modifier.padding(innerPadding),
                             navController = navController,
-                            viewmodel = membersViewModel
+                            viewmodel = membersViewModel,
                         )
                     }
                 }
@@ -106,7 +106,8 @@ fun AppNavHost(
                                 MembersScreen(
                                     modifier = modifier.padding(innerPadding),
                                     navController = navController,
-                                    viewmodel = membersViewModel
+                                    viewmodel = membersViewModel,
+                                    isWide = true
                                 )
                             }
                         }
@@ -160,7 +161,8 @@ fun AppNavHost(
                                 )
                                 TodayScreen(
                                     navController = navController,
-                                    modifier = modifier.padding(innerPadding)
+                                    modifier = modifier.padding(innerPadding),
+                                    isWide = true
                                 )
                             }
                         }
