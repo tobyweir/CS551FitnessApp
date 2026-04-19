@@ -37,9 +37,9 @@ data class GoalOption(
 )
 
 private val goalOptions = listOf(
-    GoalOption(0, "Lose Weight", "My goal is to lose weight", Icons.Default.MonitorWeight),
-    GoalOption(1, "Build Muscle", "My goal is to build muscle in some areas.", Icons.Default.FitnessCenter),
-    GoalOption(2, "Get Fit", "My goal is to get fit.", Icons.Default.SportsGymnastics),
+    GoalOption(0, "Lose Weight", "Their goal is to lose weight.", Icons.Default.MonitorWeight),
+    GoalOption(1, "Build Muscle", "Their goal is to build muscle in some areas.", Icons.Default.FitnessCenter),
+    GoalOption(2, "Get Fit", "Their goal is to get fit.", Icons.Default.SportsGymnastics),
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,17 +93,10 @@ fun MemberGoalScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "Your goal",
+                text = "What is the new member's goal?",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onBackground
-            )
-
-            Text(
-                text = "Select the option that best fits your needs such as building strength, losing weight or general fitness, so your personal trainer can create a plan tailored to you.",
-                fontSize = 13.sp,
-                color = MaterialTheme.colorScheme.onBackground,
-                lineHeight = 20.sp
             )
 
             Spacer(Modifier.height(4.dp))
@@ -129,7 +122,7 @@ private fun GoalTopBar(
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = "Add Member",
+                text = "Add a Member",
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 18.sp

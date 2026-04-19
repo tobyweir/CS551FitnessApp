@@ -116,14 +116,14 @@ fun MedicalConcernScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "Medical concern",
+                text = "Does the new member have any medical conditions?",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onBackground
             )
 
             Text(
-                text = "Select any medical concern that may affect training, and add a short note if needed.",
+                text = "Please add any extra information in the additional notes section.",
                 fontSize = 13.sp,
                 color = MaterialTheme.colorScheme.onBackground,
                 lineHeight = 20.sp
@@ -168,7 +168,7 @@ private fun MedicalTopBar(
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = "Add Member",
+                text = "Add a Member",
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 18.sp
