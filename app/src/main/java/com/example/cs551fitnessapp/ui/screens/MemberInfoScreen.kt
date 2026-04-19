@@ -3,6 +3,7 @@ package com.example.cs551fitnessapp.ui.screens
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.AssistChip
@@ -45,6 +47,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.cs551fitnessapp.ui.ViewModelFactory
 import com.example.cs551fitnessapp.ui.navigation.AddWorkoutFlow
+import com.example.cs551fitnessapp.ui.navigation.SessionDetail
 import com.example.cs551fitnessapp.ui.viewmodels.MemberViewModel
 import com.example.cs551fitnessapp.ui.viewmodels.states.MemberSessionItem
 import com.example.cs551fitnessapp.ui.viewmodels.states.MemberUiState
@@ -95,8 +98,18 @@ fun MemberInfoScreen(
                         .verticalScroll(rememberScrollState())
                 ) {
                     MemberHeader(member = uiState)
-                    UpcomingSection(uiState.upcomingSessions)
-                    PreviousSection(uiState.previousSessions)
+                    UpcomingSection(
+                        sessions = uiState.upcomingSessions,
+                        onSessionClick = { sessionId ->
+                            navController.navigate(SessionDetail(sessionId))
+                        }
+                    )
+                    PreviousSection(
+                        sessions = uiState.previousSessions,
+                        onSessionClick = { sessionId ->
+                            navController.navigate(SessionDetail(sessionId))
+                        }
+                    )
                     Spacer(modifier = Modifier.height(100.dp))
                 }
             }
@@ -181,7 +194,6 @@ fun MemberHeader(
                     ) {
                         Text(
                             text = member.notes
-                                .replace(Regex("""\s*\|\s*Sessions:\s*[^|]+"""), "")
                                 .ifBlank { "No notes yet." },
                             color = Color.White,
                             modifier = Modifier.padding(12.dp),
@@ -241,7 +253,8 @@ private fun formatJoinDate(joinDate: Long?): String {
 
 @Composable
 fun UpcomingSection(
-    sessions: List<MemberSessionItem>
+    sessions: List<MemberSessionItem>,
+    onSessionClick: (Long) -> Unit
 ) {
     SectionTitle("Upcoming")
 
@@ -252,7 +265,8 @@ fun UpcomingSection(
             SessionRow(
                 title = session.sessionName,
                 duration = session.durationText,
-                date = "${session.startText}  •  Ends ${session.endText}"
+                date = "${session.startText}  •  Ends ${session.endText}",
+                onClick = { onSessionClick(session.sessionId) }
             )
         }
     }
@@ -260,7 +274,8 @@ fun UpcomingSection(
 
 @Composable
 fun PreviousSection(
-    sessions: List<MemberSessionItem>
+    sessions: List<MemberSessionItem>,
+    onSessionClick: (Long) -> Unit
 ) {
     SectionTitle("Previous Session")
 
@@ -271,7 +286,8 @@ fun PreviousSection(
             SessionRow(
                 title = session.sessionName,
                 duration = session.durationText,
-                date = "${session.startText}  •  Ended ${session.endText}"
+                date = "${session.startText}  •  Ended ${session.endText}",
+                onClick = { onSessionClick(session.sessionId) }
             )
         }
     }
@@ -306,44 +322,60 @@ fun SectionTitle(text: String) {
 fun SessionRow(
     title: String,
     duration: String,
-    date: String
+    date: String,
+    onClick: () -> Unit
 ) {
-    Row(
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 14.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = 16.dp, vertical = 6.dp)
+            .clickable { onClick() }
     ) {
-        Box(
+        Row(
             modifier = Modifier
-                .size(46.dp)
-                .background(
-                    Color(0xFF2E5BFF),
-                    CircleShape
-                ),
-            contentAlignment = Alignment.Center
+                .fillMaxWidth()
+                .padding(horizontal = 14.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Box(
+                modifier = Modifier
+                    .size(46.dp)
+                    .background(
+                        Color(0xFF2E5BFF),
+                        CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    Icons.Default.DateRange,
+                    contentDescription = null,
+                    tint = Color.White
+                )
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    title,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    "$duration • $date",
+                    color = Color.Gray,
+                    fontSize = 13.sp
+                )
+            }
             Icon(
-                Icons.Default.DateRange,
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
-                tint = Color.White
-            )
-        }
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(
-                title,
-                fontWeight = FontWeight.Bold
-            )
-
-            Text(
-                "$duration • $date",
-                color = Color.Gray,
-                fontSize = 13.sp
+                tint = Color.Gray
             )
         }
     }
