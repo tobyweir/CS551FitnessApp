@@ -280,7 +280,7 @@ fun WorkoutPlanScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text       = "Workout List",
+                    text       = "Exercise List",
                     fontSize   = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color      = PrimaryBlue
@@ -297,12 +297,12 @@ fun WorkoutPlanScreen(
                         imageVector = Icons.Default.Add,
                         contentDescription = "Add workout",
                         tint = PrimaryBlue,
-                        modifier = Modifier.size(24.dp) // Icon is significantly smaller than the circle
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             }
 
-            // Workout List body
+
             if (addedEntries.isEmpty()) {
                 Box(
                     contentAlignment = Alignment.Center,
@@ -345,7 +345,6 @@ fun WorkoutPlanScreen(
     }
 }
 
-// Time picker button
 @Composable
 private fun TimePickerButton(
     hour    : Int,
@@ -384,7 +383,6 @@ private fun TimePickerButton(
     }
 }
 
-// Content layout
 @Composable
 private fun PlanField(
     label   : String,
@@ -434,7 +432,6 @@ private fun PlanTextField(
     }
 }
 
-// Workout List row
 @Composable
 private fun PlanWorkoutRow(
     entry    : WorkoutEntry,
@@ -496,7 +493,7 @@ private fun PlanWorkoutRow(
 private fun WorkoutPlanTopBar(onBackClick: () -> Unit) {
     CenterAlignedTopAppBar(
         title = {
-            Text("Workout Plan", fontWeight = FontWeight.Bold, color = PrimaryBlue, fontSize = 20.sp)
+            Text("Workout Session Plan", fontWeight = FontWeight.Bold, color = PrimaryBlue, fontSize = 20.sp)
         },
         navigationIcon = {
             IconButton(onClick = onBackClick) {

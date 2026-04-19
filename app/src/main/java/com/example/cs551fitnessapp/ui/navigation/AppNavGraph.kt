@@ -346,7 +346,7 @@ private fun GenericTopBar(
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = "Add Member",
+                text = "Add a Member",
                 fontWeight = FontWeight.Bold,
                 color      = MaterialTheme.colorScheme.primary,
                 fontSize   = 18.sp

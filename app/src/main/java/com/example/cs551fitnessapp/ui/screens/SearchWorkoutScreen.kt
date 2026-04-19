@@ -59,7 +59,7 @@ fun SearchWorkoutScreen(
 ) {
     val searchQuery  by searchViewModel.searchQuery.collectAsState()
     val uiState      by searchViewModel.uiState.collectAsState()
-    val addedEntries by planViewModel.addedEntries.collectAsState() //workout list
+    val addedEntries by planViewModel.addedEntries.collectAsState()
 
     LaunchedEffect(Unit) {
         searchViewModel.reloadIfIdle()
@@ -90,18 +90,16 @@ fun SearchWorkoutScreen(
                 .background(MaterialTheme.colorScheme.background)
         ) {
 
-            // Search field
             TopSearchHeader(
                 query         = searchQuery,
                 onQueryChange = searchViewModel::onSearchQueryChange,
                 onBackClick   = onBackClick
             )
 
-            // Search results
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)           // expands to fill available space, 1f = takes remaining space
+                    .weight(1f)
             ) {
                 when (val state = uiState) {
 
@@ -141,7 +139,6 @@ fun SearchWorkoutScreen(
                 }
             }
 
-            // Workout List
             if (addedEntries.isNotEmpty()) {
                 WorkoutListSection(
                     entries  = addedEntries,
@@ -152,7 +149,6 @@ fun SearchWorkoutScreen(
     }
 }
 
-// Search results — LazyColumn
 @Composable
 private fun SearchResultList(
     exercises     : List<Exercise>,
@@ -169,7 +165,6 @@ private fun SearchResultList(
             lastVisible >= exercises.size - 5
         }
     }
-    // snapshotFlow across rotation
     LaunchedEffect(listState) {
         snapshotFlow {
             val layoutInfo  = listState.layoutInfo
@@ -201,7 +196,6 @@ private fun SearchResultList(
             )
         }
 
-        // Pagination spinner
         item {
             Box(
                 Modifier
@@ -219,7 +213,6 @@ private fun SearchResultList(
     }
 }
 
-// Workout List
 @Composable
 private fun WorkoutListSection(
     entries  : List<WorkoutEntry>,
@@ -229,11 +222,10 @@ private fun WorkoutListSection(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color(0xFFF5F5F5))
-            .heightIn(max = 260.dp)  // caps section height
+            .heightIn(max = 260.dp)
     ) {
-        // Section title
         Text(
-            text       = "Workout List",
+            text       = "Exercise List",
             fontSize   = 17.sp,
             fontWeight = FontWeight.Bold,
             color      = PrimaryBlue,
@@ -248,7 +240,7 @@ private fun WorkoutListSection(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .verticalScroll(rememberScrollState())  // scrollable within 260dp cap
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp, vertical = 4.dp)
         ) {
             entries.forEach { entry ->
@@ -262,7 +254,7 @@ private fun WorkoutListSection(
     }
 }
 
-// Top bar + Search field
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TopSearchHeader(
@@ -328,7 +320,7 @@ private fun TopSearchHeader(
     }
 }
 
-// Exercise search result content
+
 @Composable
 private fun ExerciseSearchRow(
     exercise   : Exercise,
@@ -389,7 +381,7 @@ private fun ExerciseSearchRow(
     }
 }
 
-// Added workout row
+
 @Composable
 private fun WorkoutListRow(
     entry    : WorkoutEntry,
@@ -449,7 +441,7 @@ private fun WorkoutListRow(
     }
 }
 
-// Bottom bar
+
 @Composable
 private fun BottomBar(
     onCancelClick : () -> Unit,

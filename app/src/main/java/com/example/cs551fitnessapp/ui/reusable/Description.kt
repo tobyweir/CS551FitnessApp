@@ -10,13 +10,14 @@ import com.example.cs551fitnessapp.R
 
 @Composable
 fun Description (headText: Int, descriptionText: Int, modifier: Modifier = Modifier) {
-    Column{
+    val descText = stringResource(descriptionText)
+    Column(modifier = modifier) {
         Text(
             text = stringResource(headText),
             style = MaterialTheme.typography.displayMedium
         )
-        Text(
-            text = stringResource(descriptionText)
-        )
+        if (descText.isNotBlank()) {
+            Text(text = descText)
+        }
     }
 }

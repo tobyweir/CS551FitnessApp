@@ -28,10 +28,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -129,7 +129,7 @@ fun SearchBar(currentSearch : String = "" , updateSearchQuery : (String) -> Unit
                 value = currentSearch,
                 modifier = Modifier
                     .fillMaxWidth(0.85f)
-                    ,
+                ,
                 onValueChange = updateSearchQuery
                 ,
                 shape = RoundedCornerShape(100.dp),
@@ -189,26 +189,39 @@ fun SortingButtons( isActive : Boolean , isInactive : Boolean , isNearlyFinished
 
 @Composable
 fun AddMemberButton(onClick : () -> Unit = {}) {
-    Button(onClick = onClick) { Icon(imageVector = Icons.Default.Add , contentDescription = "Add a new member") }
+    ExtendedFloatingActionButton(
+        onClick = onClick,
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = Color.White,
+        icon = {
+            Icon(Icons.Default.Add, contentDescription = "Add a new member")
+        },
+        text = {
+            Text(
+                "Member",
+                fontWeight = FontWeight.Bold
+            )
+        }
+    )
 }
 //drawBehind modifier taken from https://stackoverflow.com/questions/68592618/how-to-add-border-on-bottom-only-in-jetpack-compose
 @Composable
 fun MembersList(navController: NavHostController, members: List<MemberEntity>, modifier: Modifier = Modifier) {
     LazyColumn(horizontalAlignment = Alignment.CenterHorizontally , modifier = modifier.fillMaxSize()) {
         items(items = members, key = { it.memberId }) { item ->
-                MemberCard(
-                    member = item, modifier = Modifier.fillMaxSize()
-                        .drawBehind {
-                            val strokeWidth = 1 * density
-                            val y = size.height - strokeWidth / 2
-                            drawLine(
-                                Color.LightGray,
-                                Offset(1f, y),
-                                Offset(size.width, y),
-                                strokeWidth
-                            )
-                        }
-                        .clickable(onClick = { navController.navigate(MemberPage(item.memberId.toInt())) }))
+            MemberCard(
+                member = item, modifier = Modifier.fillMaxSize()
+                    .drawBehind {
+                        val strokeWidth = 1 * density
+                        val y = size.height - strokeWidth / 2
+                        drawLine(
+                            Color.LightGray,
+                            Offset(1f, y),
+                            Offset(size.width, y),
+                            strokeWidth
+                        )
+                    }
+                    .clickable(onClick = { navController.navigate(MemberPage(item.memberId.toInt())) }))
         }
     }
 }
@@ -240,7 +253,7 @@ fun MemberCard(member: MemberEntity, modifier: Modifier = Modifier.fillMaxSize()
             .fillMaxWidth(0.3f)
             .fillMaxHeight(0.8f)
             .padding(top = 10.dp),
-        member = member)
+            member = member)
         MemberCardInfo(
             name = member.name,
             joinDate = member.joinDate,
@@ -253,14 +266,6 @@ fun MemberCard(member: MemberEntity, modifier: Modifier = Modifier.fillMaxSize()
 
 @Composable
 fun MemberCardImage(modifier: Modifier = Modifier.fillMaxSize() , member : MemberEntity) {
-//    Image(
-//        painter = painterResource(id = R.drawable.profile1),
-//        contentDescription = "Image of member",
-//        contentScale = ContentScale.Crop,
-//        modifier = modifier
-//            .aspectRatio(1f)
-//            .clip(CircleShape)
-//    )
     Box(
         modifier = Modifier
             .size(80.dp)
@@ -290,13 +295,13 @@ fun MemberCardInfo(
         Text(text = name , Modifier.padding(bottom = 3.dp) , color = Color.Blue , fontWeight = FontWeight.Bold, style = TextStyle(fontSize = 18.sp))
 
         Text(
-            text = "Start Date : ${formatMemberDate(joinDate)}",
+            text = "Membership started: ${formatMemberDate(joinDate)}",
             modifier = Modifier.padding(bottom = 3.dp),
             style = TextStyle(fontSize = 14.sp)
         )
 
         Text(
-            text = "End Date : ${formatMemberDate(endDate)}",
+            text = "Membership ends: ${formatMemberDate(endDate)}",
             modifier = Modifier.padding(bottom = 3.dp),
             style = TextStyle(fontSize = 14.sp)
         )

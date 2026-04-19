@@ -51,8 +51,8 @@ fun NewMemberSexScreen(
             .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Description(R.string.tell_us_about_yourself,
-            R.string.Gender,
+        Description(R.string.Gender,
+            R.string.Gender2,
             modifier = Modifier.padding(10.dp))
 
         SexSelector(
@@ -151,7 +151,7 @@ fun SubmissionButtons(
             onClick = onPreferNotToSayClick,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Prefer not to say")
+            Text("Other or They prefer not to say")
         }
 
         NextScreenButton(onNextClick , enabled = enableNextButton)
@@ -161,7 +161,7 @@ fun SubmissionButtons(
 //@Preview(showBackground = true)
 //@Composable
 //fun ButtonPreview() {
-  //  CS551FitnessAppTheme {
-    //    NewMemberSexScreen()
-    //}
+//  CS551FitnessAppTheme {
+//    NewMemberSexScreen()
+//}
 //}
