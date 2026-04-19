@@ -84,7 +84,7 @@ fun WorkoutInfoScreen(
                 onAddClick    = {
                     onAddClick(
                         WorkoutEntry(
-                            exercise = exercise, //exercise info from API e.g. name, gif, etc
+                            exercise = exercise,
                             sets     = sets.toIntOrNull()    ?: 0,
                             reps     = reps.toIntOrNull()    ?: 0,
                             timeHr  = timeHr.toIntOrNull() ?: 0,
@@ -105,7 +105,7 @@ fun WorkoutInfoScreen(
                 .verticalScroll(rememberScrollState())
         ) {
 
-            // Exercise GIF image
+
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
@@ -136,7 +136,6 @@ fun WorkoutInfoScreen(
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
 
-                // Exercise name
                 Text(
                     text       = exercise.name,
                     fontSize   = 20.sp,
@@ -146,10 +145,8 @@ fun WorkoutInfoScreen(
                     modifier   = Modifier.fillMaxWidth()
                 )
 
-                // Body Parts
                 BodyPartMusclesRow(muscles = exercise.bodyParts)
 
-                // Set × Replies
                 SetRepsRow(
                     sets    = sets,
                     reps    = reps,
@@ -161,7 +158,6 @@ fun WorkoutInfoScreen(
 
                 )
 
-                // Duration
                 DurationRow(
                     hours       = timeHr,
                     minutes       = timeMin,
@@ -172,7 +168,6 @@ fun WorkoutInfoScreen(
                     nextField = focusNote
                 )
 
-                // Notes
                 NoteField(
                     value    = note,
                     onChange = { note = it },
@@ -186,14 +181,13 @@ fun WorkoutInfoScreen(
     }
 }
 
-// Top bar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun WorkoutInfoTopBar(onBackClick: () -> Unit) {
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text       = "Workout Info",
+                text       = "Exercise Details",
                 fontWeight = FontWeight.Bold,
                 color      = PrimaryBlue,
                 fontSize   = 20.sp
@@ -214,7 +208,6 @@ private fun WorkoutInfoTopBar(onBackClick: () -> Unit) {
     )
 }
 
-// Target muscles row
 @Composable
 private fun BodyPartMusclesRow(muscles: List<String>) {
     val muscleText = muscles.joinToString(", ")
@@ -224,7 +217,6 @@ private fun BodyPartMusclesRow(muscles: List<String>) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        // Dumbbell icon placeholder — swap for your own drawable if needed
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
@@ -240,14 +232,14 @@ private fun BodyPartMusclesRow(muscles: List<String>) {
         }
 
         Text(
-            text     = "Body Parts : $muscleText",
+            text     = "Targeted Body Part: $muscleText",
             fontSize = 15.sp,
             color    = Color(0xFF424242)
         )
     }
 }
 
-// Set × Replies row
+
 @Composable
 private fun SetRepsRow(
     sets         : String,
@@ -264,15 +256,15 @@ private fun SetRepsRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text     = "Set",
+                text     = "Sets",
                 fontSize = 15.sp,
                 color    = Color(0xFF424242),
                 modifier = Modifier.weight(1f)
 
             )
-            Spacer(Modifier.width(16.dp))   // the "X" column gap
+            Spacer(Modifier.width(16.dp))
             Text(
-                text     = "Replies",
+                text     = "Repetitions",
                 fontSize = 15.sp,
                 color    = Color(0xFF424242),
                 modifier = Modifier.weight(1f)
@@ -283,7 +275,7 @@ private fun SetRepsRow(
             verticalAlignment  = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Sets field
+
             RoundedNumberField(
                 value    = sets,
                 onChange = onSetsChange,
@@ -300,7 +292,6 @@ private fun SetRepsRow(
                 color    = Color(0xFF424242)
             )
 
-            // Reps field
             RoundedNumberField(
                 value    = reps,
                 onChange = onRepsChange,
@@ -313,7 +304,7 @@ private fun SetRepsRow(
     }
 }
 
-// Time row
+
 @Composable
 private fun DurationRow(
     hours     : String,
@@ -364,7 +355,7 @@ private fun DurationRow(
     }
 }
 
-// Notes
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NoteField(
@@ -376,7 +367,7 @@ private fun NoteField(
     TextField(
         value         = value,
         onValueChange = onChange,
-        placeholder   = { Text("e.g. 40 lbs", color = PrimaryBlue.copy(alpha = 0.6f)) },
+        placeholder   = { Text("amount of weight if applicable", color = PrimaryBlue.copy(alpha = 0.6f)) },
         shape         = RoundedCornerShape(14.dp),
         colors        = TextFieldDefaults.colors(
             focusedContainerColor   = LightBlueBg,
@@ -399,7 +390,7 @@ private fun NoteField(
     )
 }
 
-// rounded number field
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RoundedNumberField(
@@ -438,7 +429,7 @@ private fun RoundedNumberField(
     )
 }
 
-// Bottom bar
+
 @Composable
 private fun BottomActionBar(
     onCancelClick : () -> Unit,
@@ -452,7 +443,7 @@ private fun BottomActionBar(
             .padding(horizontal = 20.dp, vertical = 14.dp)
             .navigationBarsPadding()
     ) {
-        // Cancel
+
         Button(
             onClick = onCancelClick,
             shape   = RoundedCornerShape(50),
@@ -464,7 +455,7 @@ private fun BottomActionBar(
             Text("Cancel", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
         }
 
-        // Add
+
         Button(
             onClick = onAddClick,
             shape   = RoundedCornerShape(50),
