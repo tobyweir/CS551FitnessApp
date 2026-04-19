@@ -76,7 +76,7 @@ fun AppNavHost(
                             TopBar(
                                 navController = navController,
                                 showBackIcon = false,
-                                title = "Members"
+                                title = "All Members"
                             )
                         }
                     ) { innerPadding ->
@@ -96,7 +96,7 @@ fun AppNavHost(
                             TopBar(
                                 navController = navController,
                                 showBackIcon = false,
-                                title = "Members"
+                                title = "All Members"
                             )
                             Row {
                                 SideBar(
@@ -133,7 +133,7 @@ fun AppNavHost(
                             TopBar(
                                 navController = navController,
                                 showBackIcon = false,
-                                title = "Today"
+                                title = "Home"
                             )
                         }
                     ) { innerPadding ->
@@ -152,7 +152,7 @@ fun AppNavHost(
                             TopBar(
                                 navController = navController,
                                 showBackIcon = false,
-                                title = "Today"
+                                title = "Home"
                             )
                             Row {
                                 SideBar(

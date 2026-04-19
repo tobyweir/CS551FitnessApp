@@ -2,7 +2,6 @@ package com.example.cs551fitnessapp.ui.screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,14 +33,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.ui.ViewModelFactory
 import com.example.cs551fitnessapp.ui.navigation.MemberPage
 import com.example.cs551fitnessapp.ui.viewmodels.MemberSession
@@ -73,6 +69,14 @@ fun TodayScreen(
                 uiState.value.day6,
                 uiState.value.day7
             )
+        )
+
+        Text(
+            text = "Schedule for Today",
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(start = 20.dp, top = 16.dp, bottom = 4.dp)
         )
 
         if (uiState.value.sessions.isEmpty()) {
@@ -147,14 +151,14 @@ fun DateItem(
     Box(
         modifier = Modifier
             .width(48.dp)
-            .height(80.dp)
+            .height(68.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(
                 if (isSelected) MaterialTheme.colorScheme.primary
                 else MaterialTheme.colorScheme.background
             )
-            .padding(horizontal = 8.dp, vertical = 8.dp)
-            .clickable { onClick() }
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
@@ -165,7 +169,7 @@ fun DateItem(
                 color = if (isSelected) Color.White else MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(2.dp))
             Text(
                 date,
                 fontSize = 12.sp,
@@ -195,14 +199,20 @@ fun SessionCard(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(R.drawable.profile1),
-                contentDescription = "Member Profile Picture",
-                contentScale = ContentScale.Crop,
+            Box(
                 modifier = Modifier
                     .size(70.dp)
                     .clip(CircleShape)
-            )
+                    .background(MaterialTheme.colorScheme.primary),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = session.memberName.firstOrNull()?.uppercase() ?: "?",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp
+                )
+            }
 
             Spacer(modifier = Modifier.width(16.dp))
 
@@ -225,9 +235,9 @@ fun SessionCard(
 
                 Text("Start: ${session.startTime}" ,
                     color = MaterialTheme.colorScheme.onBackground)
-                Text("Duration: ${session.duration}" ,
-                    color = MaterialTheme.colorScheme.onBackground)
                 Text("End: ${session.endTime}" ,
+                    color = MaterialTheme.colorScheme.onBackground)
+                Text("Duration: ${session.duration}" ,
                     color = MaterialTheme.colorScheme.onBackground)
             }
         }
