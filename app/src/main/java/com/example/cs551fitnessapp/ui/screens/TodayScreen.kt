@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.cs551fitnessapp.ui.ViewModelFactory
-import com.example.cs551fitnessapp.ui.navigation.MemberPage
+import com.example.cs551fitnessapp.ui.navigation.SessionDetail
 import com.example.cs551fitnessapp.ui.viewmodels.MemberSession
 import com.example.cs551fitnessapp.ui.viewmodels.TodayViewModel
 import java.time.LocalDate
@@ -188,7 +188,7 @@ fun SessionCard(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .clickable {
-                navController.navigate(MemberPage(session.memberId.toInt()))
+                navController.navigate(SessionDetail(session.sessionId))
             },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(

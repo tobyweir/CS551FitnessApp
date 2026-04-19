@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -252,7 +252,7 @@ fun AppNavHost(
                             TopBar(
                                 navController = navController,
                                 showBackIcon = canGoBack,
-                                title = "Session"
+                                title = "Workout Session Details"
                             )
                         }
                     ) { innerPadding ->
@@ -271,7 +271,7 @@ fun AppNavHost(
                             TopBar(
                                 navController = navController,
                                 showBackIcon = canGoBack,
-                                title = "Session"
+                                title = "Workout Session Details"
                             )
                             Row {
                                 SideBar(
@@ -369,8 +369,8 @@ fun BottomBar(
             },
             icon = {
                 Icon(
-                    imageVector = Icons.Default.DateRange,
-                    contentDescription = "Today"
+                    imageVector = Icons.Default.Home,
+                    contentDescription = "Home"
                 )
             },
             label = {}
@@ -408,8 +408,8 @@ fun SideBar(
             },
             icon = {
                 Icon(
-                    imageVector = Icons.Default.DateRange,
-                    contentDescription = "Today"
+                    imageVector = Icons.Default.Home,
+                    contentDescription = "Home"
                 )
             },
             label = {}
