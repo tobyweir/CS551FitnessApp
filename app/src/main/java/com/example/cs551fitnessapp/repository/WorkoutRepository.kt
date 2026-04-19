@@ -95,6 +95,10 @@ class WorkoutRepository(
                 return SavePlanResult.Error("Duplicate time slot")
             }
 
+            if (startAt > endAt) {
+                return SavePlanResult.Error("Start time must be before end time")
+            }
+
             val exerciseEntities = plan.entries.map { it.exercise.toEntity() }
             exerciseDao.insertExercises(exerciseEntities)
 

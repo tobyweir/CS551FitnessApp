@@ -1,6 +1,6 @@
 package com.example.cs551fitnessapp.database
 
-//-- Table for store workout info in the session ---------------------------------------------------
+// Table for store workout info in the session
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
