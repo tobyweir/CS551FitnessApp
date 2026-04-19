@@ -1,13 +1,13 @@
 package com.example.cs551fitnessapp.ui.screens
 
-// -- Specific Workout Detail Screen ----------------------------------------------------------
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -16,11 +16,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -52,6 +58,14 @@ fun WorkoutInfoScreen(
     var timeHr by remember { mutableStateOf("00") }
     var timeMin by remember { mutableStateOf("00") }
     var note    by remember { mutableStateOf("")   }
+
+    val focusSets    = remember { FocusRequester() }
+    val focusReps    = remember { FocusRequester() }
+    val focusTimeHr = remember { FocusRequester() }
+    val focusTimeMin = remember { FocusRequester() }
+    val focusNote    = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+
 
     val context = LocalContext.current
     val imageLoader = remember(context) {
@@ -91,7 +105,7 @@ fun WorkoutInfoScreen(
                 .verticalScroll(rememberScrollState())
         ) {
 
-            // -- Exercise GIF image --------------------------------------------------
+            // Exercise GIF image
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
@@ -122,7 +136,7 @@ fun WorkoutInfoScreen(
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
 
-                // -- Exercise name --------------------------------------------------
+                // Exercise name
                 Text(
                     text       = exercise.name,
                     fontSize   = 20.sp,
@@ -132,29 +146,38 @@ fun WorkoutInfoScreen(
                     modifier   = Modifier.fillMaxWidth()
                 )
 
-                // -- Body Parts --------------------------------------------------
+                // Body Parts
                 BodyPartMusclesRow(muscles = exercise.bodyParts)
 
-                // -- Set × Replies --------------------------------------------------
+                // Set × Replies
                 SetRepsRow(
                     sets    = sets,
                     reps    = reps,
                     onSetsChange = { sets = it.filter(Char::isDigit).take(2) },
-                    onRepsChange = { reps = it.filter(Char::isDigit).take(3) }
+                    onRepsChange = { reps = it.filter(Char::isDigit).take(2) },
+                    leftField = focusSets,
+                    rightField = focusReps,
+                    nextField = focusTimeHr
+
                 )
 
-                // -- Duration --------------------------------------------------
+                // Duration
                 DurationRow(
                     hours       = timeHr,
                     minutes       = timeMin,
                     onHrChange   = { timeHr = it.filter(Char::isDigit).take(2) },
-                    onMinChange   = { timeMin = it.filter(Char::isDigit).take(2) }
+                    onMinChange   = { timeMin = it.filter(Char::isDigit).take(2) },
+                    leftField = focusTimeHr,
+                    rightField = focusTimeMin,
+                    nextField = focusNote
                 )
 
-                // -- Notes ------------------------------------------------------
+                // Notes
                 NoteField(
                     value    = note,
-                    onChange = { note = it }
+                    onChange = { note = it },
+                    focusRequester = focusNote,
+                    onImeAction    = { focusManager.clearFocus() }
                 )
 
                 Spacer(Modifier.height(4.dp))
@@ -163,10 +186,7 @@ fun WorkoutInfoScreen(
     }
 }
 
-// -------------------------------------------------------------------------------------------------
 // Top bar
-// -------------------------------------------------------------------------------------------------
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun WorkoutInfoTopBar(onBackClick: () -> Unit) {
@@ -194,10 +214,7 @@ private fun WorkoutInfoTopBar(onBackClick: () -> Unit) {
     )
 }
 
-// -------------------------------------------------------------------------------------------------
 // Target muscles row
-// -------------------------------------------------------------------------------------------------
-
 @Composable
 private fun BodyPartMusclesRow(muscles: List<String>) {
     val muscleText = muscles.joinToString(", ")
@@ -230,17 +247,18 @@ private fun BodyPartMusclesRow(muscles: List<String>) {
     }
 }
 
-// -------------------------------------------------------------------------------------------------
 // Set × Replies row
-// -------------------------------------------------------------------------------------------------
-
 @Composable
 private fun SetRepsRow(
     sets         : String,
     reps         : String,
     onSetsChange : (String) -> Unit,
-    onRepsChange : (String) -> Unit
+    onRepsChange : (String) -> Unit,
+    leftField    : FocusRequester,
+    rightField   : FocusRequester,
+    nextField : FocusRequester
 ) {
+
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -250,6 +268,7 @@ private fun SetRepsRow(
                 fontSize = 15.sp,
                 color    = Color(0xFF424242),
                 modifier = Modifier.weight(1f)
+
             )
             Spacer(Modifier.width(16.dp))   // the "X" column gap
             Text(
@@ -268,7 +287,10 @@ private fun SetRepsRow(
             RoundedNumberField(
                 value    = sets,
                 onChange = onSetsChange,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                focusRequester = leftField,
+                imeAction      = ImeAction.Next,
+                onImeAction    = { rightField.requestFocus() }
             )
 
             Text(
@@ -282,23 +304,27 @@ private fun SetRepsRow(
             RoundedNumberField(
                 value    = reps,
                 onChange = onRepsChange,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                focusRequester = rightField,
+                imeAction      = ImeAction.Next,
+                onImeAction    = { nextField.requestFocus() }
             )
         }
     }
 }
 
-// -------------------------------------------------------------------------------------------------
 // Time row
-// -------------------------------------------------------------------------------------------------
-
 @Composable
 private fun DurationRow(
     hours     : String,
     minutes     : String,
     onHrChange : (String) -> Unit,
-    onMinChange : (String) -> Unit
+    onMinChange : (String) -> Unit,
+    leftField    : FocusRequester,
+    rightField   : FocusRequester,
+    nextField : FocusRequester
 ) {
+
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
             text     = "Duration (hh:mm)",
@@ -313,7 +339,10 @@ private fun DurationRow(
             RoundedNumberField(
                 value    = hours,
                 onChange = onHrChange,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                focusRequester = leftField,
+                imeAction      = ImeAction.Next,
+                onImeAction    = { rightField.requestFocus() }
             )
 
             Text(
@@ -326,19 +355,24 @@ private fun DurationRow(
             RoundedNumberField(
                 value    = minutes,
                 onChange = onMinChange,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                focusRequester = rightField,
+                imeAction      = ImeAction.Next,
+                onImeAction    = { nextField.requestFocus() }
             )
         }
     }
 }
 
-// -------------------------------------------------------------------------------------------------
 // Notes
-// -------------------------------------------------------------------------------------------------
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun NoteField(value: String, onChange: (String) -> Unit) {
+private fun NoteField(
+    value: String,
+    onChange: (String) -> Unit,
+    focusRequester : FocusRequester,
+    onImeAction    : () -> Unit
+) {
     TextField(
         value         = value,
         onValueChange = onChange,
@@ -352,21 +386,29 @@ private fun NoteField(value: String, onChange: (String) -> Unit) {
             focusedTextColor        = PrimaryBlue,
             unfocusedTextColor      = PrimaryBlue
         ),
-        minLines = 3,
+        minLines = 2,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            imeAction    = ImeAction.Done
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = { onImeAction() }
+        ),
         modifier = Modifier.fillMaxWidth()
+            .focusRequester(focusRequester)
     )
 }
 
-// -------------------------------------------------------------------------------------------------
-// Reusable rounded number field
-// -------------------------------------------------------------------------------------------------
-
+// rounded number field
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RoundedNumberField(
     value    : String,
     onChange : (String) -> Unit,
-    modifier : Modifier = Modifier
+    modifier : Modifier = Modifier,
+    focusRequester : FocusRequester,
+    imeAction      : ImeAction,
+    onImeAction    : () -> Unit
 ) {
     TextField(
         value         = value,
@@ -377,7 +419,13 @@ private fun RoundedNumberField(
             fontSize   = 16.sp,
             color      = Color(0xFF424242)
         ),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Number,
+            imeAction    = imeAction
+        ),
+        keyboardActions = KeyboardActions(
+            onNext = { onImeAction() }
+        ),
         shape   = RoundedCornerShape(50),
         colors  = TextFieldDefaults.colors(
             focusedContainerColor   = LightBlueBg,
@@ -386,13 +434,11 @@ private fun RoundedNumberField(
             unfocusedIndicatorColor = Color.Transparent
         ),
         modifier = modifier.height(52.dp)
+            .focusRequester(focusRequester)
     )
 }
 
-// -------------------------------------------------------------------------------------------------
-// Bottom Cancel / Add bar
-// -------------------------------------------------------------------------------------------------
-
+// Bottom bar
 @Composable
 private fun BottomActionBar(
     onCancelClick : () -> Unit,

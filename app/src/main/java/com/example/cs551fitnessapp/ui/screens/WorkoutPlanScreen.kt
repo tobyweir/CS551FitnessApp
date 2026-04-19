@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
@@ -21,8 +23,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -32,6 +37,7 @@ import com.example.cs551fitnessapp.database.WorkoutEntry
 import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
 import com.example.cs551fitnessapp.ui.components.TimePickerDialog
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.database.WorkoutPlanData
 import com.example.cs551fitnessapp.ui.components.ErrorDialog
@@ -396,7 +402,8 @@ private fun PlanTextField(
     value       : String,
     onChange    : (String) -> Unit,
     placeholder : String,
-    isError     : Boolean = false
+    isError     : Boolean = false,
+    focusManager: FocusManager = LocalFocusManager.current
 ) {
     TextField(
         value         = value,
