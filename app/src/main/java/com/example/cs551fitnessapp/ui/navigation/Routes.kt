@@ -18,4 +18,7 @@ data class MemberPage(val id: Int)
 data class AddWorkoutFlow(val id: Int)
 
 @Serializable
+data class SessionDetail(val id: Long)
+
+@Serializable
 object AddMemberFlow

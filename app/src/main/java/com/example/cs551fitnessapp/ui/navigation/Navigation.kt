@@ -32,6 +32,7 @@ import androidx.navigation.toRoute
 import com.example.cs551fitnessapp.ui.ViewModelFactory
 import com.example.cs551fitnessapp.ui.screens.MemberInfoScreen
 import com.example.cs551fitnessapp.ui.screens.MembersScreen
+import com.example.cs551fitnessapp.ui.screens.SessionDetailScreen
 import com.example.cs551fitnessapp.ui.screens.SettingsScreen
 import com.example.cs551fitnessapp.ui.screens.TodayScreen
 import com.example.cs551fitnessapp.ui.utils.WindowStateUtils
@@ -225,6 +226,62 @@ fun AppNavHost(
                                     member.id,
                                     modifier = modifier.padding(innerPadding),
                                     navController = navController
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        composable<SessionDetail> { backStackEntry ->
+            val route: SessionDetail = backStackEntry.toRoute()
+
+            when (navigationType) {
+                WindowStateUtils.BOTTOM_NAVIGATION -> {
+                    Scaffold(
+                        modifier = modifier,
+                        bottomBar = {
+                            BottomBar(
+                                navController = navController,
+                                index = navIndex,
+                                updateIndex = updateIndex
+                            )
+                        },
+                        topBar = {
+                            TopBar(
+                                navController = navController,
+                                showBackIcon = canGoBack,
+                                title = "Session"
+                            )
+                        }
+                    ) { innerPadding ->
+                        SessionDetailScreen(
+                            sessionId = route.id,
+                            modifier = modifier.padding(innerPadding)
+                        )
+                    }
+                }
+
+                WindowStateUtils.NAVIGATION_RAIL -> {
+                    Scaffold(
+                        modifier = modifier
+                    ) { innerPadding ->
+                        Column {
+                            TopBar(
+                                navController = navController,
+                                showBackIcon = canGoBack,
+                                title = "Session"
+                            )
+                            Row {
+                                SideBar(
+                                    navController = navController,
+                                    index = navIndex,
+                                    updateIndex = updateIndex
+                                )
+                                SessionDetailScreen(
+                                    sessionId = route.id,
+                                    modifier = modifier.padding(innerPadding)
                                 )
                             }
                         }
