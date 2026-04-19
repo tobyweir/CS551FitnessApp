@@ -1,6 +1,6 @@
 package com.example.cs551fitnessapp.database
 
-//-- Table for store master data of exercises from API -------------------------------------------
+// Table for store master data of exercises from API
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
