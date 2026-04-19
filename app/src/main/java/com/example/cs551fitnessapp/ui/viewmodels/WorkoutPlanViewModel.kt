@@ -1,6 +1,8 @@
 package com.example.cs551fitnessapp.ui.viewmodels
 
 import android.app.Application
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cs551fitnessapp.database.DatabaseModule
@@ -10,7 +12,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.ZoneId
 import java.util.Calendar
+import java.time.LocalDate
+import com.example.cs551fitnessapp.ui.utils.DateTimeUtils
+import kotlinx.coroutines.flow.update
+
+
 
 sealed class SavePlanResult {
     data object Idle : SavePlanResult()
@@ -19,9 +27,18 @@ sealed class SavePlanResult {
     data class Error(val message: String) : SavePlanResult()
 }
 
+data class SessionTimeResult(
+    val startTime : String,
+    val endTime   : String,
+    val sessionName : String
+)
+
 class WorkoutPlanViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = DatabaseModule.provideRepository(application)
+
+    private val _sessionTimeResults = MutableStateFlow<List<SessionTimeResult>>(emptyList())
+    val sessionTimeResults: StateFlow<List<SessionTimeResult>> = _sessionTimeResults.asStateFlow()
 
     private val _saveResult = MutableStateFlow<SavePlanResult>(SavePlanResult.Idle)
     val saveResult: StateFlow<SavePlanResult> = _saveResult.asStateFlow()
@@ -119,6 +136,25 @@ class WorkoutPlanViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun querySessionTime() {
+        viewModelScope.launch {
+
+            val (start, end) = DateTimeUtils.getDayRangebyCalendar(_selectedDate.value)
+            repository.getAllSessionsInRange(start, end)
+                .collect { sessions ->
+                    _sessionTimeResults.value = sessions.map { session ->
+                        SessionTimeResult(
+                            startTime   = session.startTime,
+                            endTime     = session.endTime,
+                            sessionName = session.sessionName
+                        )
+                    }
+                }
+        
+        }
+    }
+
     fun resetSaveResult() {
         _saveResult.value = SavePlanResult.Idle
     }
@@ -134,3 +170,4 @@ class WorkoutPlanViewModel(application: Application) : AndroidViewModel(applicat
         _saveResult.value = SavePlanResult.Idle
     }
 }
+

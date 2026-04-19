@@ -13,4 +13,8 @@
     <string name="Feet">ft</string>
     <string name="Centimeters">cm</string>
     <string name="Gender">What is your gender?</string>
+    <string name="Goal">Your goal</string>
+    <string name="Goal2">Select the option that best fits your needs such as building strength, losing weight or general fitness, so your personal trainer can create a plan tailored to you</string>
+    <string name="Medical">Medical concern</string>
+    <string name="Medical2">Select any medical concern that may affect training, and add a short note if needed</string>
 </resources>

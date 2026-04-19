@@ -16,6 +16,7 @@ import com.example.cs551fitnessapp.database.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import kotlin.math.log
 
 class ReminderWorker(private val context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
@@ -30,8 +31,10 @@ class ReminderWorker(private val context: Context, workerParams: WorkerParameter
             val sessionDao = AppDatabase.getDatabase(applicationContext).sessionDao()
             val sevenDaysAgo = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7)
             val sessions = sessionDao.getAllSessionsInRange(sevenDaysAgo, System.currentTimeMillis()).first()
-            val totalHourTraining = (sessions.sumOf { it.duration.toDouble() })/60 //convert minute to hr
-            msg = "Weekly training: %.2f hours".format(totalHourTraining)
+            val totalHourTraining = (sessions.sumOf { it.duration.toDouble() }) //convert minute to hr
+            val hours = (totalHourTraining / 60).toInt()
+            val remainingMinutes = totalHourTraining % 60
+            msg = "Weekly training: $hours hours %02d minutes".format(remainingMinutes.toInt())
 
         }
 

@@ -24,6 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.cs551fitnessapp.R
+import com.example.cs551fitnessapp.ui.reusable.Description
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 
 private val PrimaryBlue = Color(0xFF2962FF)
@@ -92,20 +94,10 @@ fun MemberGoalScreen(
                 .padding(horizontal = 24.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                text = "Your goal",
-                fontSize = 30.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = MaterialTheme.colorScheme.onBackground
+            Description(
+                com.example.cs551fitnessapp.R.string.Goal,
+                R.string.Goal2
             )
-
-            Text(
-                text = "Select the option that best fits your needs such as building strength, losing weight or general fitness, so your personal trainer can create a plan tailored to you.",
-                fontSize = 13.sp,
-                color = MaterialTheme.colorScheme.onBackground,
-                lineHeight = 20.sp
-            )
-
             Spacer(Modifier.height(4.dp))
 
             goalOptions.forEach { option ->
