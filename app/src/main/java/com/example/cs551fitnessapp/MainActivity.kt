@@ -41,13 +41,13 @@ import com.example.cs551fitnessapp.ui.navigation.TopBar
 import com.example.cs551fitnessapp.ui.screens.SearchWorkoutScreen
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 import com.example.cs551fitnessapp.ui.navigation.AppNavGraph
+import com.example.cs551fitnessapp.ui.screens.BirthdayScreen
 import com.example.cs551fitnessapp.ui.screens.MedicalConcernScreen
 import com.example.cs551fitnessapp.ui.screens.MemberGoalScreen
 import com.example.cs551fitnessapp.ui.screens.TodayScreen
 import com.example.cs551fitnessapp.ui.screens.WorkoutInfoScreen
 import com.example.cs551fitnessapp.ui.screens.WorkoutPlanScreen
 import com.example.cs551fitnessapp.ui.viewmodels.ThemeViewModel
-
 
 class MainActivity : ComponentActivity() {
 

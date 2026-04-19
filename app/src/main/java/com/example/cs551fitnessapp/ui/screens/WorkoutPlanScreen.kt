@@ -1,7 +1,9 @@
 package com.example.cs551fitnessapp.ui.screens
 
 import android.app.DatePickerDialog
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -38,18 +40,21 @@ import com.example.cs551fitnessapp.ui.viewmodels.WorkoutPlanViewModel
 import com.example.cs551fitnessapp.ui.components.TimePickerDialog
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cs551fitnessapp.R
 import com.example.cs551fitnessapp.database.WorkoutPlanData
 import com.example.cs551fitnessapp.ui.components.ErrorDialog
+import com.example.cs551fitnessapp.ui.components.ScheduleDialog
 import com.example.cs551fitnessapp.ui.viewmodels.SavePlanResult
 import com.example.cs551fitnessapp.ui.components.SuccessDialog
 import java.util.*
 
 private val PrimaryBlue = Color(0xFF2962FF)
 private val LightBlueBg = Color(0xFFE8EAF6)
-private val GrayButton  = Color(0xFF757575)
-private val LightGray   = Color(0xFFBDBDBD)
+private val GrayButton = Color(0xFF757575)
+private val LightGray = Color(0xFFBDBDBD)
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WorkoutPlanScreen(
@@ -63,31 +68,41 @@ fun WorkoutPlanScreen(
     modifier: Modifier = Modifier
 ) {
     val addedEntries by planViewModel.addedEntries.collectAsState() //Workout list
-    val sessionName  by planViewModel.sessionName.collectAsState()
+    val sessionName by planViewModel.sessionName.collectAsState()
     val selectedDate by planViewModel.selectedDate.collectAsState()
-    val startHour    by planViewModel.startHour.collectAsState()
-    val startMin     by planViewModel.startMin.collectAsState()
-    val endHour      by planViewModel.endHour.collectAsState()
-    val endMin       by planViewModel.endMin.collectAsState()
-    val saveResult   by planViewModel.saveResult.collectAsState()
+    val startHour by planViewModel.startHour.collectAsState()
+    val startMin by planViewModel.startMin.collectAsState()
+    val endHour by planViewModel.endHour.collectAsState()
+    val endMin by planViewModel.endMin.collectAsState()
+    val saveResult by planViewModel.saveResult.collectAsState()
 
     //Toast.makeText(LocalContext.current, userId.toString(), Toast.LENGTH_SHORT).show()
 
     // Timepicker
     var showStartPicker by remember { mutableStateOf(false) }
-    var showEndPicker   by remember { mutableStateOf(false) }
+    var showEndPicker by remember { mutableStateOf(false) }
 
- 
-    val isDoneEnabled = sessionName.isNotBlank()  &&
+    val results    by planViewModel.sessionTimeResults.collectAsState()
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        ScheduleDialog(
+            results   = results,
+            onDismiss = { showDialog = false }
+        )
+    }
+
+
+    val isDoneEnabled = sessionName.isNotBlank() &&
             selectedDate.isNotBlank() &&
             addedEntries.isNotEmpty()
 
     // Date picker
-    val context    = LocalContext.current
-    val calendar   = Calendar.getInstance()
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
     val monthNames = listOf(
-        "Jan","Feb","Mar","Apr","May","Jun",
-        "Jul","Aug","Sep","Oct","Nov","Dec"
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     )
 
     val datePicker = DatePickerDialog(
@@ -104,9 +119,9 @@ fun WorkoutPlanScreen(
 
     if (showStartPicker) {
         TimePickerDialog(
-            initialHour   = startHour,
+            initialHour = startHour,
             initialMinute = startMin,
-            onConfirm     = { h, m ->
+            onConfirm = { h, m ->
                 planViewModel.onStartHourChange(h)
                 planViewModel.onStartMinChange(m)
                 showStartPicker = false
@@ -117,9 +132,9 @@ fun WorkoutPlanScreen(
 
     if (showEndPicker) {
         TimePickerDialog(
-            initialHour   = endHour,
+            initialHour = endHour,
             initialMinute = endMin,
-            onConfirm     = { h, m ->
+            onConfirm = { h, m ->
                 planViewModel.onEndHourChange(h)
                 planViewModel.onEndMinChange(m)
                 showEndPicker = false
@@ -141,16 +156,19 @@ fun WorkoutPlanScreen(
 
     // Error Dialog
     if (saveResult is SavePlanResult.Error) {
-        ErrorDialog( errormsg = (saveResult as SavePlanResult.Error).message, onDismiss = {planViewModel.resetSaveResult()}, onBtnOk = {planViewModel.resetSaveResult()})
+        ErrorDialog(
+            errormsg = (saveResult as SavePlanResult.Error).message,
+            onDismiss = { planViewModel.resetSaveResult() },
+            onBtnOk = { planViewModel.resetSaveResult() })
     }
 
     Scaffold(
-        topBar    = { WorkoutPlanTopBar(onBackClick = onBackClick) },
+        topBar = { WorkoutPlanTopBar(onBackClick = onBackClick) },
         bottomBar = {
             WorkoutPlanBottomBar(
                 isDoneEnabled = isDoneEnabled && (saveResult !is SavePlanResult.Loading),
                 onCancelClick = onCancelClick,
-                onDoneClick   = {
+                onDoneClick = {
                     onDoneClick(
                         WorkoutPlanData(
                             sessionName = sessionName,
@@ -184,54 +202,75 @@ fun WorkoutPlanScreen(
             }
 
             Text(
-                text       = "Workout Details",
-                fontSize   = 18.sp,
+                text = "Workout Details",
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color      = PrimaryBlue
+                color = PrimaryBlue
             )
 
             // Session Name
             PlanField(label = "Session Name") {
                 PlanTextField(
-                    value       = sessionName,
-                    onChange    = planViewModel::onSessionNameChange,
+                    value = sessionName,
+                    onChange = planViewModel::onSessionNameChange,
                     placeholder = "e.g. Upper Arms Session",
-                    isError     = sessionName.isBlank()
+                    isError = sessionName.isBlank()
                 )
             }
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
 
-            // Date
-            PlanField(label = "Date") {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(50))
-                        .background(
-                            if (selectedDate.isBlank()) Color(0xFFFFEBEE) else LightBlueBg //validate before done
-                        )
-                        .clickable { datePicker.show() }
+                Text("Date", fontSize = 14.sp, color = MaterialTheme.colorScheme.onBackground)
+
+                Row(
+                    verticalAlignment     = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier              = Modifier.fillMaxWidth()
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
+                    // Date picker field
+                    Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 14.dp)
+                            .weight(1f)
+                            .clip(RoundedCornerShape(50))
+                            .background(
+                                if (selectedDate.isBlank()) Color(0xFFFFEBEE) else LightBlueBg
+                            )
+                            .clickable { datePicker.show() }
                     ) {
-                        Text(
-                            text     = selectedDate.ifBlank { "DD MMM YYYY" },
-                            fontSize = 15.sp,
-                            color    = if (selectedDate.isBlank()) Color(0xFF9E9E9E)
-                            else Color(0xFF212121),
-                            modifier = Modifier.weight(1f)
-                        )
-                        Icon(
-                            Icons.Default.DateRange,
-                            contentDescription = "Pick date",
-                            tint               = Color(0xFF616161),
-                            modifier           = Modifier.size(20.dp)
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 14.dp)
+                        ) {
+                            Text(
+                                text     = selectedDate.ifBlank { "DD MMM YYYY" },
+                                fontSize = 15.sp,
+                                color    = if (selectedDate.isBlank()) Color(0xFF9E9E9E)
+                                else Color(0xFF212121),
+                                modifier = Modifier.weight(1f)
+                            )
+                            Icon(
+                                Icons.Default.DateRange,
+                                contentDescription = "Pick date",
+                                tint               = Color(0xFF616161),
+                                modifier           = Modifier.size(20.dp)
+                            )
+                        }
+                    }
+                    Button(
+                        onClick        = {
+                            planViewModel.querySessionTime()
+                            showDialog = true
+                        },
+                        shape          = RoundedCornerShape(50),
+                        colors         = ButtonDefaults.buttonColors(containerColor = PrimaryBlue),
+                        contentPadding = PaddingValues(horizontal = 16.dp),
+                        modifier       = Modifier.height(50.dp)
+                    ) {
+                        Text("Schedule", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
                     }
                 }
+
                 if (selectedDate.isBlank()) {
                     Text(
                         text     = "Please select a date",
@@ -242,33 +281,82 @@ fun WorkoutPlanScreen(
                 }
             }
 
+//            Row(
+//                verticalAlignment = Alignment.Top,
+//                horizontalArrangement = Arrangement.spacedBy(8.dp),
+//                modifier = Modifier.fillMaxWidth()
+//            ) {
+//                // Date
+//                PlanField(label = "Date") {
+//                    Box(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .clip(RoundedCornerShape(50))
+//                            .background(
+//                                if (selectedDate.isBlank()) Color(0xFFFFEBEE) else LightBlueBg //validate before done
+//                            )
+//                            .clickable { datePicker.show() }
+//                    ) {
+//                        Row(
+//                            verticalAlignment = Alignment.CenterVertically,
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .padding(horizontal = 16.dp, vertical = 14.dp)
+//                        ) {
+//                            Text(
+//                                text = selectedDate.ifBlank { "DD MMM YYYY" },
+//                                fontSize = 15.sp,
+//                                color = if (selectedDate.isBlank()) Color(0xFF9E9E9E)
+//                                else Color(0xFF212121),
+//                                modifier = Modifier.weight(1f)
+//                            )
+//                            Icon(
+//                                Icons.Default.DateRange,
+//                                contentDescription = "Pick date",
+//                                tint = Color(0xFF616161),
+//                                modifier = Modifier.size(20.dp)
+//                            )
+//                        }
+//                    }
+//                    if (selectedDate.isBlank()) {
+//                        Text(
+//                            text = "Please select a date",
+//                            fontSize = 11.sp,
+//                            color = Color(0xFFE53935),
+//                            modifier = Modifier.padding(start = 16.dp, top = 2.dp)
+//                        )
+//                    }
+//                }
+//
+//            }
+
             // Start & End timepicker buttons
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier              = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             ) {
                 // Start
                 Column(
-                    modifier            = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text("Start", fontSize = 14.sp, color = MaterialTheme.colorScheme.onBackground)
                     TimePickerButton(
-                        hour    = startHour,
-                        minute  = startMin,
+                        hour = startHour,
+                        minute = startMin,
                         onClick = { showStartPicker = true }
                     )
                 }
 
                 // End
                 Column(
-                    modifier            = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text("End", fontSize = 14.sp, color = MaterialTheme.colorScheme.onBackground)
                     TimePickerButton(
-                        hour    = endHour,
-                        minute  = endMin,
+                        hour = endHour,
+                        minute = endMin,
                         onClick = { showEndPicker = true }
                     )
                 }
@@ -276,14 +364,14 @@ fun WorkoutPlanScreen(
 
             // Workout List header
             Row(
-                verticalAlignment     = Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text       = "Exercise List",
-                    fontSize   = 18.sp,
+                    text = "Workout List",
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color      = PrimaryBlue
+                    color = PrimaryBlue
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 IconButton(
@@ -297,12 +385,12 @@ fun WorkoutPlanScreen(
                         imageVector = Icons.Default.Add,
                         contentDescription = "Add workout",
                         tint = PrimaryBlue,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp) // Icon is significantly smaller than the circle
                     )
                 }
             }
 
-
+            // Workout List body
             if (addedEntries.isEmpty()) {
                 Box(
                     contentAlignment = Alignment.Center,
@@ -315,16 +403,16 @@ fun WorkoutPlanScreen(
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text      = "Click + to add workout item",
-                            fontSize  = 14.sp,
-                            color     = Color(0xFF9E9E9E),
+                            text = "Click + to add workout item",
+                            fontSize = 14.sp,
+                            color = Color(0xFF9E9E9E),
                             textAlign = TextAlign.Center
                         )
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            text      = "At least 1 exercise is required",
-                            fontSize  = 11.sp,
-                            color     = Color(0xFFE53935),
+                            text = "At least 1 exercise is required",
+                            fontSize = 11.sp,
+                            color = Color(0xFFE53935),
                             textAlign = TextAlign.Center
                         )
                     }
@@ -333,7 +421,7 @@ fun WorkoutPlanScreen(
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     addedEntries.forEach { entry ->
                         PlanWorkoutRow(
-                            entry    = entry,
+                            entry = entry,
                             onRemove = { planViewModel.removeEntry(entry.exercise.id) }
                         )
                     }
@@ -345,14 +433,15 @@ fun WorkoutPlanScreen(
     }
 }
 
+// Time picker button
 @Composable
 private fun TimePickerButton(
-    hour    : Int,
-    minute  : Int,
-    onClick : () -> Unit
+    hour: Int,
+    minute: Int,
+    onClick: () -> Unit
 ) {
     val timeText = "%02d : %02d".format(hour, minute)
-    val isUnset  = hour == 0 && minute == 0
+    val isUnset = hour == 0 && minute == 0
 
     Box(
         modifier = Modifier
@@ -363,32 +452,35 @@ private fun TimePickerButton(
             .padding(horizontal = 16.dp, vertical = 13.dp)
     ) {
         Row(
-            verticalAlignment     = Alignment.CenterVertically,
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier              = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text       = timeText,
-                fontSize   = 16.sp,
+                text = timeText,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
-                color      = if (isUnset) Color(0xFF9E9E9E) else Color(0xFF2962FF)
+                color = if (isUnset) Color(0xFF9E9E9E) else Color(0xFF2962FF)
             )
             Icon(
-                imageVector        = Icons.Default.AccessTime,
+                imageVector = Icons.Default.AccessTime,
                 contentDescription = "Pick time",
-                tint               = if (isUnset) Color(0xFF9E9E9E) else Color(0xFF2962FF),
-                modifier           = Modifier.size(18.dp)
+                tint = if (isUnset) Color(0xFF9E9E9E) else Color(0xFF2962FF),
+                modifier = Modifier.size(18.dp)
             )
         }
     }
 }
 
+// Content layout
 @Composable
 private fun PlanField(
-    label   : String,
-    content : @Composable ColumnScope.() -> Unit
+    label: String,
+    content: @Composable ColumnScope.() -> Unit
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
         Text(label, fontSize = 14.sp, color = MaterialTheme.colorScheme.onBackground)
         content()
     }
@@ -397,51 +489,52 @@ private fun PlanField(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PlanTextField(
-    value       : String,
-    onChange    : (String) -> Unit,
-    placeholder : String,
-    isError     : Boolean = false,
+    value: String,
+    onChange: (String) -> Unit,
+    placeholder: String,
+    isError: Boolean = false,
     focusManager: FocusManager = LocalFocusManager.current
 ) {
     TextField(
-        value         = value,
+        value = value,
         onValueChange = onChange,
-        placeholder   = { Text(placeholder, color = Color(0xFF9E9E9E), fontSize = 15.sp) },
-        singleLine    = true,
-        isError       = isError,
-        shape         = RoundedCornerShape(50),
-        colors        = TextFieldDefaults.colors(
-            focusedContainerColor   = LightBlueBg,
+        placeholder = { Text(placeholder, color = Color(0xFF9E9E9E), fontSize = 15.sp) },
+        singleLine = true,
+        isError = isError,
+        shape = RoundedCornerShape(50),
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = LightBlueBg,
             unfocusedContainerColor = if (isError) Color(0xFFFFEBEE) else LightBlueBg,
-            errorContainerColor     = Color(0xFFFFEBEE),
-            focusedIndicatorColor   = Color.Transparent,
+            errorContainerColor = Color(0xFFFFEBEE),
+            focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            errorIndicatorColor     = Color.Transparent,
-            focusedTextColor        = Color(0xFF212121),
-            unfocusedTextColor      = Color(0xFF212121)
+            errorIndicatorColor = Color.Transparent,
+            focusedTextColor = Color(0xFF212121),
+            unfocusedTextColor = Color(0xFF212121)
         ),
         modifier = Modifier.fillMaxWidth()
     )
     if (isError) {
         Text(
-            text     = "Session name is required",
+            text = "Session name is required",
             fontSize = 11.sp,
-            color    = Color(0xFFE53935),
+            color = Color(0xFFE53935),
             modifier = Modifier.padding(start = 16.dp, top = 2.dp)
         )
     }
 }
 
+// Workout List row
 @Composable
 private fun PlanWorkoutRow(
-    entry    : WorkoutEntry,
-    onRemove : () -> Unit
+    entry: WorkoutEntry,
+    onRemove: () -> Unit
 ) {
     Card(
-        shape     = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(0.dp),
-        colors    = CardDefaults.cardColors(containerColor = LightBlueBg),
-        modifier  = Modifier.fillMaxWidth()
+        colors = CardDefaults.cardColors(containerColor = LightBlueBg),
+        modifier = Modifier.fillMaxWidth()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -463,22 +556,22 @@ private fun PlanWorkoutRow(
             Spacer(Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text       = entry.exercise.name
+                    text = entry.exercise.name
                         .split(" ")
                         .joinToString(" ") { it.replaceFirstChar(Char::uppercase) },
-                    fontSize   = 15.sp,
+                    fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color      = Color(0xFF212121),
-                    maxLines   = 1,
-                    overflow   = TextOverflow.Ellipsis
+                    color = Color(0xFF212121),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Spacer(Modifier.height(3.dp))
                 val notePart = entry.note.takeIf { it.isNotBlank() }
-                val setRep   = "${entry.sets} × ${entry.reps}"
+                val setRep = "${entry.sets} × ${entry.reps}"
                 Text(
-                    text     = listOfNotNull(notePart, setRep).joinToString("  |  "),
+                    text = listOfNotNull(notePart, setRep).joinToString("  |  "),
                     fontSize = 13.sp,
-                    color    = Color(0xFF757575)
+                    color = Color(0xFF757575)
                 )
             }
             IconButton(onClick = onRemove) {
@@ -493,7 +586,12 @@ private fun PlanWorkoutRow(
 private fun WorkoutPlanTopBar(onBackClick: () -> Unit) {
     CenterAlignedTopAppBar(
         title = {
-            Text("Workout Session Plan", fontWeight = FontWeight.Bold, color = PrimaryBlue, fontSize = 20.sp)
+            Text(
+                "Workout Plan",
+                fontWeight = FontWeight.Bold,
+                color = PrimaryBlue,
+                fontSize = 20.sp
+            )
         },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
@@ -509,9 +607,9 @@ private fun WorkoutPlanTopBar(onBackClick: () -> Unit) {
 
 @Composable
 private fun WorkoutPlanBottomBar(
-    isDoneEnabled : Boolean,
-    onCancelClick : () -> Unit,
-    onDoneClick   : () -> Unit
+    isDoneEnabled: Boolean,
+    onCancelClick: () -> Unit,
+    onDoneClick: () -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -522,9 +620,9 @@ private fun WorkoutPlanBottomBar(
             .navigationBarsPadding()
     ) {
         Button(
-            onClick  = onCancelClick,
-            shape    = RoundedCornerShape(50),
-            colors   = ButtonDefaults.buttonColors(containerColor = GrayButton),
+            onClick = onCancelClick,
+            shape = RoundedCornerShape(50),
+            colors = ButtonDefaults.buttonColors(containerColor = GrayButton),
             modifier = Modifier
                 .weight(1f)
                 .height(52.dp)
@@ -532,11 +630,11 @@ private fun WorkoutPlanBottomBar(
             Text("Cancel", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
         }
         Button(
-            onClick  = onDoneClick,
-            enabled  = isDoneEnabled,
-            shape    = RoundedCornerShape(50),
-            colors   = ButtonDefaults.buttonColors(
-                containerColor         = PrimaryBlue,
+            onClick = onDoneClick,
+            enabled = isDoneEnabled,
+            shape = RoundedCornerShape(50),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = PrimaryBlue,
                 disabledContainerColor = LightGray
             ),
             modifier = Modifier

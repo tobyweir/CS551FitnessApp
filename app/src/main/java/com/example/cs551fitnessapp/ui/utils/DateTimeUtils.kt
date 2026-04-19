@@ -69,4 +69,29 @@ object DateTimeUtils {
             cal.get(Calendar.MINUTE)
         )
     }
+
+    fun getDayRangebyCalendar(dateStr: String): Pair<Long, Long> {
+        val parts    = dateStr.split(" ")
+        val day      = parts[0].toInt()
+        val month    = listOf("Jan","Feb","Mar","Apr","May","Jun",
+            "Jul","Aug","Sep","Oct","Nov","Dec")
+            .indexOf(parts[1])
+        val year     = parts[2].toInt()
+
+        val cal = Calendar.getInstance().apply {
+            set(year, month, day, 0, 0, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+        val startOfDay = cal.timeInMillis    // 00:00:00.000
+
+        cal.set(Calendar.HOUR_OF_DAY, 23)
+        cal.set(Calendar.MINUTE, 59)
+        cal.set(Calendar.SECOND, 59)
+        cal.set(Calendar.MILLISECOND, 999)
+
+        val endOfDay = cal.timeInMillis     // 23:59:59.999
+
+        return Pair(startOfDay, endOfDay)
+    }
 }
