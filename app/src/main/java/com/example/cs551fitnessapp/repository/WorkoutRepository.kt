@@ -58,6 +58,9 @@ class WorkoutRepository(
     fun getAllSessionsWithExercises(memberId: Long) =
         sessionDao.getAllSessionsWithExercises(memberId)
 
+    fun getExercisesForSession(sessionId: Long) =
+        sessionExerciseDao.getExercisesForSession(sessionId)
+
     suspend fun saveWorkoutPlan(
         memberId: Long,
         plan: WorkoutPlanData
