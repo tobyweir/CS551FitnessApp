@@ -117,7 +117,8 @@ fun MemberInfoScreen(
 
         ExtendedFloatingActionButton(
             onClick = { navController.navigate(AddWorkoutFlow(id)) },
-            containerColor = Color(0xFFD7FF00),
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = Color.White,
             icon = {
                 Icon(Icons.Default.Add, contentDescription = null)
             },

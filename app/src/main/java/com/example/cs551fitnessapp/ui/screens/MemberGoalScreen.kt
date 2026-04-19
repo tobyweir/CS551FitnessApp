@@ -24,8 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.cs551fitnessapp.R
-import com.example.cs551fitnessapp.ui.reusable.Description
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
 
 private val PrimaryBlue = Color(0xFF2962FF)
@@ -39,9 +37,9 @@ data class GoalOption(
 )
 
 private val goalOptions = listOf(
-    GoalOption(0, "Lose Weight", "My goal is to lose weight", Icons.Default.MonitorWeight),
-    GoalOption(1, "Build Muscle", "My goal is to build muscle in some areas.", Icons.Default.FitnessCenter),
-    GoalOption(2, "Get Fit", "My goal is to get fit.", Icons.Default.SportsGymnastics),
+    GoalOption(0, "Lose Weight", "Their goal is to lose weight.", Icons.Default.MonitorWeight),
+    GoalOption(1, "Build Muscle", "Their goal is to build muscle in some areas.", Icons.Default.FitnessCenter),
+    GoalOption(2, "Get Fit", "Their goal is to get fit.", Icons.Default.SportsGymnastics),
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -94,10 +92,13 @@ fun MemberGoalScreen(
                 .padding(horizontal = 24.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Description(
-                com.example.cs551fitnessapp.R.string.Goal,
-                R.string.Goal2
+            Text(
+                text = "What is the new member's goal?",
+                fontSize = 30.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = MaterialTheme.colorScheme.onBackground
             )
+
             Spacer(Modifier.height(4.dp))
 
             goalOptions.forEach { option ->
@@ -121,7 +122,7 @@ private fun GoalTopBar(
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = "Add Member",
+                text = "Add a Member",
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 18.sp

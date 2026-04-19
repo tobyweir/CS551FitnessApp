@@ -44,9 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.cs551fitnessapp.ui.reusable.Description
 import com.example.cs551fitnessapp.ui.theme.CS551FitnessAppTheme
-import com.example.cs551fitnessapp.R
 
 private val PrimaryBlue = Color(0xFF2962FF)
 private val LightGrayBg = Color(0xFFF5F5F5)
@@ -117,8 +115,19 @@ fun MedicalConcernScreen(
                 .padding(horizontal = 24.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Description( com.example.cs551fitnessapp.R.string.Medical,
-                R.string.Medical2)
+            Text(
+                text = "Does the new member have any medical conditions?",
+                fontSize = 30.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+
+            Text(
+                text = "Please add any extra information in the additional notes section.",
+                fontSize = 13.sp,
+                color = MaterialTheme.colorScheme.onBackground,
+                lineHeight = 20.sp
+            )
 
             Spacer(Modifier.height(4.dp))
 
@@ -159,7 +168,7 @@ private fun MedicalTopBar(
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = "Add Member",
+                text = "Add a Member",
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 18.sp

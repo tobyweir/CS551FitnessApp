@@ -77,7 +77,7 @@ fun AddMemberNameScreen(
 //            Spacer(Modifier.height(10.dp))
 
             Text(
-                "What's your name?",
+                "What is the new member's name?",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -98,7 +98,7 @@ fun AddMemberNameScreen(
             Spacer(Modifier.height(8.dp))
 
             Text(
-                "Edit",
+                "Add profile picture",
                 fontSize = 12.sp,
                 color = Color.Gray
             )
@@ -127,7 +127,7 @@ fun AddMemberNameScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "Num Of Session :",
+                    "Number of Sessions",
                     color = MaterialTheme.colorScheme.onBackground
                 )
 

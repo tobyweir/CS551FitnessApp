@@ -2,19 +2,16 @@
     <string name="app_name">CS551FitnessApp</string>
     <string name="tell_us_about_yourself">Tell us about yourself</string>
     <string name="Sample_Text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
-    <string name="Birthday">When is your birthday?</string>
-    <string name="Birthday2">Please tell us on which date your birthday occurs</string>
-    <string name="Weight">Your weight</string>
-    <string name="Weight2">Please let us know your weight in either pounds or kilograms</string>
+    <string name="Birthday">What is the new member\'s birthday?</string>
+    <string name="Birthday2"></string>
+    <string name="Weight">What is the new member\'s weight?</string>
+    <string name="Weight2"></string>
     <string name="Pounds">lbs</string>
     <string name="Kilograms">kg</string>
-    <string name="Height">Your height</string>
-    <string name="Height2">Please inform us of your height in either feet or centimetres</string>
+    <string name="Height">What is the new member\'s height?</string>
+    <string name="Height2"></string>
     <string name="Feet">ft</string>
     <string name="Centimeters">cm</string>
-    <string name="Gender">What is your gender?</string>
-    <string name="Goal">Your goal</string>
-    <string name="Goal2">Select the option that best fits your needs such as building strength, losing weight or general fitness, so your personal trainer can create a plan tailored to you</string>
-    <string name="Medical">Medical concern</string>
-    <string name="Medical2">Select any medical concern that may affect training, and add a short note if needed</string>
+    <string name="Gender">What is the new member\'s gender?</string>
+    <string name="Gender2"></string>
 </resources>
