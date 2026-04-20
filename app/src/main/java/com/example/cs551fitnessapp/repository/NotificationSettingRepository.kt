@@ -31,10 +31,6 @@ class NotificationSettingsRepository(
 
 ) {
 
-
-
-    /** Emits the latest NotificationSettings whenever DataStore changes */
-
     val notificationSettings: Flow<NotificationSettings> =
 
         dataStore.data.map { prefs ->
@@ -59,8 +55,6 @@ class NotificationSettingsRepository(
         }
 
 
-
-    /** Dark theme preference */
 
     val isDarkThemeEnabled: Flow<Boolean> =
 
