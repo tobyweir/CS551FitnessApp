@@ -60,7 +60,7 @@ class NotificationSettingsViewModel(
                 // Schedule periodic work
                 scheduler.schedule(7, data) // Schedule every 7 days
                 // Trigger an immediate notification for debugging
-               scheduler.fireNow(data)
+               //scheduler.fireNow(data)
 
             } else {
                 scheduler.cancelPeriodicNoti()
