@@ -14,11 +14,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import androidx.lifecycle.AndroidViewModel
 import androidx.room.Room
-import com.example.cs551fitnessapp.repository.EventRepository
-import com.example.cs551fitnessapp.database.Database
 import com.example.cs551fitnessapp.database.SessionDao
-import com.example.cs551fitnessapp.database.UserAppointmentDao
-import com.example.cs551fitnessapp.database.UserAppointmentEntity
 import com.example.cs551fitnessapp.database.SessionEntity
 import com.example.cs551fitnessapp.repository.NotificationSettings
 import com.example.cs551fitnessapp.repository.NotificationSettingsRepository
