@@ -144,7 +144,7 @@ git clone https://github.com/tobyweir/CS551FitnessApp.git
 CS551 MSc Team 1:
 
 - Abdulhafith Ahmed
-- Charles Shaw
+- Robyn Shaw
 - Darshan Venkatesh Murthy
 - Pichawee Arreerob
 - Toby Weir
