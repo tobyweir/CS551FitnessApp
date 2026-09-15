@@ -40,7 +40,7 @@
 | **Age** | 30 |
 | **Occupation** | Fitness Trainer |
 | **Mobile Experience** | Expert |
-| **The Ask** | A mobile app to support her clients' fitness routines and schedules — storing workout histories, allowing customisation based on fitness level, and connecting to open fitness APIs. |
+| **The Ask** | Sarah Thompson is looking for a mobile application that supports her clients’ fitness routines and schedules. The app should store client workout histories, allow for customisation options based on client fitness levels, and connect with open fitness APIs.  |
 
 ## Overview
 
